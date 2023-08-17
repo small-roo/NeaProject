@@ -1,0 +1,21 @@
+﻿.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.table-center {
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+table, th, td {
+    border: 1px solid white;
+    border-collapse: collapse;
+}
+
+th, td {
+    background-color: #96D4D4;
+}

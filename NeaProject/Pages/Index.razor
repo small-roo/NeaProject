@@ -4,13 +4,47 @@
 @using SkiaSharp;
 @using SkiaSharp.Views.Blazor;
 
-<div class="container">
-    <div class="row">
-        <div class="canvas-container">
-            <SKCanvasView OnPaintSurface="OnPaintSurface" IgnorePixelScaling="true" EnableRenderLoop="true" />
+<div style="background-color:#955">
+    <div class="container center">
+        <div class="row">
+            <div class="canvas-container">
+                <SKCanvasView OnPaintSurface="OnPaintSurface" IgnorePixelScaling="true" EnableRenderLoop="true" />
+            </div>
         </div>
     </div>
 </div>
+<div style="background-color:#559">
+    <table class="table-center">
+        <tr>
+            <td style="width:16%; height:128px" rowspan="2">wooa</td>
+            <td rowspan="2">woob</td>
+            <td style="width:8%">wooc</td>
+            <td style="width:8%">wood</td>
+        </tr>
+        <tr>
+            <td>wooe</td>
+            <td>woof</td>
+        </tr>
+        <tr>
+            <td style="height:128px;" rowspan="4">woo</td>
+            <td>woo</td>
+            <td rowspan="2">woo</td>
+            <td rowspan="2">woo</td>
+        </tr>
+        <tr>
+            <td>woo</td>
+        </tr>
+        <tr>
+            <td>woo</td>
+            <td rowspan="2">woo</td>
+            <td rowspan="2">woo</td>
+        </tr>
+        <tr>
+            <td>woo</td>
+        </tr>
+    </table>
+</div>
+
 
 
 @code {
