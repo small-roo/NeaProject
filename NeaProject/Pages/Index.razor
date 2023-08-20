@@ -3,6 +3,7 @@
 @using NeaProject.Engine
 @using SkiaSharp;
 @using SkiaSharp.Views.Blazor;
+@using NeaProject.Classes;
 
 <div style="background-color:#955">
     <div class="container center">
@@ -51,13 +52,14 @@
     // Worth noting that the renderer is about 50% slower when you use Web GL. My assumption is that you end up
     // interop-ing more than it seems, another copy of the byte array for the surface would cause about the level of
     // slowdown I saw. But 2D canvas is fine - after all, just a 2D game.
-    
-    const int WolfViewportZoom = 2;
-    const int WolfViewportWidth = 304 * WolfViewportZoom;
-    const int WolfViewportHeight = 152 * WolfViewportZoom;
-    
+
+    const int WolfViewportZoom = 1;
+    const int WolfViewportWidth = 320 * WolfViewportZoom;
+    const int WolfViewportHeight = 160 * WolfViewportZoom;
+
+    private static readonly Map map = new Map();
     private readonly FpsCounter _fpsCounter = new FpsCounter();
-    private readonly Renderer _renderer = new Renderer(WolfViewportWidth, WolfViewportHeight);
+    private readonly Renderer _renderer = new Renderer(map, WolfViewportWidth, WolfViewportHeight);
     private readonly SKBitmap _bitmap = new SKBitmap(WolfViewportWidth, WolfViewportHeight);
     
     protected void OnPaintSurface(SKPaintSurfaceEventArgs e)
@@ -76,7 +78,7 @@
         
         var canvas = e.Surface.Canvas;
         canvas.Clear(SKColors.White);
-        canvas.DrawBitmap(_bitmap, new SKRect(0, 0, WolfViewportWidth*2, WolfViewportHeight*2));
+        canvas.DrawBitmap(_bitmap, new SKRect(0, 0, WolfViewportWidth*1, WolfViewportHeight*1));
         var fps = _fpsCounter.GetCurrentFps();
         using var paint = new SKPaint
         {
