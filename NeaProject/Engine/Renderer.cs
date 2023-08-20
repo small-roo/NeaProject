@@ -9,10 +9,11 @@ public class Renderer
     const int tileWidth = 16;
     const int tileHeight = 16;
 
-
+    private uint pink = MakePixel(0xff, 0xbb, 0xbb, 0xff);
     private uint black = MakePixel(0x00, 0x00, 0x00, 0xFF);
     private uint white = MakePixel(0xFF, 0xFF, 0xFF, 0xFF);
     private readonly Map _map;
+    private readonly Player _player;
     private readonly int _width;
     private readonly int _height;
     private readonly uint[,] _buffer;
@@ -20,9 +21,10 @@ public class Renderer
     private readonly int _yTileCount;
     private double t;
     
-    public Renderer(Map map, int width, int height)
+    public Renderer(Map map, Player player, int width, int height)
     {
         _map = map;
+        _player = player;
         _width = width;
         _height = height;
         _buffer = new uint[height, width];
@@ -32,16 +34,19 @@ public class Renderer
     
     public uint[,] UpdateFrameBuffer()
     {
-        //for (int row = 0; row < _height; row++)
-        //    for (int col = 0; col < _width; col++)
-        //    {
-        //        byte red = (byte)(Math.Sin((double)col/_width*2*Math.PI)*127+128);
-        //        byte green = (byte)(Math.Sin(t)*127+128);
-        //        byte blue = (byte)(Math.Sin((double)row / _height * 2 * Math.PI+t) * 127 + 128);
-        //        _buffer[row, col] = MakePixel(red, green, blue, 0xFF);
-        //    }
-        //t+=0.1;
+        DrawMap();
+        DrawPlayer();
 
+        return _buffer;
+    }
+
+    private void DrawPlayer()
+    {
+        DrawPlainTile(_player.YPos, _player.XPos, pink);
+    }
+
+    private void DrawMap()
+    {
         for (int tileRow = 0; tileRow < _yTileCount; tileRow++)
         {
             for (int tileCol = 0; tileCol < _xTileCount; tileCol++)
@@ -49,22 +54,25 @@ public class Renderer
                 // determine colour of tile
                 uint tileColour = GetBaseMap(tileRow, tileCol);
 
-                // calculating offset
-                int yOffset = tileRow * tileHeight;
-                int xOffset = tileCol * tileWidth;
-
-                // draw tile
-                for (int pixelRow = 0; pixelRow < tileHeight; pixelRow++)
-                {
-                    for (int pixelCol = 0; pixelCol < tileWidth; pixelCol++)
-                    {
-                        _buffer[pixelRow + yOffset, pixelCol + xOffset] = tileColour;
-                    }
-                }
+                DrawPlainTile(tileRow, tileCol, tileColour);
             }
         }
+    }
 
-        return _buffer;
+    private void DrawPlainTile(int tileRow, int tileCol, uint tileColour)
+    {
+        // calculating offset
+        int yOffset = tileRow * tileHeight;
+        int xOffset = tileCol * tileWidth;
+
+        // draw tile
+        for (int pixelRow = 0; pixelRow < tileHeight; pixelRow++)
+        {
+            for (int pixelCol = 0; pixelCol < tileWidth; pixelCol++)
+            {
+                _buffer[pixelRow + yOffset, pixelCol + xOffset] = tileColour;
+            }
+        }
     }
 
     private uint GetCheckerboard(int tileRow, int tileCol)

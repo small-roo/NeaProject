@@ -4,6 +4,9 @@ namespace NeaProject.Classes
 {
     public class Map
     {
+        public static int Height = 10;
+        public static int Width = 20;
+
         private string stringMap = """
             gggggggggggggggggggg
             gggggggggggrgggggggg
@@ -16,7 +19,7 @@ namespace NeaProject.Classes
             ssssssssswwwwwwwwwww
             sswwwwwwwwwwwwwwwwww
             """;
-        private char[,] charMap = new char[10,20];
+        private char[,] charMap = new char[Height, Width];
         public Map() 
         {
             string[] mapRows = stringMap.Split('\n');
