@@ -6,13 +6,36 @@
 
 <p role="status">Current count: @currentCount</p>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<textarea
+    @ref="buttonRef"
+    class="massive-invisible-button"
+    @onclick="IncrementCount"
+    @onkeydown="KeyDown">
+        Click me
+</textarea>
+
+<p>Pressed Key: @(lastPressed ?? "Nothing pressed yet")</p>
 
 @code {
     private int currentCount = 0;
-
+    private string? lastPressed;
+    private ElementReference buttonRef;
     private void IncrementCount()
     {
         currentCount++;
+    }
+
+    private void KeyDown(KeyboardEventArgs e)
+    {
+        var pressedKey = e.Key;
+        lastPressed = pressedKey;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await buttonRef.FocusAsync();
+        }
     }
 }
