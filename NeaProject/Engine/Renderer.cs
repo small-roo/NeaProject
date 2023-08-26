@@ -21,7 +21,7 @@ public class Renderer
     private readonly int _xTileCount;
     private readonly int _yTileCount;
     private double t;
-    
+
     public Renderer(Map map, Player player, Dictionary<char, Sprite> sprites, int width, int height)
     {
         _map = map;
@@ -30,10 +30,10 @@ public class Renderer
         _width = width;
         _height = height;
         _buffer = new uint[height, width];
-        _xTileCount = width/tileWidth;
-        _yTileCount = height/tileHeight;
+        _xTileCount = width / tileWidth;
+        _yTileCount = height / tileHeight;
     }
-    
+
     public uint[,] UpdateFrameBuffer()
     {
         DrawMap();
@@ -44,7 +44,7 @@ public class Renderer
 
     private void DrawPlayer()
     {
-        DrawPlainTile(_player.YPos, _player.XPos, pink);
+        DrawSprite(_player.YPos, _player.XPos, _sprites['p']);
     }
 
     private void DrawMap()
@@ -54,14 +54,14 @@ public class Renderer
             for (int tileCol = 0; tileCol < _xTileCount; tileCol++)
             {
                 // determine colour of tile
-                uint tileColour = GetBaseMap(tileRow, tileCol);
-
-                DrawPlainTile(tileRow, tileCol, tileColour);
+                char mapChar = _map.GetTileChar(tileRow, tileCol);
+                Sprite sprite = _sprites[mapChar];
+                DrawSprite(tileRow, tileCol, sprite);
             }
         }
     }
 
-    private void DrawPlainTile(int tileRow, int tileCol, uint tileColour)
+    private void DrawSprite(int tileRow, int tileCol, Sprite sprite)
     {
         // calculating offset
         int yOffset = tileRow * tileHeight;
@@ -72,7 +72,8 @@ public class Renderer
         {
             for (int pixelCol = 0; pixelCol < tileWidth; pixelCol++)
             {
-                _buffer[pixelRow + yOffset, pixelCol + xOffset] = tileColour;
+                uint pixelColour = sprite.GetColourAt(pixelCol, pixelRow);
+                _buffer[pixelRow + yOffset, pixelCol + xOffset] = pixelColour;
             }
         }
     }
@@ -96,8 +97,7 @@ public class Renderer
     {
         char tileChar = _map.GetTileChar(tileRow, tileCol);
         Sprite sprite = _sprites[tileChar];
-        Color charColour = sprite.GetColourAt(0, 0);
-        uint tileColour = MakePixel(charColour.R, charColour.G, charColour.B, charColour.A);
+        uint tileColour = sprite.GetColourAt(0, 0);
         return tileColour;
     }
 
