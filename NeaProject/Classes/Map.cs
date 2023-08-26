@@ -43,22 +43,5 @@ namespace NeaProject.Classes
         {
             return charMap[yTile, xTile];
         }
-
-        public Color GetCharColour(char tileChar)
-        {
-            switch (tileChar)
-            {
-                case 'g':
-                    return Color.Green;
-                case 'r':
-                    return Color.Gray;
-                case 's':
-                    return Color.Yellow;
-                case 'w':
-                    return Color.Blue;
-                default: 
-                    return Color.Red;
-            }
-        }
     }
 }

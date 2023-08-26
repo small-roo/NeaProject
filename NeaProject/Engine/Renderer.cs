@@ -14,6 +14,7 @@ public class Renderer
     private uint white = MakePixel(0xFF, 0xFF, 0xFF, 0xFF);
     private readonly Map _map;
     private readonly Player _player;
+    private readonly Dictionary<char, Sprite> _sprites;
     private readonly int _width;
     private readonly int _height;
     private readonly uint[,] _buffer;
@@ -21,10 +22,11 @@ public class Renderer
     private readonly int _yTileCount;
     private double t;
     
-    public Renderer(Map map, Player player, int width, int height)
+    public Renderer(Map map, Player player, Dictionary<char, Sprite> sprites, int width, int height)
     {
         _map = map;
         _player = player;
+        _sprites = sprites;
         _width = width;
         _height = height;
         _buffer = new uint[height, width];
@@ -93,7 +95,8 @@ public class Renderer
     private uint GetBaseMap(int tileRow, int tileCol)
     {
         char tileChar = _map.GetTileChar(tileRow, tileCol);
-        Color charColour = _map.GetCharColour(tileChar);
+        Sprite sprite = _sprites[tileChar];
+        Color charColour = sprite.GetColourAt(0, 0);
         uint tileColour = MakePixel(charColour.R, charColour.G, charColour.B, charColour.A);
         return tileColour;
     }
