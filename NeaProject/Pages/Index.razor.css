@@ -1,8 +1,17 @@
 ﻿.center {
-    display: block;
+    display: inline-block;
     margin-left: auto;
     margin-right: auto;
     width: 50%;
+}
+
+.canvas {
+    padding-left: 0;
+    padding-right: 0;
+    margin: auto;
+    display: block;
+    width: 640px;
+    height: 320px;
 }
 
 .stat {
@@ -19,7 +28,7 @@
 .table-center {
     margin-left: auto;
     margin-right: auto;
-    width: 50%;
+    width: 640px;
 }
 
 table, th, td {
