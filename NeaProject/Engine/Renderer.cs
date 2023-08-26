@@ -73,7 +73,10 @@ public class Renderer
             for (int pixelCol = 0; pixelCol < tileWidth; pixelCol++)
             {
                 uint pixelColour = sprite.GetColourAt(pixelCol, pixelRow);
-                _buffer[pixelRow + yOffset, pixelCol + xOffset] = pixelColour;
+                if (pixelColour != 16777215) // if not transparent, then draw pixel
+                {
+                    _buffer[pixelRow + yOffset, pixelCol + xOffset] = pixelColour;
+                }
             }
         }
     }

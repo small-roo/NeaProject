@@ -64,13 +64,46 @@
     const int WolfViewportZoom = 1;
     const int WolfViewportWidth = 640 * WolfViewportZoom;
     const int WolfViewportHeight = 320 * WolfViewportZoom;
+    const string PlayerSprite = @"
+................kkkkkkkkkk......
+...kkkkkkk...kkkkkkkkkkkkkkk....
+.kkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.
+kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.
+kkkkkkkkkkkkkkkkkkkkkkkkkk....k.
+kkk...kkkkkkkkkkkkkkkkkkk.......
+k...kkkkkkkkkkkkkkkkkkkkkkk.....
+...kkkkkkkkkkkkkkkkkkkkkkkkkk...
+..kkkkkkkkkkkkkkkkkkkkkkkkkkkk..
+..kkkkkkkkkkkkkkkkkpppppkkkkkk..
+.kkkkkkkkkkkkkkkppppppppppkkkkk.
+.kkkkkkkkkkkkkpppppppppppppkkkk.
+.kkkkkkkkkkkpppppppppwwpppppkkk.
+.kkkkkkkkkwppppppppppwwppppppkk.
+kkppkkkkkkbppppppppppbbpppppppkk
+kpppkkkkkbbppppppppppbbppppppppk
+kppppkkkkbbppppppppppbbppppppppp
+ppppppkkpbbppppppppppbbppppppppp
+ppppppkkpkkppppppppppkkppppppppp
+ppppppkkpkkppppppppppkkppppppppp
+pppppppkpppppppppppppppppppppppp
+.pppprrrpppppppppppppppprrrpppp.
+.pppppppppppppppppppppppppppppp.
+..ppppppppppppkppkpppppppppppp..
+..pppppppppppppkkppppppppppppp..
+...pppppppppppppppppppppppppp...
+...pppppppppppppppppppppppppp...
+....pppppppppppppppppppppppp....
+.rrrrrrrpppppppppppppprrrrrrrr..
+rrrrrrrrrrrpppppppppprrrrrrrrrrr
+rrrrrrrrrrrrrrrpprrrrrrrrrrrrrrr
+..rrrrrrrrrrrr....rrrrrrrrrrrr..";
 
     private static readonly Map map = new Map();
     private static readonly Player player = new Player(map);
     private static readonly Dictionary<char, Sprite> _sprites = new Dictionary<char, Sprite>()
     {
         { 'g', new Sprite(Color.Green, "Grass")},
-        { 'p', new Sprite(Color.Pink, "Player")},
+        { 'p', new Sprite(PlayerSprite, "Player")},
         { 'r', new Sprite(Color.LightGray, "Rock")},
         { 's', new Sprite(Color.LightGoldenrodYellow, "Sand")},
         { 'w', new Sprite(Color.CornflowerBlue, "Water")}
