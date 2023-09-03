@@ -98,19 +98,12 @@ rrrrrrrrrrrpppppppppprrrrrrrrrrr
 rrrrrrrrrrrrrrrpprrrrrrrrrrrrrrr
 ..rrrrrrrrrrrr....rrrrrrrrrrrr..";
 
-    private static readonly Map map = new Map();
-    private static readonly Player player = new Player(map);
-    private static readonly Dictionary<char, Sprite> _sprites = new Dictionary<char, Sprite>()
-    {
-        { 'g', new Sprite(Color.Green, "Grass")},
-        { 'p', new Sprite(PlayerSprite, "Player")},
-        { 'r', new Sprite(Color.LightGray, "Rock")},
-        { 's', new Sprite(Color.LightGoldenrodYellow, "Sand")},
-        { 'w', new Sprite(Color.CornflowerBlue, "Water")}
-    };
-    private readonly FpsCounter _fpsCounter = new FpsCounter();
-    private readonly Renderer _renderer = new Renderer(map, player, _sprites, WolfViewportWidth, WolfViewportHeight);
-    private readonly SKBitmap _bitmap = new SKBitmap(WolfViewportWidth, WolfViewportHeight);
+    private Map? map;
+    private Player? player;
+    private Dictionary<char, Sprite>? _sprites;
+    private FpsCounter? _fpsCounter;
+    private Renderer? _renderer;
+    private SKBitmap? _bitmap;
 
     private int currentCount = 0;
     private string? lastPressed;
@@ -121,9 +114,9 @@ rrrrrrrrrrrrrrrpprrrrrrrrrrrrrrr
         currentCount++;
     }
 
-    private void KeyDown(KeyboardEventArgs e)
+    private void KeyDown(KeyboardEventArgs keyEvent)
     {
-        var pressedKey = e.Key;
+        var pressedKey = keyEvent.Key;
         lastPressed = pressedKey;
         pressedKey = pressedKey.ToLower();
         switch (pressedKey)
@@ -158,6 +151,27 @@ rrrrrrrrrrrrrrrpprrrrrrrrrrrrrrr
                 }
 
         }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Uri tileSheetUri = new Uri("http://localhost:5235/images/MapTiles/all_tiles.png"); // absolute for now, should be relative
+        map = new Map();
+        player = new Player(map);
+        ImageLoader imageLoader = new ImageLoader();
+        var bitmap = await ImageLoader.GetBitmapAsync(tileSheetUri);
+        _sprites = new Dictionary<char, Sprite>()
+        {
+            { 'g', new Sprite(bitmap, "Grass")},
+            { 'p', new Sprite(PlayerSprite, "Player")},
+            { 'r', new Sprite(Color.LightGray, "Rock")},
+            { 's', new Sprite(Color.LightGoldenrodYellow, "Sand")},
+            { 'w', new Sprite(Color.CornflowerBlue, "Water")}
+        };
+
+        _fpsCounter = new FpsCounter();
+        _renderer = new Renderer(map, player, _sprites, WolfViewportWidth, WolfViewportHeight);
+        _bitmap = new SKBitmap(WolfViewportWidth, WolfViewportHeight);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

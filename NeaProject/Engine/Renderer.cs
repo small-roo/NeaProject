@@ -10,8 +10,8 @@ public class Renderer
     const int tileHeight = 32;
 
     private uint pink = MakePixel(0xff, 0xbb, 0xbb, 0xff);
-    private uint black = MakePixel(0x00, 0x00, 0x00, 0xFF);
-    private uint white = MakePixel(0xFF, 0xFF, 0xFF, 0xFF);
+    private uint black = MakePixel(0x00, 0x00, 0x00, 0xff);
+    private uint white = MakePixel(0xff, 0xff, 0xff, 0xff);
     private readonly Map _map;
     private readonly Player _player;
     private readonly Dictionary<char, Sprite> _sprites;
@@ -73,7 +73,7 @@ public class Renderer
             for (int pixelCol = 0; pixelCol < tileWidth; pixelCol++)
             {
                 uint pixelColour = sprite.GetColourAt(pixelCol, pixelRow);
-                if (pixelColour != 16777215) // if not transparent, then draw pixel
+                if (pixelColour != 0x00ffffff) // if not transparent, then draw pixel (16777215)
                 {
                     _buffer[pixelRow + yOffset, pixelCol + xOffset] = pixelColour;
                 }

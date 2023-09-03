@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using SkiaSharp;
+using System.Drawing;
 
 namespace NeaProject.Classes
 {
@@ -6,14 +7,15 @@ namespace NeaProject.Classes
     {
         private uint[,] _colour = new uint[32,32];
         public string Name;
-        public Sprite(Uri uriSprite, string name)
+
+        public Sprite(SKBitmap bitmap, string name) 
         {
-            uint tileColour = MakePixel(Color.White);
-            for (int i = 0; i < 32; i++)
+            for (int y = 0; y < 32; y++)
             {
-                for (int j = 0; j < 32; j++)
+                for (int x = 0; x < 32; x++)
                 {
-                    _colour[j, i] = tileColour;
+                    uint tileColour = MakePixel(bitmap.GetPixel(x, y));
+                    _colour[x, y] = tileColour;
                 }
             }
             Name = name;
@@ -67,12 +69,23 @@ namespace NeaProject.Classes
         {
             return _colour[x,y];
         }
+
         private static uint MakePixel(Color colour)
         {
             byte red = colour.R;
             byte green = colour.G;
             byte blue = colour.B;
             byte alpha = colour.A;
+            var result = (uint)((alpha << 24) | (blue << 16) | (green << 8) | red);
+            return result;
+        }
+
+        private static uint MakePixel(SKColor colour)
+        {
+            byte red = colour.Red;
+            byte green = colour.Green;
+            byte blue = colour.Blue;
+            byte alpha = colour.Alpha;
             var result = (uint)((alpha << 24) | (blue << 16) | (green << 8) | red);
             return result;
         }
