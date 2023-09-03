@@ -61,9 +61,9 @@
     // interop-ing more than it seems, another copy of the byte array for the surface would cause about the level of
     // slowdown I saw. But 2D canvas is fine - after all, just a 2D game.
 
-    const int WolfViewportZoom = 1;
-    const int WolfViewportWidth = 640 * WolfViewportZoom;
-    const int WolfViewportHeight = 320 * WolfViewportZoom;
+    const int ViewportZoom = 1;
+    const int ViewportWidth = 640 * ViewportZoom;
+    const int ViewportHeight = 320 * ViewportZoom;
     const string PlayerSprite = @"
 ................kkkkkkkkkk......
 ...kkkkkkk...kkkkkkkkkkkkkkk....
@@ -174,8 +174,8 @@ rrrrrrrrrrrrrrrpprrrrrrrrrrrrrrr
         };
 
         _fpsCounter = new FpsCounter();
-        _renderer = new Renderer(map, player, _sprites, WolfViewportWidth, WolfViewportHeight);
-        _bitmap = new SKBitmap(WolfViewportWidth, WolfViewportHeight);
+        _renderer = new Renderer(map, player, _sprites, ViewportWidth, ViewportHeight);
+        _bitmap = new SKBitmap(ViewportWidth, ViewportHeight);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -202,7 +202,7 @@ rrrrrrrrrrrrrrrpprrrrrrrrrrrrrrr
         
         var canvas = e.Surface.Canvas;
         canvas.Clear(SKColors.White);
-        canvas.DrawBitmap(_bitmap, new SKRect(0, 0, WolfViewportWidth*1, WolfViewportHeight*1));
+        canvas.DrawBitmap(_bitmap, new SKRect(0, 0, ViewportWidth*1, ViewportHeight*1));
         var fps = _fpsCounter.GetCurrentFps();
         using var paint = new SKPaint
         {
