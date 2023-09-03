@@ -6,8 +6,8 @@ namespace NeaProject.Engine;
 
 public class Renderer
 {
-    const int tileWidth = 32;
-    const int tileHeight = 32;
+    const int tileWidth = Sprite.tileSize;
+    const int tileHeight = Sprite.tileSize;
 
     private uint pink = MakePixel(0xff, 0xbb, 0xbb, 0xff);
     private uint black = MakePixel(0x00, 0x00, 0x00, 0xff);

@@ -7,14 +7,52 @@ namespace NeaProject.Classes
     {
         private uint[,] _colour = new uint[32,32];
         public string Name;
+        public const int tileSize = 32;
 
         public Sprite(SKBitmap bitmap, string name) 
         {
+            int yOffset;
+            int xOffset;
+            switch (name)
+            {
+                case "Grass":
+                    {
+                        xOffset = 0;
+                        yOffset = 0;
+                        break;
+                    }
+                case "Sand":
+                    {
+                        xOffset = 14 * tileSize;
+                        yOffset = 4 * tileSize;
+                        break;
+                    }
+                case "Rock":
+                    {
+                        xOffset = 28 * tileSize;
+                        yOffset = 15 * tileSize;
+                        break;
+                    }
+                case "Water":
+                    {
+                        xOffset = 4 * tileSize;
+                        yOffset = 4 * tileSize;
+                        break;
+                    }
+                default:
+                    {
+                        xOffset = 4 * tileSize;
+                        yOffset = 13 * tileSize;
+                        break;
+                    }
+            
+            }
+
             for (int y = 0; y < 32; y++)
             {
                 for (int x = 0; x < 32; x++)
                 {
-                    uint tileColour = MakePixel(bitmap.GetPixel(x, y));
+                    uint tileColour = MakePixel(bitmap.GetPixel(x + xOffset, y + yOffset));
                     _colour[x, y] = tileColour;
                 }
             }

@@ -116,6 +116,10 @@ rrrrrrrrrrrrrrrpprrrrrrrrrrrrrrr
 
     private void KeyDown(KeyboardEventArgs keyEvent)
     {
+        if (player == null)
+        {
+            return; 
+        }
         var pressedKey = keyEvent.Key;
         lastPressed = pressedKey;
         pressedKey = pressedKey.ToLower();
@@ -159,14 +163,14 @@ rrrrrrrrrrrrrrrpprrrrrrrrrrrrrrr
         map = new Map();
         player = new Player(map);
         ImageLoader imageLoader = new ImageLoader();
-        var bitmap = await ImageLoader.GetBitmapAsync(tileSheetUri);
+        SKBitmap mapTileSheet = await ImageLoader.GetBitmapAsync(tileSheetUri);
         _sprites = new Dictionary<char, Sprite>()
         {
-            { 'g', new Sprite(bitmap, "Grass")},
+            { 'g', new Sprite(mapTileSheet, "Grass")},
             { 'p', new Sprite(PlayerSprite, "Player")},
-            { 'r', new Sprite(Color.LightGray, "Rock")},
-            { 's', new Sprite(Color.LightGoldenrodYellow, "Sand")},
-            { 'w', new Sprite(Color.CornflowerBlue, "Water")}
+            { 'r', new Sprite(mapTileSheet, "Rock")},
+            { 's', new Sprite(mapTileSheet, "Sand")},
+            { 'w', new Sprite(mapTileSheet, "Water")}
         };
 
         _fpsCounter = new FpsCounter();
