@@ -6,35 +6,25 @@ namespace NeaProject.Classes
     {
         public int Height = 10;
         public int Width = 20;
-
-        private string stringMap = """
-            gggggggggggggggggggg
-            gggggggggggrgggggggg
-            ggrggggggggggggggggg
-            ggggggggggggggggrggg
-            gggggggrgggggggggggg
-            ggggggggggggggggssss
-            rgggggggggggssssswww
-            ggggggssssssswwwwwww
-            ssssssssswwwwwwwwwww
-            sswwwwwwwwwwwwwwwwww
-            """;
         private char[,] charMap;
-        public Map() 
+        public Map(string stringMap) 
         {
             charMap = new char[Height, Width];
             string[] mapRows = stringMap.Split('\n');
             int rowIndex = 0;
-            int colIndex = 0;
             foreach (string row in mapRows) 
             {
                 string trimmedRow = row.Trim();
-                foreach (char tile in trimmedRow)
+                //foreach (char tile in trimmedRow)
+                //{
+                //    charMap[rowIndex, colIndex] = tile;
+                //    colIndex++;
+                //}
+                int tileCount = trimmedRow.Length / 2;
+                for (int colIndex = 0; colIndex < tileCount; colIndex++)
                 {
-                    charMap[rowIndex, colIndex] = tile;
-                    colIndex++;
+                    charMap[rowIndex, colIndex] = trimmedRow[colIndex * 2];
                 }
-                colIndex = 0;
                 rowIndex++;
             }
         }

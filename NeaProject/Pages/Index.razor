@@ -30,7 +30,7 @@
             <td rowspan="4"><img src="/images/player1.png" style="width:100%" /></td>
             <td>wooh</td>
             <td rowspan="2">wooi</td>
-            <td class="stat" rowspan="2">HP: @player.CurrentHp</td>
+            <td class="stat" rowspan="2">HP: @(player?.CurrentHp ?? 0)</td>
         </tr>
         <tr>
             <td>wook</td>
@@ -160,7 +160,9 @@
     protected override async Task OnInitializedAsync()
     {
         Uri tileSheetUri = new Uri("http://localhost:5235/images/MapTiles/all_tiles.png"); // absolute for now, should be relative
-        map = new Map();
+        Uri mapUri = new Uri("http://localhost:5235/map-data/map_0.txt");
+        string mapString = await DownloadAsync(mapUri);
+        map = new Map(mapString);
         player = new Player(map);
         ImageLoader imageLoader = new ImageLoader();
         SKBitmap mapTileSheet = await ImageLoader.GetBitmapAsync(tileSheetUri);
@@ -215,6 +217,13 @@
 
         var surfaceSize = e.Info.Size;
         canvas.DrawText($"{fps:0.00}fps", surfaceSize.Width / 2, surfaceSize.Height - 10f, paint);
+    }
+
+    public async static Task<string> DownloadAsync(Uri uri)
+    {
+        using var client = new HttpClient();
+        var content = await client.GetStringAsync(uri);
+        return content;
     }
     
     
