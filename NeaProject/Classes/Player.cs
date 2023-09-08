@@ -20,8 +20,15 @@
         {
             if (XPos + moveX > -1 && XPos + moveX < _map.Width && YPos + moveY > -1 && YPos + moveY < _map.Height)
             {
-                XPos += moveX;
-                YPos += moveY;
+                if (_map.GetOverlayTileChar(YPos + moveY, XPos + moveX) == '.')
+                {
+                    XPos += moveX;
+                    YPos += moveY;
+                }
+                else
+                {
+                    CurrentHp--;
+                }
             }
         }
     }
