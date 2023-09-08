@@ -73,13 +73,19 @@ namespace NeaProject.Classes
                     _colour[xIndex, yIndex] = pixelChar switch
                     {
                         '.' => MakePixel(Color.Transparent),
+                        'b' => MakePixel(Color.DarkSlateBlue),
+                        'd' => MakePixel(Color.Maroon),
+                        'e' => MakePixel(Color.Indigo),
+                        'g' => MakePixel(Color.Green),
+                        'h' => MakePixel(Color.PeachPuff),
+                        'k' => MakePixel(Color.Black),
+                        'm' => MakePixel(Color.HotPink),
                         'p' => MakePixel(Color.Pink),
+                        'r' => MakePixel(Color.Crimson),
+                        's' => MakePixel(Color.PapayaWhip),
+                        'u' => MakePixel(Color.DarkOrchid),
                         'w' => MakePixel(Color.White),
                         'y' => MakePixel(Color.Yellow),
-                        'b' => MakePixel(Color.CornflowerBlue),
-                        'r' => MakePixel(Color.Red),
-                        'k' => MakePixel(Color.Black),
-                        'g' => MakePixel(Color.Green),
                         _ => MakePixel(Color.Magenta),
                     };
                     xIndex++;

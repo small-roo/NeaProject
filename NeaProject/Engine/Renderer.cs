@@ -96,14 +96,6 @@ public class Renderer
         return tileColour;
     }
 
-    private uint GetBaseMap(int tileRow, int tileCol)
-    {
-        char tileChar = _map.GetTileChar(tileRow, tileCol);
-        Sprite sprite = _sprites[tileChar];
-        uint tileColour = sprite.GetColourAt(0, 0);
-        return tileColour;
-    }
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static uint MakePixel(byte red, byte green, byte blue, byte alpha) =>
         (uint)((alpha << 24) | (blue << 16) | (green << 8) | red);
