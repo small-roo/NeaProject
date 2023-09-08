@@ -100,7 +100,7 @@
 
     private Map? map;
     private Player? player;
-    private Dictionary<char, Sprite>? _sprites;
+    private Dictionary<char, Sprite?>? _sprites;
     private FpsCounter? _fpsCounter;
     private Renderer? _renderer;
     private SKBitmap? _bitmap;
@@ -166,8 +166,9 @@
         player = new Player(map);
         ImageLoader imageLoader = new ImageLoader();
         SKBitmap mapTileSheet = await ImageLoader.GetBitmapAsync(tileSheetUri);
-        _sprites = new Dictionary<char, Sprite>()
+        _sprites = new Dictionary<char, Sprite?>()
         {
+            { '.', null},
             { 'g', new Sprite(mapTileSheet, "Grass")},
             { 'p', new Sprite(PlayerSprite, "Player")},
             { 'r', new Sprite(mapTileSheet, "Rock")},
@@ -187,9 +188,13 @@
             await buttonRef.FocusAsync();
         }
     }
-    
+
     protected void OnPaintSurface(SKPaintSurfaceEventArgs e)
     {
+        if (_renderer == null || _bitmap == null || _fpsCounter == null)
+        {
+            return;
+        }
         // Their is a good article on the different ways to update pixel data here:
         //  https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/bitmaps/pixel-bits
         // Having tried them all maintaining and then setting the pixel byte array is the most performant for us.

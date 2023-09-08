@@ -9,26 +9,18 @@ public class Renderer
     const int tileWidth = Sprite.tileSize;
     const int tileHeight = Sprite.tileSize;
 
-    private uint pink = MakePixel(0xff, 0xbb, 0xbb, 0xff);
-    private uint black = MakePixel(0x00, 0x00, 0x00, 0xff);
-    private uint white = MakePixel(0xff, 0xff, 0xff, 0xff);
     private readonly Map _map;
     private readonly Player _player;
-    private readonly Dictionary<char, Sprite> _sprites;
-    private readonly int _width;
-    private readonly int _height;
+    private readonly Dictionary<char, Sprite?> _sprites;
     private readonly uint[,] _buffer;
     private readonly int _xTileCount;
     private readonly int _yTileCount;
-    private double t;
 
-    public Renderer(Map map, Player player, Dictionary<char, Sprite> sprites, int width, int height)
+    public Renderer(Map map, Player player, Dictionary<char, Sprite?> sprites, int width, int height)
     {
         _map = map;
         _player = player;
         _sprites = sprites;
-        _width = width;
-        _height = height;
         _buffer = new uint[height, width];
         _xTileCount = width / tileWidth;
         _yTileCount = height / tileHeight;
@@ -53,16 +45,23 @@ public class Renderer
         {
             for (int tileCol = 0; tileCol < _xTileCount; tileCol++)
             {
-                // determine colour of tile
+                // determine sprite of tile
                 char mapChar = _map.GetTileChar(tileRow, tileCol);
-                Sprite sprite = _sprites[mapChar];
+                Sprite? sprite = _sprites[mapChar];
+                DrawSprite(tileRow, tileCol, sprite);
+                mapChar = _map.GetOverlayTileChar(tileRow, tileCol);
+                sprite = _sprites[mapChar];
                 DrawSprite(tileRow, tileCol, sprite);
             }
         }
     }
 
-    private void DrawSprite(int tileRow, int tileCol, Sprite sprite)
+    private void DrawSprite(int tileRow, int tileCol, Sprite? sprite)
     {
+        if (sprite == null)
+        {
+            return;
+        }
         // calculating offset
         int yOffset = tileRow * tileHeight;
         int xOffset = tileCol * tileWidth;
@@ -80,23 +79,4 @@ public class Renderer
             }
         }
     }
-
-    private uint GetCheckerboard(int tileRow, int tileCol)
-    {
-        uint tileColour;
-        if (tileRow % 2 == tileCol % 2)
-        {
-            tileColour = black;
-        }
-        else
-        {
-            tileColour = white;
-        }
-
-        return tileColour;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static uint MakePixel(byte red, byte green, byte blue, byte alpha) =>
-        (uint)((alpha << 24) | (blue << 16) | (green << 8) | red);
 }

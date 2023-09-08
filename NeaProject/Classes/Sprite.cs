@@ -5,7 +5,7 @@ namespace NeaProject.Classes
 {
     public class Sprite
     {
-        private uint[,] _colour = new uint[32,32];
+        private readonly uint[,] _colour = new uint[32, 32];
         public string Name;
         public const int tileSize = 32;
 

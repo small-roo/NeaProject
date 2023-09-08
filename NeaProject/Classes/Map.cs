@@ -6,24 +6,23 @@ namespace NeaProject.Classes
     {
         public int Height = 10;
         public int Width = 20;
-        private char[,] charMap;
+        private readonly char[,] charMap;
+        private readonly char[,] overlayCharMap;
+
         public Map(string stringMap) 
         {
             charMap = new char[Height, Width];
+            overlayCharMap = new char[Height, Width];
             string[] mapRows = stringMap.Split('\n');
             int rowIndex = 0;
             foreach (string row in mapRows) 
             {
                 string trimmedRow = row.Trim();
-                //foreach (char tile in trimmedRow)
-                //{
-                //    charMap[rowIndex, colIndex] = tile;
-                //    colIndex++;
-                //}
                 int tileCount = trimmedRow.Length / 2;
                 for (int colIndex = 0; colIndex < tileCount; colIndex++)
                 {
                     charMap[rowIndex, colIndex] = trimmedRow[colIndex * 2];
+                    overlayCharMap[rowIndex, colIndex] = trimmedRow[colIndex * 2 + 1];
                 }
                 rowIndex++;
             }
@@ -32,6 +31,11 @@ namespace NeaProject.Classes
         public char GetTileChar(int yTile, int xTile)
         {
             return charMap[yTile, xTile];
+        }
+
+        public char GetOverlayTileChar(int yTile, int xTile)
+        {
+            return overlayCharMap[yTile, xTile];
         }
     }
 }

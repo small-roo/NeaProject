@@ -10,7 +10,7 @@ namespace NeaProject.Classes
         public static async Task<SKBitmap> GetBitmapAsync(Uri uri)
         {
             // create an http client
-            using HttpClient client = new HttpClient();
+            using HttpClient client = new();
 
             // getting a response message for the uri
             HttpResponseMessage response = await client.GetAsync(uri);
