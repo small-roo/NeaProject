@@ -15,10 +15,23 @@
 </div>
 
 <div style="background-color:#559">
+    @if (player?.HasWon() == true)
+    {
+        <h1>YOU WIN!!</h1>
+    }
+    else
+    {
     <table class="table-center">
         <tr>
             <td style="width:16%;" rowspan="2">wooa</td>
-            <td rowspan="2">woob</td>
+            <td rowspan="2">
+                @if(player != null)
+                {
+                    foreach(string? item in player.Inventory) 
+                    {
+                        <p>@item</p>
+                    }
+                } </td>
             <td style="width:8%">wooc</td>
             <td class="stat" style="width:8%">wood</td>
         </tr>
@@ -44,6 +57,7 @@
             <td>wooo</td>
         </tr>
     </table>
+    }
 </div>
 
 <div>
@@ -169,6 +183,7 @@
         _sprites = new Dictionary<char, Sprite?>()
         {
             { '.', null},
+            { 'd', new Sprite(mapTileSheet, "Diamond")},
             { 'g', new Sprite(mapTileSheet, "Grass")},
             { 'p', new Sprite(PlayerSprite, "Player")},
             { 'r', new Sprite(mapTileSheet, "Rock")},

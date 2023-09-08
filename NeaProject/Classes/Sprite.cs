@@ -21,6 +21,12 @@ namespace NeaProject.Classes
                         yOffset = 0;
                         break;
                     }
+                case "Diamond":
+                    {
+                        xOffset = 23 * tileSize;
+                        yOffset = 10 * tileSize;
+                        break;
+                    }
                 case "Sand":
                     {
                         xOffset = 14 * tileSize;

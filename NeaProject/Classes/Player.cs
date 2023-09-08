@@ -4,9 +4,8 @@
     {
         public int XPos { get; set; }
         public int YPos { get; set; }
-
         private readonly Map _map;
-
+        public List<string> Inventory = new();
         public int CurrentHp { get; set; } = 100;
 
         public Player(Map map)
@@ -25,11 +24,22 @@
                     XPos += moveX;
                     YPos += moveY;
                 }
+                else if (_map.GetOverlayTileChar(YPos + moveY, XPos + moveX) == 'd')
+                {
+                    XPos += moveX;
+                    YPos += moveY;
+                    Inventory.Add("Flower Bundle");
+                    _map.SetOverlayTileChar(XPos, YPos, '.');
+                }
                 else
                 {
                     CurrentHp--;
                 }
             }
+        }
+        public bool HasWon()
+        {
+            return Inventory.Count(i => i == "Flower Bundle") == 4;
         }
     }
 }

@@ -37,5 +37,10 @@ namespace NeaProject.Classes
         {
             return overlayCharMap[yTile, xTile];
         }
+
+        public void SetOverlayTileChar(int xTile, int yTile, char newOverlay)
+        {
+            overlayCharMap[yTile, xTile] = newOverlay;
+        }
     }
 }
