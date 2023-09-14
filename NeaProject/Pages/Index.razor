@@ -15,23 +15,28 @@
 </div>
 
 <div style="background-color:#559">
-    @if (player?.HasWon() == true)
+    @if (player?.IsDead() == true)
+    {
+        <h1>YOU LOSE!!</h1>
+    }
+    else if (player?.HasWon() == true)
     {
         <h1>YOU WIN!!</h1>
     }
     else
     {
-    <table class="table-center">
-        <tr>
-            <td style="width:16%;" rowspan="2">wooa</td>
-            <td rowspan="2">
-                @if(player != null)
-                {
-                    foreach(string? item in player.Inventory) 
+        <table class="table-center">
+            <tr>
+                <td style="width:16%;" rowspan="2">wooa</td>
+                <td rowspan="2">
+                    @if (player != null)
                     {
-                        <p>@item</p>
+                        foreach (string? item in player.Inventory)
+                        {
+                            <p>@item</p>
+                        }
                     }
-                } </td>
+                 </td>
             <td style="width:8%">wooc</td>
             <td class="stat" style="width:8%">wood</td>
         </tr>
@@ -118,6 +123,7 @@
     private FpsCounter? _fpsCounter;
     private Renderer? _renderer;
     private SKBitmap? _bitmap;
+    private List<Npc> _npcs = new();
 
     private int currentCount = 0;
     private string? lastPressed;
@@ -130,7 +136,7 @@
 
     private void KeyDown(KeyboardEventArgs keyEvent)
     {
-        if (player == null)
+        if (player == null || player.IsDead() || player.HasWon())
         {
             return; 
         }
@@ -177,7 +183,8 @@
         Uri mapUri = new Uri("http://localhost:5235/map-data/map_0.txt");
         string mapString = await DownloadAsync(mapUri);
         map = new Map(mapString);
-        player = new Player(map);
+        List<char> playerAllowedTiles = new List<char> { 'g', 's', 'w' };
+        player = new Player(map, playerAllowedTiles);
         ImageLoader imageLoader = new ImageLoader();
         SKBitmap mapTileSheet = await ImageLoader.GetBitmapAsync(tileSheetUri);
         _sprites = new Dictionary<char, Sprite?>()
