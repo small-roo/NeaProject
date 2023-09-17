@@ -6,6 +6,8 @@
 @using NeaProject.Classes;
 @using System.Drawing;
 
+@inject NavigationManager navigationManager;
+
 <div style="background-color:#955">
                 <SKCanvasView 
                     OnPaintSurface="OnPaintSurface" 
@@ -45,8 +47,8 @@
             <td class ="stat">woof</td>
         </tr>
         <tr>
-            <td rowspan="4"><img src="/images/player1.png" style="width:100%" /></td>
-            <td>wooh</td>
+            <td rowspan="4"><img src="@($"{navigationManager.Uri}images/player1.png")" style="width:100%" /></td>
+            <td>@navigationManager.Uri</td>
             <td rowspan="2">wooi</td>
             <td class="stat" rowspan="2">HP: @(player?.CurrentHp ?? 0)</td>
         </tr>
@@ -179,8 +181,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Uri tileSheetUri = new Uri("http://localhost:5235/images/MapTiles/all_tiles.png"); // absolute for now, should be relative
-        Uri mapUri = new Uri("http://localhost:5235/map-data/map_0.txt");
+        Uri tileSheetUri = new Uri($"{navigationManager.Uri}images/MapTiles/all_tiles.png"); // absolute for now, should be relative
+        Uri mapUri = new Uri($"{navigationManager.Uri}map-data/map_0.txt");
         string mapString = await DownloadAsync(mapUri);
         map = new Map(mapString);
         List<char> playerAllowedTiles = new List<char> { 'g', 's', 'w' };
