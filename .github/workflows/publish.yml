@@ -21,6 +21,9 @@ jobs:
                   dotnet-version: 7.x
                   include-prerelease: false
 
+            - name: Install wasm-tools
+              run: dotnet workload install wasm-tools
+
             # Publishes Blazor project to the release-folder
             - name: Publish .NET Core Project
               run: dotnet publish NeaProject/NeaProject.csproj -c Release -o release --nologo
