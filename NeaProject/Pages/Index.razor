@@ -92,6 +92,16 @@
         →
     </button>
 </div>
+<div>
+    <button class="massive-invisible-button" @onclick="SaveDataAsync">
+        Save
+    </button>
+</div>
+<div>
+    <button class="massive-invisible-button" @onclick="ClearDataAsync">
+        Delete Save Data
+    </button>
+</div>
 
 
 @code {
@@ -154,6 +164,18 @@
         currentCount++;
     }
 
+
+    private async Task SaveDataAsync()
+    {
+        await _localStorage.SetItemAsync("player", _player);
+    }
+
+    private async Task ClearDataAsync()
+    {
+        await _localStorage.RemoveItemAsync("player");
+    }
+
+    // Movement
     private void MoveUp()
     { 
         if (_player == null || _player.IsDead() || _player.HasWon() || _map == null)
@@ -247,7 +269,6 @@
                     Name = "Mellie",
                     AllowedTiles = new List<char> { 'g', 's', 'w' }
                 };
-            await _localStorage.SetItemAsync("player", _player);
         }
         ImageLoader imageLoader = new ImageLoader();
         SKBitmap mapTileSheet = await ImageLoader.GetBitmapAsync(tileSheetUri);
