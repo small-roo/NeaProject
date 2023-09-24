@@ -5,16 +5,11 @@
         public int CurrentHp { get; set; }
         public int XPos { get; set; }
         public int YPos { get; set; }
-        protected readonly Map _map;
-        public List<string> Inventory = new();
-        private List<char> _allowedTiles = new();
+        public required string Name { get; set; }
+        public List<char> AllowedTiles { get; set; } = new List<char>();
+        public List<string> Inventory { get; set; } = new List<string>();
 
-        protected Character(Map map, List<char> allowedTiles)
-        {
-            _map = map;
-            _allowedTiles = allowedTiles;
-        }
-        public void Move(int moveX, int moveY)
+        public void Move(Map _map, int moveX, int moveY)
         {
             if (XPos + moveX <= -1 || XPos + moveX >= _map.Width || YPos + moveY <= -1 || YPos + moveY >= _map.Height)
             {
@@ -24,7 +19,7 @@
 
             char nextTile = _map.GetTileChar(YPos + moveY, XPos + moveX);
             char nextOverlayTile = _map.GetOverlayTileChar(YPos + moveY, XPos + moveX);
-            if (!_allowedTiles.Contains(nextTile))
+            if (!AllowedTiles.Contains(nextTile))
             {
                 return;
             }

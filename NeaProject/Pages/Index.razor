@@ -1,12 +1,14 @@
 ﻿@page "/"
 @using System.Runtime.CompilerServices
+@using Blazored.LocalStorage;
 @using NeaProject.Engine
 @using SkiaSharp;
 @using SkiaSharp.Views.Blazor;
 @using NeaProject.Classes;
 @using System.Drawing;
 
-@inject NavigationManager navigationManager;
+@inject NavigationManager _navigationManager;
+@inject ILocalStorageService _localStorage;
 
 <div style="background-color:#955">
                 <SKCanvasView 
@@ -17,11 +19,11 @@
 </div>
 
 <div style="background-color:#559">
-    @if (player?.IsDead() == true)
+    @if (_player?.IsDead() == true)
     {
         <h1>YOU LOSE!!</h1>
     }
-    else if (player?.HasWon() == true)
+    else if (_player?.HasWon() == true)
     {
         <h1>YOU WIN!!</h1>
     }
@@ -31,9 +33,9 @@
             <tr>
                 <td style="width:16%;" rowspan="2">wooa</td>
                 <td rowspan="2">
-                    @if (player != null)
+                    @if (_player != null)
                     {
-                        foreach (string? item in player.Inventory)
+                        foreach (string? item in _player.Inventory)
                         {
                             <p>@item</p>
                         }
@@ -47,10 +49,10 @@
             <td class ="stat">woof</td>
         </tr>
         <tr>
-            <td rowspan="4"><img src="@($"{navigationManager.Uri}images/player1.png")" style="width:100%" /></td>
-            <td>@navigationManager.Uri</td>
-            <td rowspan="2">wooi</td>
-            <td class="stat" rowspan="2">HP: @(player?.CurrentHp ?? 0)</td>
+            <td rowspan="4"><img src="@($"{_navigationManager.Uri}images/player1.png")" style="width:100%" /></td>
+            <td>@_navigationManager.Uri</td>
+            <td rowspan="2">@_player?.Name</td>
+            <td class="stat" rowspan="2">HP: @(_player?.CurrentHp ?? 0)</td>
         </tr>
         <tr>
             <td>wook</td>
@@ -77,8 +79,17 @@
 </div>
 
 <div class="d-lg-none">
-    <button>
-        up
+    <button @onclick="MoveUp">
+        ↑
+    </button>
+    <button @onclick="MoveLeft">
+        ←
+    </button>
+    <button @onclick="MoveDown">
+        ↓
+    </button>
+    <button @onclick="MoveRight">
+        →
     </button>
 </div>
 
@@ -125,13 +136,14 @@
 ..........eeeeekkkeeee..........
 ..........eeeekkkkkeee..........";
 
-    private Map? map;
-    private Player? player;
+    private Map? _map;
+    private Player? _player;
     private Dictionary<char, Sprite?>? _sprites;
     private FpsCounter? _fpsCounter;
     private Renderer? _renderer;
     private SKBitmap? _bitmap;
     private List<Npc> _npcs = new();
+    private string _playerName = "";
 
     private int currentCount = 0;
     private string? lastPressed;
@@ -142,12 +154,42 @@
         currentCount++;
     }
 
+    private void MoveUp()
+    { 
+        if (_player == null || _player.IsDead() || _player.HasWon() || _map == null)
+        {
+            return;
+        }
+        _player.Move(_map, 0, -1); 
+    }
+    private void MoveRight()
+    { 
+        if (_player == null || _player.IsDead() || _player.HasWon() || _map == null)
+        {
+            return;
+        }
+        _player.Move(_map, 1, 0);
+    }
+    private void MoveDown()
+    {
+        if (_player == null || _player.IsDead() || _player.HasWon() || _map == null)
+        {
+            return;
+        }
+        _player.Move(_map, 0, 1);
+    }
+    private void MoveLeft()
+    {
+        if (_player == null || _player.IsDead() || _player.HasWon() || _map == null)
+        {
+            return;
+        }
+        _player.Move(_map, -1, 0);
+    }
+
     private void KeyDown(KeyboardEventArgs keyEvent)
     {
-        if (player == null || player.IsDead() || player.HasWon())
-        {
-            return; 
-        }
+        
         var pressedKey = keyEvent.Key;
         lastPressed = pressedKey;
         pressedKey = pressedKey.ToLower();
@@ -156,25 +198,25 @@
             case "arrowup":
             case "w":
                 {
-                    player.Move(0, -1);
+                    MoveUp();
                     break;
                 }
             case "arrowdown":
             case "s":
                 {
-                    player.Move(0, 1);
+                    MoveDown();
                     break;
                 }
             case "arrowleft":
             case "a":
                 {
-                    player.Move(-1, 0);
+                    MoveLeft();
                     break;
                 }
             case "arrowright":
             case "d":
                 {
-                    player.Move(1, 0);
+                    MoveRight();
                     break;
                 }
             default:
@@ -187,12 +229,26 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Uri tileSheetUri = new Uri($"{navigationManager.Uri}images/MapTiles/all_tiles.png"); // absolute for now, should be relative
-        Uri mapUri = new Uri($"{navigationManager.Uri}map-data/map_0.txt");
+        Uri tileSheetUri = new Uri($"{_navigationManager.Uri}images/MapTiles/all_tiles.png"); // absolute for now, should be relative
+        Uri mapUri = new Uri($"{_navigationManager.Uri}map-data/map_0.txt");
         string mapString = await DownloadAsync(mapUri);
-        map = new Map(mapString);
-        List<char> playerAllowedTiles = new List<char> { 'g', 's', 'w' };
-        player = new Player(map, playerAllowedTiles);
+        _map = new Map(mapString);
+        if (await _localStorage.ContainKeyAsync("player"))
+        {
+            _player = await _localStorage.GetItemAsync<Player>("player");
+        }
+        else
+        {
+            _player = new Player
+                {
+                    CurrentHp = 100,
+                    XPos = _map.Width / 2,
+                    YPos = _map.Height / 2,
+                    Name = "Mellie",
+                    AllowedTiles = new List<char> { 'g', 's', 'w' }
+                };
+            await _localStorage.SetItemAsync("player", _player);
+        }
         ImageLoader imageLoader = new ImageLoader();
         SKBitmap mapTileSheet = await ImageLoader.GetBitmapAsync(tileSheetUri);
         _sprites = new Dictionary<char, Sprite?>()
@@ -207,7 +263,7 @@
         };
 
         _fpsCounter = new FpsCounter();
-        _renderer = new Renderer(map, player, _sprites, ViewportWidth, ViewportHeight);
+        _renderer = new Renderer(_map, _player, _sprites, ViewportWidth, ViewportHeight);
         _bitmap = new SKBitmap(ViewportWidth, ViewportHeight);
     }
 
