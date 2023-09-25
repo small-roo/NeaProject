@@ -38,6 +38,14 @@
                 Inventory.Add("Flower Bundle");
                 _map.SetOverlayTileChar(XPos, YPos, '.');
             }
+            else if (nextOverlayTile == 'f' && Inventory.Count(i => i == "Flower Bundle") == 4)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    Inventory.Remove("Flower Bundle");
+                }
+                Inventory.Add("Heartfelt Gift");
+            }
             else
             {
                 CurrentHp--;

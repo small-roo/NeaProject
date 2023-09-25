@@ -4,7 +4,7 @@
     {
         public bool HasWon()
         {
-            return Inventory.Count(i => i == "Flower Bundle") == 4;
+            return Inventory.Contains("Heartfelt Gift");
         }
     }
 }

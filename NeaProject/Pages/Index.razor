@@ -180,7 +180,7 @@
 
     private void KeyDown(KeyboardEventArgs keyEvent)
     {
-        
+
         var pressedKey = keyEvent.Key;
         lastPressed = pressedKey;
         pressedKey = pressedKey.ToLower();
@@ -220,8 +220,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Uri tileSheetUri = new Uri($"{_navigationManager.Uri}images/MapTiles/all_tiles.png"); // absolute for now, should be relative
-        Uri mapUri = new Uri($"{_navigationManager.Uri}map-data/map_0.txt");
+        Uri tileSheetUri = new Uri($"{_navigationManager.Uri}images/MapTiles/all_tiles.png?_={DateTime.Now}");
+        Uri mapUri = new Uri($"{_navigationManager.Uri}map-data/map_0.txt?_={DateTime.Now}");
         string mapString = await DownloadAsync(mapUri);
         _map = new Map(mapString);
         if (await _localStorage.ContainKeyAsync("player"))
@@ -245,6 +245,7 @@
         {
             { '.', null},
             { 'd', new Sprite(mapTileSheet, "Diamond", 1)},
+            { 'f', new Sprite(mapTileSheet, "FinalBoss", 4)},
             { 'g', new Sprite(mapTileSheet, "Grass", 1)},
             { 'p', new Sprite(mapTileSheet, "Player", 4)},
             { 'r', new Sprite(mapTileSheet, "Rock", 1)},
@@ -271,7 +272,7 @@
         {
             return;
         }
-        // Their is a good article on the different ways to update pixel data here:
+        // There is a good article on the different ways to update pixel data here:
         //  https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/bitmaps/pixel-bits
         // Having tried them all maintaining and then setting the pixel byte array is the most performant for us.
         

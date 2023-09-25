@@ -33,6 +33,12 @@ namespace NeaProject.Classes
         {
             switch (name)
             {
+                case "FinalBoss":
+                    {
+                        xOffset = 0;
+                        yOffset = 17;
+                        break;
+                    }
                 case "Grass":
                     {
                         xOffset = 0;
