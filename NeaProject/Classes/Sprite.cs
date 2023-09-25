@@ -5,14 +5,32 @@ namespace NeaProject.Classes
 {
     public class Sprite
     {
-        private readonly uint[,] _colour = new uint[32, 32];
+        private readonly uint[,,] _colour;
         public string Name;
         public const int tileSize = 32;
 
-        public Sprite(SKBitmap bitmap, string name) 
+        public Sprite(SKBitmap bitmap, string name, int numOfFrames)
         {
-            int yOffset;
-            int xOffset;
+            GetTileOffset(name, out int yOffset, out int xOffset);
+            _colour = new uint[32, 32, numOfFrames];
+
+            for (int frameIndex = 0; frameIndex < numOfFrames; frameIndex++)
+            {
+                for (int y = 0; y < 32; y++)
+                {
+                    for (int x = 0; x < 32; x++)
+                    {
+                        uint tileColour = MakePixel(bitmap.GetPixel(x + xOffset, y + yOffset));
+                        _colour[x, y, frameIndex] = tileColour;
+                    }
+                }
+                xOffset += tileSize;
+            }
+            Name = name;
+        }
+
+        private static void GetTileOffset(string name, out int yOffset, out int xOffset)
+        {
             switch (name)
             {
                 case "Grass":
@@ -23,51 +41,49 @@ namespace NeaProject.Classes
                     }
                 case "Diamond":
                     {
-                        xOffset = 23 * tileSize;
-                        yOffset = 10 * tileSize;
+                        xOffset = 23;
+                        yOffset = 10;
                         break;
                     }
-                case "Sand":
+                case "Player":
                     {
-                        xOffset = 14 * tileSize;
-                        yOffset = 4 * tileSize;
+                        xOffset = 0;
+                        yOffset = 16;
                         break;
                     }
                 case "Rock":
                     {
-                        xOffset = 28 * tileSize;
-                        yOffset = 15 * tileSize;
+                        xOffset = 28;
+                        yOffset = 15;
+                        break;
+                    }
+                case "Sand":
+                    {
+                        xOffset = 14;
+                        yOffset = 4;
                         break;
                     }
                 case "Water":
                     {
-                        xOffset = 4 * tileSize;
-                        yOffset = 4 * tileSize;
+                        xOffset = 4;
+                        yOffset = 4;
                         break;
                     }
                 default:
                     {
-                        xOffset = 4 * tileSize;
-                        yOffset = 13 * tileSize;
+                        xOffset = 4;
+                        yOffset = 13;
                         break;
                     }
-            
-            }
 
-            for (int y = 0; y < 32; y++)
-            {
-                for (int x = 0; x < 32; x++)
-                {
-                    uint tileColour = MakePixel(bitmap.GetPixel(x + xOffset, y + yOffset));
-                    _colour[x, y] = tileColour;
-                }
             }
-            Name = name;
+            xOffset *= tileSize;
+            yOffset *= tileSize;
         }
 
         public Sprite(string textSprite, string name) 
         {
-            _colour = new uint[32, 32];
+            _colour = new uint[32, 32, 1];
             string[] spriteRows = textSprite.Split('\n').Skip(1).ToArray();
             int xIndex = 0;
             int yIndex = 0;
@@ -76,7 +92,7 @@ namespace NeaProject.Classes
                 string trimmedRow = row.Trim();
                 foreach (char pixelChar in trimmedRow)
                 {
-                    _colour[xIndex, yIndex] = pixelChar switch
+                    _colour[xIndex, yIndex, 0] = pixelChar switch
                     {
                         '.' => MakePixel(Color.Transparent),
                         'b' => MakePixel(Color.DarkSlateBlue),
@@ -104,20 +120,21 @@ namespace NeaProject.Classes
 
         public Sprite(Color colour, string name)
         {
+            _colour = new uint[32, 32, 1];
             uint tileColour = MakePixel(colour);
-            for (int i = 0; i < 32; i++)
+            for (int y = 0; y < 32; y++)
             {
-                for (int j = 0; j < 32; j++)
+                for (int x = 0; x < 32; x++)
                 {
-                    _colour[j, i] = tileColour;
+                    _colour[x, y, 0] = tileColour;
                 }
             }
             Name = name;
         }
 
-        public uint GetColourAt(int x, int y) 
+        public uint GetColourAt(int x, int y, int frameIndex) 
         {
-            return _colour[x,y];
+            return _colour[x,y,frameIndex];
         }
 
         private static uint MakePixel(Color colour)

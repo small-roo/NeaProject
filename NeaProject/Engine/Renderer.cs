@@ -36,7 +36,7 @@ public class Renderer
 
     private void DrawPlayer()
     {
-        DrawSprite(_player.YPos, _player.XPos, _sprites['p']);
+        DrawSprite(_player.YPos, _player.XPos, _sprites['p'], _player.FrameIndex);
     }
 
     private void DrawMap()
@@ -48,15 +48,15 @@ public class Renderer
                 // determine sprite of tile
                 char mapChar = _map.GetTileChar(tileRow, tileCol);
                 Sprite? sprite = _sprites[mapChar];
-                DrawSprite(tileRow, tileCol, sprite);
+                DrawSprite(tileRow, tileCol, sprite, 0);
                 mapChar = _map.GetOverlayTileChar(tileRow, tileCol);
                 sprite = _sprites[mapChar];
-                DrawSprite(tileRow, tileCol, sprite);
+                DrawSprite(tileRow, tileCol, sprite, 0);
             }
         }
     }
 
-    private void DrawSprite(int tileRow, int tileCol, Sprite? sprite)
+    private void DrawSprite(int tileRow, int tileCol, Sprite? sprite, int frameIndex)
     {
         if (sprite == null)
         {
@@ -71,7 +71,7 @@ public class Renderer
         {
             for (int pixelCol = 0; pixelCol < tileWidth; pixelCol++)
             {
-                uint pixelColour = sprite.GetColourAt(pixelCol, pixelRow);
+                uint pixelColour = sprite.GetColourAt(pixelCol, pixelRow, frameIndex);
                 if (pixelColour >> 24 != 0x00) // if not transparent, then draw pixel (checks the alpha channel)
                 {
                     _buffer[pixelRow + yOffset, pixelCol + xOffset] = pixelColour;

@@ -5,6 +5,7 @@
         public int CurrentHp { get; set; }
         public int XPos { get; set; }
         public int YPos { get; set; }
+        public int FrameIndex { get; set; }
         public required string Name { get; set; }
         public List<char> AllowedTiles { get; set; } = new List<char>();
         public List<string> Inventory { get; set; } = new List<string>();
