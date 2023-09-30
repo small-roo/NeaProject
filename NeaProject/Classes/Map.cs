@@ -4,16 +4,18 @@ namespace NeaProject.Classes
 {
     public class Map
     {
-        public int Height = 10;
-        public int Width = 20;
+        public int Height;
+        public int Width;
         private readonly char[,] charMap;
         private readonly char[,] overlayCharMap;
 
         public Map(string stringMap) 
         {
-            charMap = new char[Height, Width];
-            overlayCharMap = new char[Height, Width];
             string[] mapRows = stringMap.Split('\n');
+            Width = mapRows[0].Length/2; //don't need to subtract 1 because will always be even, and using integer division
+            Height = mapRows.Length;
+            charMap = new char[Height, Width];
+            overlayCharMap = new char[Height, Width]; 
             int rowIndex = 0;
             foreach (string row in mapRows) 
             {

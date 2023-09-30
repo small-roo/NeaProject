@@ -109,10 +109,6 @@
     // interop-ing more than it seems, another copy of the byte array for the surface would cause about the level of
     // slowdown I saw. But 2D canvas is fine - after all, just a 2D game.
 
-    const int ViewportZoom = 1;
-    const int ViewportWidth = 640 * ViewportZoom;
-    const int ViewportHeight = 320 * ViewportZoom;
-
     private Map? _map;
     private Player? _player;
     private Dictionary<char, Sprite?>? _sprites;
@@ -143,39 +139,43 @@
     // Movement
     private void MoveUp()
     { 
-        if (_player == null || _player.IsDead() || _player.HasWon() || _map == null)
+        if (_player == null || _player.IsDead() || _player.HasWon() || _map == null || _renderer == null)
         {
             return;
         }
         _player.FrameIndex = 3;
-        _player.Move(_map, 0, -1); 
+        _player.Move(_map, 0, -1);
+        _renderer.MoveCamera();
     }
     private void MoveRight()
     { 
-        if (_player == null || _player.IsDead() || _player.HasWon() || _map == null)
+        if (_player == null || _player.IsDead() || _player.HasWon() || _map == null || _renderer == null)
         {
             return;
         }
         _player.FrameIndex = 1;
         _player.Move(_map, 1, 0);
+        _renderer.MoveCamera();
     }
     private void MoveDown()
     {
-        if (_player == null || _player.IsDead() || _player.HasWon() || _map == null)
+        if (_player == null || _player.IsDead() || _player.HasWon() || _map == null || _renderer == null)
         {
             return;
         }
         _player.FrameIndex = 0;
         _player.Move(_map, 0, 1);
+        _renderer.MoveCamera();
     }
     private void MoveLeft()
     {
-        if (_player == null || _player.IsDead() || _player.HasWon() || _map == null)
+        if (_player == null || _player.IsDead() || _player.HasWon() || _map == null || _renderer == null)
         {
             return;
         }
         _player.FrameIndex = 2;
         _player.Move(_map, -1, 0);
+        _renderer.MoveCamera();
     }
 
     private void KeyDown(KeyboardEventArgs keyEvent)
@@ -233,8 +233,10 @@
             _player = new Player
                 {
                     CurrentHp = 100,
-                    XPos = _map.Width / 2,
-                    YPos = _map.Height / 2,
+                    // XPos = _map.Width / 2,
+                    // YPos = _map.Height / 2,
+                    XPos = 5,
+                    YPos = 5,
                     Name = "Mellie",
                     AllowedTiles = new List<char> { 'g', 's', 'w' }
                 };
@@ -254,8 +256,8 @@
         };
 
         _fpsCounter = new FpsCounter();
-        _renderer = new Renderer(_map, _player, _sprites, ViewportWidth, ViewportHeight);
-        _bitmap = new SKBitmap(ViewportWidth, ViewportHeight);
+        _renderer = new Renderer(_map, _player, _sprites);
+        _bitmap = new SKBitmap(_renderer.ViewportWidth, _renderer.ViewportHeight);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -286,7 +288,7 @@
         
         var canvas = e.Surface.Canvas;
         canvas.Clear(SKColors.White);
-        canvas.DrawBitmap(_bitmap, new SKRect(0, 0, ViewportWidth*1, ViewportHeight*1));
+        canvas.DrawBitmap(_bitmap, new SKRect(0, 0, _renderer.ViewportWidth*1, _renderer.ViewportHeight*1));
         var fps = _fpsCounter.GetCurrentFps();
         using var paint = new SKPaint
         {

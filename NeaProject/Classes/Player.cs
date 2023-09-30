@@ -1,4 +1,6 @@
-﻿namespace NeaProject.Classes
+﻿using Microsoft.AspNetCore.Components.RenderTree;
+
+namespace NeaProject.Classes
 {
     public class Player : Character
     {
