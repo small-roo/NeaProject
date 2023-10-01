@@ -34,8 +34,8 @@
             }
             //character is moving to a tile it is allowed to move to
 
-            MoveRules(moveX, moveY, NextTile, NextOverlayTile, _map);
-            string? collidingNpcBehaviour = CollidingNpcBehaviour(NextOverlayTile);
+            MoveRules(moveX, moveY, _map);
+            string? collidingNpcBehaviour = CollidingNpcBehaviour();
             if (collidingNpcBehaviour != null) 
             {
                 if (collidingNpcBehaviour == "Passive" || collidingNpcBehaviour == "Neutral")
@@ -45,8 +45,8 @@
             }
         }
 
-        public abstract void MoveRules(int moveX, int moveY, char nextTile, char nextOverlayTile, Map _map);
-        public virtual string? CollidingNpcBehaviour(char nextOverlayTile) { return ""; }
+        public abstract void MoveRules(int moveX, int moveY, Map _map);
+        public virtual string? CollidingNpcBehaviour() { return ""; }
 
         public bool IsDead()
         {

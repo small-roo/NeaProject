@@ -39,7 +39,7 @@
                     { return ""; }
             }
         }
-        public override void MoveRules(int moveX, int moveY, char nextTile, char nextOverlayTile, Map _map)
+        public override void MoveRules(int moveX, int moveY, Map _map)
         {
             throw new NotImplementedException();
         }
