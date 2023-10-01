@@ -31,13 +31,54 @@
     {
         <table class="table-center">
             <tr>
-                <td style="width:16%;" rowspan="2">wooa</td>
+                <td style="width:16%;" rowspan="2">
+                    @if (_player != null)
+                    {
+                        if (_player.LookForDialogue == true)
+                        {
+                            switch (_player.NextOverlayTile)
+                            {
+                                case 'f':
+                                    {
+                                        if (_finalBoss != null)
+                                        {
+                                            <img src="@($"{_navigationManager.Uri}images/Sprites/Mellow-Neutral.png")" style="width:100%" />
+                                        }
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        <p>wooa</p>
+                                        break;
+                                    }
+                            }
+                        }
+                    } 
+                    </td>
                 <td rowspan="2">
                     @if (_player != null)
                     {
-                        foreach (string? item in _player.Inventory)
+                        if (_player.LookForDialogue == true)
                         {
-                            <p>@item</p>
+                            switch (_player.NextOverlayTile)
+                            {
+                                case 'f':
+                                    {
+                                        if (_finalBoss != null)
+                                        {
+                                            <p>@_finalBoss.Chat(_player)</p>
+                                        }
+                                        break;
+                                    }
+                                default: break;
+                            }
+                        }
+                        else
+                        {
+                            foreach (string? item in _player.Inventory)
+                            {
+                                <p>@item</p>
+                            }
                         }
                     }
                  </td>
@@ -52,7 +93,8 @@
             <td rowspan="4"><img src="@($"{_navigationManager.Uri}images/player1.png")" style="width:100%" /></td>
             <td>@_navigationManager.Uri</td>
             <td rowspan="2">@_player?.Name</td>
-            <td class="stat" rowspan="2">HP: @(_player?.CurrentHp ?? 0)</td>
+            <td class="stat" rowspan="2">HP: 
+                @(_player?.CurrentHp ?? 0)</td>
         </tr>
         <tr>
             <td>wook</td>
@@ -120,6 +162,10 @@
     private string? lastPressed;
     private ElementReference buttonRef;
 
+    // NPCs
+
+    private FinalBoss? _finalBoss;
+
     private void IncrementCount()
     {
         currentCount++;
@@ -143,6 +189,7 @@
         {
             return;
         }
+        _player.DirectionFacing = 'U';
         _player.FrameIndex = 3;
         _player.Move(_map, 0, -1);
         _renderer.MoveCamera();
@@ -153,6 +200,7 @@
         {
             return;
         }
+        _player.DirectionFacing = 'R';
         _player.FrameIndex = 1;
         _player.Move(_map, 1, 0);
         _renderer.MoveCamera();
@@ -163,6 +211,7 @@
         {
             return;
         }
+        _player.DirectionFacing = 'D';
         _player.FrameIndex = 0;
         _player.Move(_map, 0, 1);
         _renderer.MoveCamera();
@@ -173,6 +222,7 @@
         {
             return;
         }
+        _player.DirectionFacing = 'L';
         _player.FrameIndex = 2;
         _player.Move(_map, -1, 0);
         _renderer.MoveCamera();
@@ -254,6 +304,7 @@
             { 's', new Sprite(mapTileSheet, "Sand", 1)},
             { 'w', new Sprite(mapTileSheet, "Water", 1)}
         };
+        _finalBoss = new FinalBoss { Name = "Mellow" };
 
         _fpsCounter = new FpsCounter();
         _renderer = new Renderer(_map, _player, _sprites);

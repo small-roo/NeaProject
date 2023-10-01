@@ -5,8 +5,13 @@
         public int CurrentHp { get; set; }
         public int XPos { get; set; }
         public int YPos { get; set; }
+        public char NextTile { get; private set; } = '\0';
+        public char NextOverlayTile { get; private set; } = '\0';
+        public char DirectionFacing { get; set; }
         public int FrameIndex { get; set; }
         public required string Name { get; set; }
+        public bool LookForDialogue = false;
+        public bool LookForFight = false;
         public List<char> AllowedTiles { get; set; } = new List<char>();
         public List<string> Inventory { get; set; } = new List<string>();
 
@@ -18,39 +23,30 @@
             }
             //character is moving within the map
 
-            char nextTile = _map.GetTileChar(YPos + moveY, XPos + moveX);
-            char nextOverlayTile = _map.GetOverlayTileChar(YPos + moveY, XPos + moveX);
-            if (!AllowedTiles.Contains(nextTile))
+            LookForDialogue = false;
+            LookForFight = false;
+
+            NextTile = _map.GetTileChar(YPos + moveY, XPos + moveX);
+            NextOverlayTile = _map.GetOverlayTileChar(YPos + moveY, XPos + moveX);
+            if (!AllowedTiles.Contains(NextTile))
             {
                 return;
             }
             //character is moving to a tile it is allowed to move to
 
-            if (nextOverlayTile == '.')
+            MoveRules(moveX, moveY, NextTile, NextOverlayTile, _map);
+            string? collidingNpcBehaviour = CollidingNpcBehaviour(NextOverlayTile);
+            if (collidingNpcBehaviour != null) 
             {
-                XPos += moveX;
-                YPos += moveY;
-            }
-            else if (nextOverlayTile == 'd')
-            {
-                XPos += moveX;
-                YPos += moveY;
-                Inventory.Add("Flower Bundle");
-                _map.SetOverlayTileChar(XPos, YPos, '.');
-            }
-            else if (nextOverlayTile == 'f' && Inventory.Count(i => i == "Flower Bundle") >= 4)
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    Inventory.Remove("Flower Bundle");
-                }
-                Inventory.Add("Heartfelt Gift");
-            }
-            else
-            {
-                CurrentHp--;
+                if (collidingNpcBehaviour == "Passive" || collidingNpcBehaviour == "Neutral")
+                { LookForDialogue = true; }
+                if (collidingNpcBehaviour == "Hostile" || collidingNpcBehaviour == "Neutral")
+                { LookForFight = true; }
             }
         }
+
+        public abstract void MoveRules(int moveX, int moveY, char nextTile, char nextOverlayTile, Map _map);
+        public virtual string? CollidingNpcBehaviour(char nextOverlayTile) { return ""; }
 
         public bool IsDead()
         {
