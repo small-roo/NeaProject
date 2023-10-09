@@ -11,11 +11,16 @@
 @inject ILocalStorageService _localStorage;
 
 <div style="background-color:#955">
+    <button
+        @ref="buttonRef"
+        class="massive-invisible-button"
+        @onkeydown="KeyDown">
                 <SKCanvasView 
                     OnPaintSurface="OnPaintSurface" 
                     IgnorePixelScaling="true"
                     EnableRenderLoop="true" 
                     style="width:640px; height:320px; margin:auto; display:block"/>
+    </button>
 </div>
 
 <div style="background-color:#559">
@@ -111,15 +116,6 @@
     }
 </div>
 
-<div>
-    <button
-        @ref="buttonRef"
-        class="massive-invisible-button"
-        @onkeydown="KeyDown">
-        Pressed Key: @(lastPressed ?? "Nothing pressed yet")
-    </button>
-</div>
-
 <div class="d-lg-none">
     <button @onclick="MoveUp">
         ↑
@@ -175,11 +171,13 @@
     private async Task SaveDataAsync()
     {
         await _localStorage.SetItemAsync("player", _player);
+        await buttonRef.FocusAsync();
     }
 
     private async Task ClearDataAsync()
     {
         await _localStorage.RemoveItemAsync("player");
+        await buttonRef.FocusAsync();
     }
 
     // Movement
