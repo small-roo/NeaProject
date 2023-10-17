@@ -31,31 +31,28 @@
     {
         <h1>YOU WIN!!</h1>
     }
-    else
+    else if (_player != null && NavigationManager != null)
     {
         <table class="table-center">
             <tr>
                 <td style="width:16%;" rowspan="2">
-                    @if (_player != null && NavigationManager != null)
+                    @if (_player.LookForDialogue == true)
                     {
-                        if (_player.LookForDialogue == true)
+                        switch (_player.NextOverlayTile)
                         {
-                            switch (_player.NextOverlayTile)
-                            {
-                                case 'f':
+                            case 'F':
+                                {
+                                    if (_finalBoss != null)
                                     {
-                                        if (_finalBoss != null)
-                                        {
-                                            <img src="@($"{NavigationManager.Uri}images/Sprites/Mellow-Neutral.png")" style="width:100%" />
-                                        }
-                                        break;
+                                        <img src="@($"{NavigationManager.Uri}images/Sprites/Mellow-Neutral.png")" style="width:100%" />
                                     }
-                                default:
-                                    {
-                                        <p>wooa</p>
-                                        break;
-                                    }
-                            }
+                                    break;
+                                }
+                            default:
+                                {
+                                    <p>wooa</p>
+                                    break;
+                                }
                         }
                     } 
                     </td>
@@ -94,7 +91,7 @@
             <td class ="stat">woof</td>
         </tr>
         <tr>
-            <td rowspan="4"><img src="@($"{NavigationManager?.Uri}images/player1.png")" style="width:100%" /></td>
+                <td rowspan="4"><img src="@($"{NavigationManager.Uri}images/Sprites/Mellie-Neutral.png")" style="width:100%" /></td>
             <td>@NavigationManager?.Uri</td>
             <td rowspan="2">@_player?.Name</td>
             <td class="stat" rowspan="2">HP: 

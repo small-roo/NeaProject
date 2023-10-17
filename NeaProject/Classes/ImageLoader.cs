@@ -4,16 +4,19 @@ namespace NeaProject.Classes
 {
     public class ImageLoader
     {
-        public ImageLoader()
+        private readonly Uri _uri;
+
+        public ImageLoader(Uri uri)
         {
+            _uri = uri;
         }
-        public static async Task<SKBitmap> GetBitmapAsync(Uri uri)
+        public async Task<SKBitmap> GetBitmapAsync()
         {
             // create an http client
             using HttpClient client = new();
 
             // getting a response message for the uri
-            HttpResponseMessage response = await client.GetAsync(uri);
+            HttpResponseMessage response = await client.GetAsync(_uri);
 
             // makes sure the response message is one that allows the program to continue
             // throws an exception otherwise

@@ -10,6 +10,7 @@
         public char DirectionFacing { get; set; }
         public int FrameIndex { get; set; }
         public required string Name { get; set; }
+        public required char SpriteRef { get; set; }
         public bool LookForDialogue = false;
         public bool LookForFight = false;
         public List<char> AllowedTiles { get; set; } = new List<char>();

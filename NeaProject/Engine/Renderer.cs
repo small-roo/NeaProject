@@ -1,4 +1,5 @@
 using NeaProject.Classes;
+using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 
@@ -20,12 +21,14 @@ public class Renderer
     private readonly Map _map;
     private readonly Player _player;
     private readonly Dictionary<char, Sprite?> _sprites;
+    private readonly List<Npc> _npcs;
     private readonly uint[,] _buffer;
 
-    public Renderer(Map map, Player player, Dictionary<char, Sprite?> sprites)
+    public Renderer(Map map, Player player, List<Npc> npcs, Dictionary<char, Sprite?> sprites)
     {
         _map = map;
         _player = player;
+        _npcs = npcs;
         _sprites = sprites;
         _buffer = new uint[ViewportHeight, ViewportWidth];
     }
@@ -33,6 +36,7 @@ public class Renderer
     public uint[,] UpdateFrameBuffer()
     {
         DrawMap();
+        DrawNpcs();
         DrawPlayer();
 
         return _buffer;
@@ -64,6 +68,18 @@ public class Renderer
         DrawSprite(_player.YPos - DrawingStartTileY, _player.XPos - DrawingStartTileX, _sprites['p'], _player.FrameIndex);
     }
 
+    private void DrawNpcs()
+    { 
+        foreach (var npc in _npcs.Where(npc =>
+            npc.YPos >= DrawingStartTileY &&
+            npc.YPos < DrawingStartTileY + ViewportTileY &&
+            npc.XPos >= DrawingStartTileX &&
+            npc.XPos < DrawingStartTileX + ViewportTileX))
+        {
+            DrawSprite(npc.YPos - DrawingStartTileY, npc.XPos - DrawingStartTileX, _sprites[npc.SpriteRef], npc.FrameIndex);
+        }
+    }
+
     private void DrawMap()
     {
         for (int drawingTileY = 0; drawingTileY < ViewportTileY; drawingTileY++)
@@ -76,7 +92,19 @@ public class Renderer
                 DrawSprite(drawingTileY, drawingTileX, sprite, 0);
                 mapChar = _map.GetOverlayTileChar(DrawingStartTileY + drawingTileY, DrawingStartTileX + drawingTileX);
                 sprite = _sprites[mapChar];
-                DrawSprite(drawingTileY, drawingTileX, sprite, 0);
+                switch (mapChar)
+                {
+                    case 'B':
+                        {
+                            break;
+                        }
+                    default:
+                        { 
+                            DrawSprite(drawingTileY, drawingTileX, sprite, 0);
+                            break; 
+                        }
+                }
+                
             }
         }
     }

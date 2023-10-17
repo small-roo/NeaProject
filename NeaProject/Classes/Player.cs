@@ -25,7 +25,7 @@ namespace NeaProject.Classes
                 Inventory.Add("Flower Bundle");
                 _map.SetOverlayTileChar(XPos, YPos, '.');
             }
-            else if (NextOverlayTile == 'f')
+            else if (NextOverlayTile == 'F')
             {
                 if (Inventory.Count(i => i == "Flower Bundle") >= 4)
                 {
@@ -46,7 +46,7 @@ namespace NeaProject.Classes
         {
             switch (NextOverlayTile) // could be Neutral (will have dialogue and might fight you) Hostile (will fight you) or Passive (has dialogue)
             {
-                case 'f':
+                case 'F':
                     { return "Neutral"; }
                 default: return null;
             }

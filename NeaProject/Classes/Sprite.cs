@@ -75,6 +75,12 @@ namespace NeaProject.Classes
                         yOffset = 4;
                         break;
                     }
+                case "Bird":
+                    {
+                        xOffset = 0;
+                        yOffset = 18;
+                        break;
+                    }
                 default:
                     {
                         xOffset = 4;

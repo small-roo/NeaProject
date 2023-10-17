@@ -162,27 +162,54 @@ namespace NeaProject.Pages
                     XPos = 5,
                     YPos = 5,
                     Name = "Mellie",
+                    SpriteRef = 'p',
                     AllowedTiles = new List<char> { 'g', 's', 'w' }
                 };
             }
-            ImageLoader imageLoader = new();
-            SKBitmap mapTileSheet = await ImageLoader.GetBitmapAsync(tileSheetUri);
+            ImageLoader imageLoader = new(tileSheetUri);
+            SKBitmap mapTileSheet = await imageLoader.GetBitmapAsync();
             _sprites = new Dictionary<char, Sprite?>()
-        {
-            { '.', null},
-            { 'd', new Sprite(mapTileSheet, "Diamond", 1)},
-            { 'f', new Sprite(mapTileSheet, "FinalBoss", 4)},
-            { 'g', new Sprite(mapTileSheet, "Grass", 1)},
-            { 'p', new Sprite(mapTileSheet, "Player", 4)},
-            { 'r', new Sprite(mapTileSheet, "Rock", 1)},
-            { 's', new Sprite(mapTileSheet, "Sand", 1)},
-            { 'w', new Sprite(mapTileSheet, "Water", 1)}
-        };
-            _finalBoss = new FinalBoss { Name = "Mellow" };
+            {
+                { '.', null},
+                { 'd', new Sprite(mapTileSheet, "Diamond", 1)}, //currently unused
+                { 'F', new Sprite(mapTileSheet, "FinalBoss", 4)},
+                { 'g', new Sprite(mapTileSheet, "Grass", 1)},
+                { 'p', new Sprite(mapTileSheet, "Player", 4)},
+                { 'r', new Sprite(mapTileSheet, "Rock", 1)},
+                { 's', new Sprite(mapTileSheet, "Sand", 1)},
+                { 'w', new Sprite(mapTileSheet, "Water", 1)},
+                { 'B', new Sprite(mapTileSheet, "Bird", 2)} //capital describes an NPC
+            };
+            _finalBoss = new FinalBoss { Name = "Mellow", SpriteRef = 'F' };
+            SetUpNpcs(_map);
 
             _fpsCounter = new FpsCounter();
-            _renderer = new Renderer(_map, _player, _sprites);
+            _renderer = new Renderer(_map, _player, _npcs, _sprites);
             _bitmap = new SKBitmap(_renderer.ViewportWidth, _renderer.ViewportHeight);
+        }
+
+        private void SetUpNpcs(Map map)
+        {
+            _npcs.Clear();
+            Random random = new();
+            for (int birdNumber = 1; birdNumber <= 20; birdNumber++)
+            {
+                BirdEnemy bird = new()
+                {
+                    Name = $"bird{birdNumber}",
+                    SpriteRef = 'B',
+                    XPos = random.Next(0, map.Width),
+                    YPos = random.Next(0, map.Height),
+                    FrameIndex = random.Next(0, 2),
+                };
+                while (map.GetOverlayTileChar(bird.YPos, bird.XPos) != '.')
+                {
+                    bird.XPos = random.Next(0, map.Width);
+                    bird.YPos = random.Next(0, map.Height);
+                }
+                map.SetOverlayTileChar(bird.XPos, bird.YPos, 'B');
+                _npcs.Add(bird);
+            }
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
