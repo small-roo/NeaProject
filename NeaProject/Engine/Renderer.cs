@@ -1,5 +1,6 @@
 using NeaProject.Classes;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 
@@ -22,6 +23,7 @@ public class Renderer
     private readonly Player _player;
     private readonly Dictionary<char, Sprite?> _sprites;
     private readonly List<Npc> _npcs;
+    private readonly Stopwatch _stopwatch;
     private readonly uint[,] _buffer;
 
     public Renderer(Map map, Player player, List<Npc> npcs, Dictionary<char, Sprite?> sprites)
@@ -30,15 +32,23 @@ public class Renderer
         _player = player;
         _npcs = npcs;
         _sprites = sprites;
+        _stopwatch = Stopwatch.StartNew();
         _buffer = new uint[ViewportHeight, ViewportWidth];
     }
 
     public uint[,] UpdateFrameBuffer()
     {
-        DrawMap();
-        DrawNpcs();
-        DrawPlayer();
+        bool isAnimationFrame = false;
+        if (_stopwatch.ElapsedMilliseconds > 100)
+        {
+            _stopwatch.Restart();
+            isAnimationFrame = true;
+        }
 
+        DrawMap();
+        DrawNpcs(isAnimationFrame);
+        DrawPlayer(isAnimationFrame);
+        
         return _buffer;
     }
 
@@ -63,12 +73,16 @@ public class Renderer
         }
     }
 
-    private void DrawPlayer()
+    private void DrawPlayer(bool isAnimationFrame)
     {
+        if (isAnimationFrame)
+        {
+            _player.Animate();
+        }
         DrawSprite(_player.YPos - DrawingStartTileY, _player.XPos - DrawingStartTileX, _sprites['p'], _player.FrameIndex);
     }
 
-    private void DrawNpcs()
+    private void DrawNpcs(bool isAnimationFrame)
     { 
         foreach (var npc in _npcs.Where(npc =>
             npc.YPos >= DrawingStartTileY &&
@@ -76,6 +90,10 @@ public class Renderer
             npc.XPos >= DrawingStartTileX &&
             npc.XPos < DrawingStartTileX + ViewportTileX))
         {
+            if (isAnimationFrame)
+            {
+                npc.Animate();
+            }
             DrawSprite(npc.YPos - DrawingStartTileY, npc.XPos - DrawingStartTileX, _sprites[npc.SpriteRef], npc.FrameIndex);
         }
     }
@@ -95,6 +113,7 @@ public class Renderer
                 switch (mapChar)
                 {
                     case 'B':
+                    case '.':
                         {
                             break;
                         }

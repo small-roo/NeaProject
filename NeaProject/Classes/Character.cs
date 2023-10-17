@@ -46,6 +46,7 @@
             }
         }
 
+        public virtual void Animate() { }
         public abstract void MoveRules(int moveX, int moveY, Map _map);
         public virtual string? CollidingNpcBehaviour() { return ""; }
 
