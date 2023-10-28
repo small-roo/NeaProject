@@ -11,8 +11,6 @@ public class Renderer
     const int tileWidth = Sprite.tileSize;
     const int tileHeight = Sprite.tileSize;
 
-    public int DrawingStartTileX = 1;
-    public int DrawingStartTileY = 1;
     public int ViewportHeight = 320;
     public int ViewportWidth = 640;
     public int ViewportTileX = 20;
@@ -26,17 +24,17 @@ public class Renderer
     private readonly Stopwatch _stopwatch;
     private readonly uint[,] _buffer;
 
-    public Renderer(Map map, Player player, List<Npc> npcs, Dictionary<char, Sprite?> sprites)
+    public Renderer(Game game, Dictionary<char, Sprite?> sprites)
     {
-        _map = map;
-        _player = player;
-        _npcs = npcs;
+        _map = game.Map;
+        _player = game.Player;
+        _npcs = game.Npcs;
         _sprites = sprites;
         _stopwatch = Stopwatch.StartNew();
         _buffer = new uint[ViewportHeight, ViewportWidth];
     }
 
-    public uint[,] UpdateFrameBuffer()
+    public uint[,] UpdateFrameBuffer(Camera camera)
     {
         bool isAnimationFrame = false;
         if (_stopwatch.ElapsedMilliseconds > 100)
@@ -45,70 +43,70 @@ public class Renderer
             isAnimationFrame = true;
         }
 
-        DrawMap();
-        DrawNpcs(isAnimationFrame);
-        DrawPlayer(isAnimationFrame);
+        DrawMap(camera);
+        DrawNpcs(isAnimationFrame, camera);
+        DrawPlayer(isAnimationFrame, camera);
         
         return _buffer;
     }
 
-    public void MoveCamera()
+    public void MoveCamera(Camera camera)
     {
-        if (_player.XPos - DrawingStartTileX < ViewportEdgeBuffer)
+        if (_player.XPos - camera.DrawingStartTileX < ViewportEdgeBuffer)
         {
-            DrawingStartTileX--;
+            camera.DrawingStartTileX--;
         }
-        else if (_player.XPos - DrawingStartTileX >= ViewportTileX - ViewportEdgeBuffer)
+        else if (_player.XPos - camera.DrawingStartTileX >= ViewportTileX - ViewportEdgeBuffer)
         { 
-            DrawingStartTileX++;
+            camera.DrawingStartTileX++;
         }
 
-        if (_player.YPos - DrawingStartTileY < ViewportEdgeBuffer)
+        if (_player.YPos - camera.DrawingStartTileY < ViewportEdgeBuffer)
         {
-            DrawingStartTileY--;
+            camera.DrawingStartTileY--;
         }
-        else if (_player.YPos - DrawingStartTileY >= ViewportTileY - ViewportEdgeBuffer)
+        else if (_player.YPos - camera.DrawingStartTileY >= ViewportTileY - ViewportEdgeBuffer)
         {
-            DrawingStartTileY++;
+            camera.DrawingStartTileY++;
         }
     }
 
-    private void DrawPlayer(bool isAnimationFrame)
+    private void DrawPlayer(bool isAnimationFrame, Camera camera)
     {
         if (isAnimationFrame)
         {
             _player.Animate();
         }
-        DrawSprite(_player.YPos - DrawingStartTileY, _player.XPos - DrawingStartTileX, _sprites['p'], _player.FrameIndex);
+        DrawSprite(_player.YPos - camera.DrawingStartTileY, _player.XPos - camera.DrawingStartTileX, _sprites['p'], _player.FrameIndex);
     }
 
-    private void DrawNpcs(bool isAnimationFrame)
+    private void DrawNpcs(bool isAnimationFrame, Camera camera)
     { 
         foreach (var npc in _npcs.Where(npc =>
-            npc.YPos >= DrawingStartTileY &&
-            npc.YPos < DrawingStartTileY + ViewportTileY &&
-            npc.XPos >= DrawingStartTileX &&
-            npc.XPos < DrawingStartTileX + ViewportTileX))
+            npc.YPos >= camera.DrawingStartTileY &&
+            npc.YPos < camera.DrawingStartTileY + ViewportTileY &&
+            npc.XPos >= camera.DrawingStartTileX &&
+            npc.XPos < camera.DrawingStartTileX + ViewportTileX))
         {
             if (isAnimationFrame)
             {
                 npc.Animate();
             }
-            DrawSprite(npc.YPos - DrawingStartTileY, npc.XPos - DrawingStartTileX, _sprites[npc.SpriteRef], npc.FrameIndex);
+            DrawSprite(npc.YPos - camera.DrawingStartTileY, npc.XPos - camera.DrawingStartTileX, _sprites[npc.SpriteRef], npc.FrameIndex);
         }
     }
 
-    private void DrawMap()
+    private void DrawMap(Camera camera)
     {
         for (int drawingTileY = 0; drawingTileY < ViewportTileY; drawingTileY++)
         {
             for (int drawingTileX = 0; drawingTileX < ViewportTileX; drawingTileX++)
             {
                 // determine sprite of tile
-                char mapChar = _map.GetTileChar(DrawingStartTileY + drawingTileY, DrawingStartTileX + drawingTileX);
+                char mapChar = _map.GetTileChar(camera.DrawingStartTileY + drawingTileY, camera.DrawingStartTileX + drawingTileX);
                 Sprite? sprite = _sprites[mapChar];
                 DrawSprite(drawingTileY, drawingTileX, sprite, 0);
-                mapChar = _map.GetOverlayTileChar(DrawingStartTileY + drawingTileY, DrawingStartTileX + drawingTileX);
+                mapChar = _map.GetOverlayTileChar(camera.DrawingStartTileY + drawingTileY, camera.DrawingStartTileX + drawingTileX);
                 sprite = _sprites[mapChar];
                 switch (mapChar)
                 {

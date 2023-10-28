@@ -2,7 +2,7 @@
 {
     public class FinalBoss : Npc
     {
-        private int SpokenToCount = 0;
+        public int SpokenToCount { get; set; } = 0;
         public override string Chat(Player player)
         {
             int flowerCount = player.Inventory.Count(i => i == "Flower Bundle");

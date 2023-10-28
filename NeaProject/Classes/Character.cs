@@ -5,14 +5,14 @@
         public int CurrentHp { get; set; }
         public int XPos { get; set; }
         public int YPos { get; set; }
-        public char NextTile { get; private set; } = '\0';
-        public char NextOverlayTile { get; private set; } = '\0';
+        public char NextTile { get; private set; }
+        public char NextOverlayTile { get; private set; }
         public char DirectionFacing { get; set; }
         public int FrameIndex { get; set; }
         public required string Name { get; set; }
         public required char SpriteRef { get; set; }
-        public bool LookForDialogue = false;
-        public bool LookForFight = false;
+        public bool LookForDialogue { get; set; } = false;
+        public bool LookForFight { get; set; } = false;
         public List<char> AllowedTiles { get; set; } = new List<char>();
         public List<string> Inventory { get; set; } = new List<string>();
 

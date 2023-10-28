@@ -17,20 +17,15 @@ namespace NeaProject.Pages
         // interop-ing more than it seems, another copy of the byte array for the surface would cause about the level of
         // slowdown I saw. But 2D canvas is fine - after all, just a 2D game.
 
-        private Map? _map;
-        private Player? _player;
+        private Game _game = new();
+        private Npc? _talkingToNpc;
         private Dictionary<char, Sprite?>? _sprites;
         private FpsCounter? _fpsCounter;
         private Renderer? _renderer;
         private SKBitmap? _bitmap;
-        private readonly List<Npc> _npcs = new();
         private int currentCount = 0;
         private string? lastPressed;
         private ElementReference buttonRef;
-
-        // NPCs
-
-        private FinalBoss? _finalBoss;
 
         private void IncrementCount()
         {
@@ -42,67 +37,29 @@ namespace NeaProject.Pages
         {
             if (LocalStorage == null)
             { return; }
-            await LocalStorage.SetItemAsync("player", _player);
+            await LocalStorage.SetItemAsync("game", _game);
             await buttonRef.FocusAsync();
+        }
+
+        private async Task LoadDataAsync()
+        {
+            if (LocalStorage == null)
+            { return; }
+            _game = await LocalStorage.GetItemAsync<Game>("game");
         }
 
         private async Task ClearDataAsync()
         {
             if (LocalStorage == null)
             { return; }
-            await LocalStorage.RemoveItemAsync("player");
+            await LocalStorage.RemoveItemAsync("game");
             await buttonRef.FocusAsync();
-        }
-
-        // Movement
-        private void MoveUp()
-        {
-            if (_player == null || _player.IsDead() || _player.HasWon() || _map == null || _renderer == null)
-            {
-                return;
-            }
-            _player.DirectionFacing = 'U';
-            _player.FrameIndex = 3;
-            _player.Move(_map, 0, -1);
-            _renderer.MoveCamera();
-        }
-        private void MoveRight()
-        {
-            if (_player == null || _player.IsDead() || _player.HasWon() || _map == null || _renderer == null)
-            {
-                return;
-            }
-            _player.DirectionFacing = 'R';
-            _player.FrameIndex = 1;
-            _player.Move(_map, 1, 0);
-            _renderer.MoveCamera();
-        }
-        private void MoveDown()
-        {
-            if (_player == null || _player.IsDead() || _player.HasWon() || _map == null || _renderer == null)
-            {
-                return;
-            }
-            _player.DirectionFacing = 'D';
-            _player.FrameIndex = 0;
-            _player.Move(_map, 0, 1);
-            _renderer.MoveCamera();
-        }
-        private void MoveLeft()
-        {
-            if (_player == null || _player.IsDead() || _player.HasWon() || _map == null || _renderer == null)
-            {
-                return;
-            }
-            _player.DirectionFacing = 'L';
-            _player.FrameIndex = 2;
-            _player.Move(_map, -1, 0);
-            _renderer.MoveCamera();
         }
 
         private void KeyDown(KeyboardEventArgs keyEvent)
         {
-
+            if (_renderer == null)
+            { return; }
             var pressedKey = keyEvent.Key;
             lastPressed = pressedKey;
             pressedKey = pressedKey.ToLower();
@@ -111,25 +68,25 @@ namespace NeaProject.Pages
                 case "arrowup":
                 case "w":
                     {
-                        MoveUp();
+                        _game.MoveUp();
                         break;
                     }
                 case "arrowdown":
                 case "s":
                     {
-                        MoveDown();
+                        _game.MoveDown();
                         break;
                     }
                 case "arrowleft":
                 case "a":
                     {
-                        MoveLeft();
+                        _game.MoveLeft();
                         break;
                     }
                 case "arrowright":
                 case "d":
                     {
-                        MoveRight();
+                        _game.MoveRight();
                         break;
                     }
                 default:
@@ -138,6 +95,7 @@ namespace NeaProject.Pages
                     }
 
             }
+            _renderer.MoveCamera(_game.Camera);
         }
 
         protected override async Task OnInitializedAsync()
@@ -145,16 +103,17 @@ namespace NeaProject.Pages
             if (LocalStorage == null||NavigationManager == null)
             { return; }
             var tileSheetUri = new Uri($"{NavigationManager.Uri}images/MapTiles/all_tiles.png?_={DateTime.Now}");
-            var mapUri = new Uri($"{NavigationManager.Uri}map-data/map_0.txt?_={DateTime.Now}");
-            string mapString = await DownloadAsync(mapUri);
-            _map = new Map(mapString);
-            if (await LocalStorage.ContainKeyAsync("player"))
+            
+            if (await LocalStorage.ContainKeyAsync("game"))
             {
-                _player = await LocalStorage.GetItemAsync<Player>("player");
+                await LoadDataAsync();
             }
             else
             {
-                _player = new Player
+                var mapUri = new Uri($"{NavigationManager.Uri}map-data/map_0.txt?_={DateTime.Now}");
+                string mapString = await DownloadAsync(mapUri);
+                _game.Map = new Map(mapString);
+                _game.Player = new Player
                 {
                     CurrentHp = 100,
                     // XPos = _map.Width / 2,
@@ -165,6 +124,7 @@ namespace NeaProject.Pages
                     SpriteRef = 'p',
                     AllowedTiles = new List<char> { 'g', 's', 'w' }
                 };
+                SetUpNpcs(_game.Map);
             }
             ImageLoader imageLoader = new(tileSheetUri);
             SKBitmap mapTileSheet = await imageLoader.GetBitmapAsync();
@@ -180,17 +140,15 @@ namespace NeaProject.Pages
                 { 'w', new Sprite(mapTileSheet, "Water", 1)},
                 { 'B', new Sprite(mapTileSheet, "Bird", 2)} //capital describes an NPC
             };
-            _finalBoss = new FinalBoss { Name = "Mellow", SpriteRef = 'F' };
-            SetUpNpcs(_map);
 
             _fpsCounter = new FpsCounter();
-            _renderer = new Renderer(_map, _player, _npcs, _sprites);
+            _renderer = new Renderer(_game, _sprites);
             _bitmap = new SKBitmap(_renderer.ViewportWidth, _renderer.ViewportHeight);
         }
 
         private void SetUpNpcs(Map map)
         {
-            _npcs.Clear();
+            _game.Npcs.Clear();
             Random random = new();
             for (int birdNumber = 1; birdNumber <= 20; birdNumber++)
             {
@@ -208,8 +166,10 @@ namespace NeaProject.Pages
                     bird.YPos = random.Next(0, map.Height);
                 }
                 map.SetOverlayTileChar(bird.XPos, bird.YPos, 'B');
-                _npcs.Add(bird);
+                _game.Npcs.Add(bird);
             }
+             FinalBoss finalBoss = new() { Name = "Mellow", SpriteRef = 'F' };
+            _game.Npcs.Add(finalBoss);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -232,7 +192,7 @@ namespace NeaProject.Pages
 
             unsafe
             {
-                fixed (uint* ptr = _renderer.UpdateFrameBuffer())
+                fixed (uint* ptr = _renderer.UpdateFrameBuffer(_game.Camera))
                 {
                     _bitmap.SetPixels((IntPtr)ptr);
                 }

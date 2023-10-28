@@ -23,29 +23,26 @@
 </div>
 
 <div style="background-color:#559">
-    @if (_player?.IsDead() == true)
+    @if (_game.Player?.IsDead() == true)
     {
         <h1>YOU LOSE!!</h1>
     }
-    else if (_player?.HasWon() == true)
+    else if (_game.Player?.HasWon() == true)
     {
         <h1>YOU WIN!!</h1>
     }
-    else if (_player != null && NavigationManager != null)
+    else if (_game.Player != null && NavigationManager != null)
     {
         <table class="table-center">
             <tr>
                 <td style="width:16%;" rowspan="2">
-                    @if (_player.LookForDialogue == true)
+                    @if (_game.Player.LookForDialogue == true)
                     {
-                        switch (_player.NextOverlayTile)
+                        switch (_game.Player.NextOverlayTile)
                         {
                             case 'F':
                                 {
-                                    if (_finalBoss != null)
-                                    {
-                                        <img src="@($"{NavigationManager.Uri}images/Sprites/Mellow-Neutral.png")" style="width:100%" />
-                                    }
+                                    <img src="@($"{NavigationManager.Uri}images/Sprites/Mellow-Neutral.png")" style="width:100%" />
                                     break;
                                 }
                             default:
@@ -57,18 +54,25 @@
                     } 
                     </td>
                 <td rowspan="2">
-                    @if (_player != null)
+                    @if (_game.Player != null)
                     {
-                        if (_player.LookForDialogue == true)
+                        if (_game.Player.LookForDialogue == true)
                         {
-                            switch (_player.NextOverlayTile)
+                            switch (_game.Player.NextOverlayTile)
                             {
-                                case 'f':
+                                case 'F':
                                     {
-                                        if (_finalBoss != null)
+                                        int count = 0;
+                                        foreach (Npc npc in _game.Npcs)
                                         {
-                                            <p>@_finalBoss.Chat(_player)</p>
+                                            if (npc.Name == "Mellow")
+                                            {
+                                                _talkingToNpc = _game.Npcs[count];
+                                                <p>@_talkingToNpc.Chat(_game.Player)</p>
+                                            }
+                                            count++;
                                         }
+
                                         break;
                                     }
                                 default: break;
@@ -76,7 +80,7 @@
                         }
                         else
                         {
-                            foreach (string? item in _player.Inventory)
+                            foreach (string? item in _game.Player.Inventory)
                             {
                                 <p>@item</p>
                             }
@@ -93,9 +97,9 @@
         <tr>
                 <td rowspan="4"><img src="@($"{NavigationManager.Uri}images/Sprites/Mellie-Neutral.png")" style="width:100%" /></td>
             <td>@NavigationManager?.Uri</td>
-            <td rowspan="2">@_player?.Name</td>
+            <td rowspan="2">@_game.Player?.Name</td>
             <td class="stat" rowspan="2">HP: 
-                @(_player?.CurrentHp ?? 0)</td>
+                @(_game.Player?.CurrentHp ?? 0)</td>
         </tr>
         <tr>
             <td>wook</td>
@@ -113,16 +117,16 @@
 </div>
 
 <div class="d-lg-none">
-    <button @onclick="MoveUp">
+    <button @onclick="_game.MoveUp">
         ↑
     </button>
-    <button @onclick="MoveLeft">
+    <button @onclick="_game.MoveLeft">
         ←
     </button>
-    <button @onclick="MoveDown">
+    <button @onclick="_game.MoveDown">
         ↓
     </button>
-    <button @onclick="MoveRight">
+    <button @onclick="_game.MoveRight">
         →
     </button>
 </div>
