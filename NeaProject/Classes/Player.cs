@@ -40,12 +40,13 @@ namespace NeaProject.Classes
                                 {
                                     XPos = charX;
                                     YPos = charY;
-                                    _camera.DrawingStartTileX = charX - 8;
+                                    _camera.DrawingStartTileX = charX - 6;
                                     _camera.DrawingStartTileY = charY - 4;
                                     break;
                                 }
                                 charX++;
                             }
+                            charX = 0;
                             charY++;
                         }
                         break;

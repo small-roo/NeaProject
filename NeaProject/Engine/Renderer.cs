@@ -103,14 +103,15 @@ public class Renderer
             for (int drawingTileX = 0; drawingTileX < ViewportTileX; drawingTileX++)
             {
                 // determine sprite of tile
-                char mapChar = _map.GetTileChar(camera.DrawingStartTileY + drawingTileY, camera.DrawingStartTileX + drawingTileX);
+                char mapChar = _map.GetTileChar(camera.DrawingStartTileX + drawingTileX, camera.DrawingStartTileY + drawingTileY);
                 Sprite? sprite = _sprites[mapChar];
                 DrawSprite(drawingTileY, drawingTileX, sprite, 0);
-                mapChar = _map.GetOverlayTileChar(camera.DrawingStartTileY + drawingTileY, camera.DrawingStartTileX + drawingTileX);
+                mapChar = _map.GetOverlayTileChar(camera.DrawingStartTileX + drawingTileX, camera.DrawingStartTileY + drawingTileY);
                 sprite = _sprites[mapChar];
                 switch (mapChar)
                 {
                     case 'B':
+                    case 'F':
                     case '.':
                         {
                             break;

@@ -45,12 +45,12 @@ namespace NeaProject.Classes
             return temp;
         }
 
-        public char GetTileChar(int yTile, int xTile)
+        public char GetTileChar(int xTile, int yTile)
         {
             return CharMap[yTile][xTile];
         }
 
-        public char GetOverlayTileChar(int yTile, int xTile)
+        public char GetOverlayTileChar(int xTile, int yTile)
         {
             return OverlayCharMap[yTile][xTile];
         }

@@ -166,7 +166,7 @@ namespace NeaProject.Pages
                     YPos = random.Next(0, map.Height),
                     FrameIndex = random.Next(0, 2),
                 };
-                while (map.GetOverlayTileChar(bird.YPos, bird.XPos) != '.')
+                while (map.GetOverlayTileChar(bird.XPos, bird.YPos) != '.')
                 {
                     bird.XPos = random.Next(0, map.Width);
                     bird.YPos = random.Next(0, map.Height);

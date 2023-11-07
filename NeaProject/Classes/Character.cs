@@ -29,8 +29,8 @@ namespace NeaProject.Classes
             LookForDialogue = false;
             LookForFight = false;
 
-            NextTile = _map.GetTileChar(YPos + moveY, XPos + moveX);
-            NextOverlayTile = _map.GetOverlayTileChar(YPos + moveY, XPos + moveX);
+            NextTile = _map.GetTileChar(XPos + moveX, YPos + moveY);
+            NextOverlayTile = _map.GetOverlayTileChar(XPos + moveX, YPos + moveY);
             if (!AllowedTiles.Contains(NextTile))
             {
                 return;
