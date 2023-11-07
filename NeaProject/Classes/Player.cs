@@ -30,25 +30,7 @@ namespace NeaProject.Classes
                     {
                         XPos += moveX;
                         YPos += moveY;
-                        int charX = 0;
-                        int charY = 0;
-                        foreach (char[] charRow in _map.OverlayCharMap)
-                        {
-                            foreach (char tile in _map.OverlayCharMap[charY])
-                            {
-                                if (tile == NextOverlayTile && charX != XPos && charY != YPos)
-                                {
-                                    XPos = charX;
-                                    YPos = charY;
-                                    _camera.DrawingStartTileX = charX - 6;
-                                    _camera.DrawingStartTileY = charY - 4;
-                                    break;
-                                }
-                                charX++;
-                            }
-                            charX = 0;
-                            charY++;
-                        }
+                        Teleport(_map, _camera);
                         break;
                     }
                 case 'd':
@@ -77,6 +59,29 @@ namespace NeaProject.Classes
                         break;
                     }
             
+            }
+        }
+
+        private void Teleport(Map _map, Camera _camera)
+        {
+            int charX = 0;
+            int charY = 0;
+            foreach (char[] charRow in _map.OverlayCharMap)
+            {
+                foreach (char tile in _map.OverlayCharMap[charY])
+                {
+                    if (tile == NextOverlayTile && (charX != XPos || charY != YPos))
+                    {
+                        XPos = charX;
+                        YPos = charY;
+                        _camera.DrawingStartTileX = charX - 6;
+                        _camera.DrawingStartTileY = charY - 4;
+                        return;
+                    }
+                    charX++;
+                }
+                charX = 0;
+                charY++;
             }
         }
 

@@ -35,7 +35,7 @@ namespace NeaProject.Classes
                     }
                 case 4:
                     {
-                        return $"You still need {4 - flowerCount} Flower Bundles";
+                        return $"You still need {4 - flowerCount} Flower Bundle{(flowerCount == 1 ? "": "s")}";
                     }
                 default:
                     { return ""; }
