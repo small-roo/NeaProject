@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.RenderTree;
 using NeaProject.Classes;
+using NeaProject.Engine;
 using System.Threading;
 
 namespace NeaProject.Classes
@@ -11,34 +12,70 @@ namespace NeaProject.Classes
             return Inventory.Contains("Heartfelt Gift");
         }
 
-        public override void MoveRules(int moveX, int moveY,Map _map)
+        public override void MoveRules(int moveX, int moveY, Map _map, Camera _camera)
         {
-            if (NextOverlayTile == '.')
+            switch (NextOverlayTile)
             {
-                XPos += moveX;
-                YPos += moveY;
-            }
-            else if (NextOverlayTile == 'd')
-            {
-                XPos += moveX;
-                YPos += moveY;
-                Inventory.Add("Flower Bundle");
-                _map.SetOverlayTileChar(XPos, YPos, '.');
-            }
-            else if (NextOverlayTile == 'F')
-            {
-                if (Inventory.Count(i => i == "Flower Bundle") >= 4)
-                {
-                    for (int i = 0; i < 4; i++)
+                case '.':
                     {
-                        Inventory.Remove("Flower Bundle");
+                        XPos += moveX;
+                        YPos += moveY;
+                        break;
                     }
-                    Inventory.Add("Heartfelt Gift");
-                }
-            }
-            else
-            {
-                CurrentHp--;
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                    {
+                        XPos += moveX;
+                        YPos += moveY;
+                        int charX = 0;
+                        int charY = 0;
+                        foreach (char[] charRow in _map.OverlayCharMap)
+                        {
+                            foreach (char tile in _map.OverlayCharMap[charY])
+                            {
+                                if (tile == NextOverlayTile && charX != XPos && charY != YPos)
+                                {
+                                    XPos = charX;
+                                    YPos = charY;
+                                    _camera.DrawingStartTileX = charX - 8;
+                                    _camera.DrawingStartTileY = charY - 4;
+                                    break;
+                                }
+                                charX++;
+                            }
+                            charY++;
+                        }
+                        break;
+                    }
+                case 'd':
+                    {
+                        XPos += moveX;
+                        YPos += moveY;
+                        Inventory.Add("Flower Bundle");
+                        _map.SetOverlayTileChar(XPos, YPos, '.');
+                        break;
+                    }
+                case 'F':
+                    {
+                        if (Inventory.Count(i => i == "Flower Bundle") >= 4)
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                Inventory.Remove("Flower Bundle");
+                            }
+                            Inventory.Add("Heartfelt Gift");
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        CurrentHp--;
+                        break;
+                    }
+            
             }
         }
 

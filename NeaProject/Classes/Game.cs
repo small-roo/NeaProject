@@ -17,7 +17,7 @@ namespace NeaProject.Classes
             }
             Player.DirectionFacing = 'U';
             Player.FrameIndex = 3;
-            Player.Move(Map, 0, -1);
+            Player.Move(Map, 0, -1, Camera);
             
         }
         public void MoveRight()
@@ -28,7 +28,7 @@ namespace NeaProject.Classes
             }
             Player.DirectionFacing = 'R';
             Player.FrameIndex = 1;
-            Player.Move(Map, 1, 0);
+            Player.Move(Map, 1, 0, Camera);
         }
         public void MoveDown()
         {
@@ -38,7 +38,7 @@ namespace NeaProject.Classes
             }
             Player.DirectionFacing = 'D';
             Player.FrameIndex = 0;
-            Player.Move(Map, 0, 1);
+            Player.Move(Map, 0, 1, Camera);
         }
         public void MoveLeft()
         {
@@ -48,7 +48,7 @@ namespace NeaProject.Classes
             }
             Player.DirectionFacing = 'L';
             Player.FrameIndex = 2;
-            Player.Move(Map, -1, 0);
+            Player.Move(Map, -1, 0, Camera);
         }
     }
 }

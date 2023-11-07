@@ -1,4 +1,6 @@
-﻿namespace NeaProject.Classes
+﻿using NeaProject.Engine;
+
+namespace NeaProject.Classes
 {
     public class BirdEnemy : Npc
     {
@@ -12,7 +14,7 @@
         {
             throw new NotImplementedException();
         }
-        public override void MoveRules(int moveX, int moveY, Map _map)
+        public override void MoveRules(int moveX, int moveY, Map _map, Camera _camera)
         {
             if (NextOverlayTile == '.')
             {

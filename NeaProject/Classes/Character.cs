@@ -1,4 +1,6 @@
-﻿namespace NeaProject.Classes
+﻿using NeaProject.Engine;
+
+namespace NeaProject.Classes
 {
     public abstract class Character
     {
@@ -16,7 +18,7 @@
         public List<char> AllowedTiles { get; set; } = new List<char>();
         public List<string> Inventory { get; set; } = new List<string>();
 
-        public void Move(Map _map, int moveX, int moveY)
+        public void Move(Map _map, int moveX, int moveY, Camera _camera)
         {
             if (XPos + moveX <= -1 || XPos + moveX >= _map.Width || YPos + moveY <= -1 || YPos + moveY >= _map.Height)
             {
@@ -35,7 +37,7 @@
             }
             //character is moving to a tile it is allowed to move to
 
-            MoveRules(moveX, moveY, _map);
+            MoveRules(moveX, moveY, _map, _camera);
             string? collidingNpcBehaviour = CollidingNpcBehaviour();
             if (collidingNpcBehaviour != null) 
             {
@@ -47,7 +49,7 @@
         }
 
         public virtual void Animate() { }
-        public abstract void MoveRules(int moveX, int moveY, Map _map);
+        public abstract void MoveRules(int moveX, int moveY, Map _map, Camera _camera);
         public virtual string? CollidingNpcBehaviour() { return ""; }
 
         public bool IsDead()

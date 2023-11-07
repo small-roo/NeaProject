@@ -33,10 +33,14 @@ namespace NeaProject.Classes
         {
             switch (name)
             {
-                case "FinalBoss":
+                case "Teleport0":
+                case "Teleport1":
+                case "Teleport2":
+                case "Teleport3":
+                case "Teleport4":
                     {
-                        xOffset = 0;
-                        yOffset = 17;
+                        xOffset = 23;
+                        yOffset = 9;
                         break;
                     }
                 case "Grass":
@@ -69,6 +73,12 @@ namespace NeaProject.Classes
                         yOffset = 4;
                         break;
                     }
+                case "Tree":
+                    {
+                        xOffset = 8;
+                        yOffset = 2;
+                        break;
+                    }
                 case "Water":
                     {
                         xOffset = 4;
@@ -79,6 +89,12 @@ namespace NeaProject.Classes
                     {
                         xOffset = 0;
                         yOffset = 18;
+                        break;
+                    }
+                case "FinalBoss":
+                    {
+                        xOffset = 0;
+                        yOffset = 17;
                         break;
                     }
                 default:

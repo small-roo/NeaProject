@@ -1,4 +1,6 @@
-﻿namespace NeaProject.Classes
+﻿using NeaProject.Engine;
+
+namespace NeaProject.Classes
 {
     public class FinalBoss : Npc
     {
@@ -39,7 +41,7 @@
                     { return ""; }
             }
         }
-        public override void MoveRules(int moveX, int moveY, Map _map)
+        public override void MoveRules(int moveX, int moveY, Map _map, Camera _camera)
         {
             throw new NotImplementedException();
         }

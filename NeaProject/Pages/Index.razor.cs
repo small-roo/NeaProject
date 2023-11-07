@@ -131,14 +131,20 @@ namespace NeaProject.Pages
             _sprites = new Dictionary<char, Sprite?>()
             {
                 { '.', null},
-                { 'd', new Sprite(mapTileSheet, "Diamond", 1)}, //currently unused
-                { 'F', new Sprite(mapTileSheet, "FinalBoss", 4)},
+                { '0', new Sprite(mapTileSheet, "Teleport0", 1)},
+                { '1', new Sprite(mapTileSheet, "Teleport1", 1)},
+                { '2', new Sprite(mapTileSheet, "Teleport2", 1)},
+                { '3', new Sprite(mapTileSheet, "Teleport3", 1)},
+                { '4', new Sprite(mapTileSheet, "Teleport4", 1)},
+                { 'd', new Sprite(mapTileSheet, "Diamond", 1)}, //currently unused                
                 { 'g', new Sprite(mapTileSheet, "Grass", 1)},
                 { 'p', new Sprite(mapTileSheet, "Player", 4)},
                 { 'r', new Sprite(mapTileSheet, "Rock", 1)},
                 { 's', new Sprite(mapTileSheet, "Sand", 1)},
+                { 't', new Sprite(mapTileSheet, "Tree", 1)},
                 { 'w', new Sprite(mapTileSheet, "Water", 1)},
-                { 'B', new Sprite(mapTileSheet, "Bird", 2)} //capital describes an NPC
+                { 'B', new Sprite(mapTileSheet, "Bird", 2)}, //capital describes an NPC
+                { 'F', new Sprite(mapTileSheet, "FinalBoss", 4)}
             };
 
             _fpsCounter = new FpsCounter();
@@ -165,10 +171,16 @@ namespace NeaProject.Pages
                     bird.XPos = random.Next(0, map.Width);
                     bird.YPos = random.Next(0, map.Height);
                 }
-                map.SetOverlayTileChar(bird.XPos, bird.YPos, 'B');
+                map.SetOverlayTileChar(bird.XPos, bird.YPos, bird.SpriteRef);
                 _game.Npcs.Add(bird);
             }
-             FinalBoss finalBoss = new() { Name = "Mellow", SpriteRef = 'F' };
+            FinalBoss finalBoss = new() 
+            { 
+                Name = "Mellow", 
+                SpriteRef = 'F', 
+                XPos = 29, YPos = 13 
+            };
+            map.SetOverlayTileChar(finalBoss.XPos, finalBoss.YPos, finalBoss.SpriteRef);
             _game.Npcs.Add(finalBoss);
         }
 
