@@ -55,6 +55,18 @@ namespace NeaProject.Classes
                         yOffset = 10;
                         break;
                     }
+                case "Space":
+                    {
+                        xOffset = 46;
+                        yOffset = 11;
+                        break;
+                    }
+                case "MarsRock":
+                    {
+                        xOffset = 42;
+                        yOffset = 25;
+                        break;
+                    }
                 case "Player":
                     {
                         xOffset = 0;
@@ -69,8 +81,8 @@ namespace NeaProject.Classes
                     }
                 case "Sand":
                     {
-                        xOffset = 14;
-                        yOffset = 4;
+                        xOffset = 33;
+                        yOffset = 25;
                         break;
                     }
                 case "Tree":

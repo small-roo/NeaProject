@@ -118,11 +118,11 @@ namespace NeaProject.Pages
                     CurrentHp = 100,
                     // XPos = _map.Width / 2,
                     // YPos = _map.Height / 2,
-                    XPos = 5,
+                    XPos = 10,
                     YPos = 5,
                     Name = "Mellie",
                     SpriteRef = 'p',
-                    AllowedTiles = new List<char> { 'g', 's', 'w' }
+                    AllowedTiles = new List<char> { 'g', 'm', 's', 'w' }
                 };
                 SetUpNpcs(_game.Map);
             }
@@ -131,6 +131,7 @@ namespace NeaProject.Pages
             _sprites = new Dictionary<char, Sprite?>()
             {
                 { '.', null},
+                { '□', new Sprite(mapTileSheet, "Space", 1)},
                 { '0', new Sprite(mapTileSheet, "Teleport0", 1)},
                 { '1', new Sprite(mapTileSheet, "Teleport1", 1)},
                 { '2', new Sprite(mapTileSheet, "Teleport2", 1)},
@@ -138,6 +139,7 @@ namespace NeaProject.Pages
                 { '4', new Sprite(mapTileSheet, "Teleport4", 1)},
                 { 'd', new Sprite(mapTileSheet, "Diamond", 1)}, //currently unused                
                 { 'g', new Sprite(mapTileSheet, "Grass", 1)},
+                { 'm', new Sprite(mapTileSheet, "MarsRock", 1)},
                 { 'p', new Sprite(mapTileSheet, "Player", 4)},
                 { 'r', new Sprite(mapTileSheet, "Rock", 1)},
                 { 's', new Sprite(mapTileSheet, "Sand", 1)},
