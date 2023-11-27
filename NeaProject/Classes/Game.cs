@@ -1,13 +1,87 @@
 ﻿using NeaProject.Engine;
+using System.Xml.Linq;
 
 namespace NeaProject.Classes
 {
     public class Game
     {
-        public Player Player { get; set; } = new() { Name = "", SpriteRef = '\0'};
-        public Map Map { get; set; } = new();
-        public List<Npc> Npcs { get; set; } = new();
-        public Camera Camera { get; set; } = new();
+        public Map Map { get; } = new();
+        public Camera Camera { get; } = new();
+        public List<Npc> Npcs { get; } = new();
+        public Player Player { get; }
+
+        public Game()
+        {
+            Player = new(Map, Camera) { Name = "", SpriteRef = '\0' };
+        }
+        public Game(string mapString)
+        {
+            Map = new Map(mapString);
+            Player = new Player(Map, Camera)
+            {
+                CurrentHp = 100,
+                // XPos = _map.Width / 2,
+                // YPos = _map.Height / 2,
+                XPos = 10,
+                YPos = 5,
+                Name = "Mellie",
+                SpriteRef = 'p',
+                AllowedTiles = new List<char> { 'g', 'm', 's', 'w' }
+            };
+            SetUpNpcs(Map);
+        }
+
+        private void SetUpNpcs(Map map)
+        {
+            Npcs.Clear();
+            Random random = new();
+            for (int birdNumber = 1; birdNumber <= 20; birdNumber++) //bird
+            {
+                BirdEnemy bird = new(map)
+                {
+                    Name = $"bird{birdNumber}",
+                    SpriteRef = 'B',
+                    XPos = random.Next(0, map.Width),
+                    YPos = random.Next(0, map.Height),
+                    FrameIndex = random.Next(0, 2),
+                };
+                while (map.GetOverlayTileChar(bird.XPos, bird.YPos) != '.' || map.GetTileChar(bird.XPos, bird.YPos) != 'g')
+                {
+                    bird.XPos = random.Next(0, map.Width);
+                    bird.YPos = random.Next(0, map.Height);
+                }
+                map.SetOverlayTileChar(bird.XPos, bird.YPos, bird.SpriteRef);
+                Npcs.Add(bird);
+            }
+            FinalBoss finalBoss = new(map) //final boss
+            {
+                Name = "Mellow",
+                SpriteRef = 'F',
+                XPos = 29,
+                YPos = 13
+            };
+            for (int snakeNumber = 1; snakeNumber <= 10; snakeNumber++) //snake
+            {
+                SnakeEnemy snake = new(map)
+                {
+                    Name = $"snake{snakeNumber}",
+                    SpriteRef = 'S',
+                    XPos = random.Next(0, map.Width),
+                    YPos = random.Next(0, map.Height),
+                    FrameIndex = random.Next(0, 2)
+                };
+                while (map.GetOverlayTileChar(snake.XPos, snake.YPos) != '.' || map.GetTileChar(snake.XPos, snake.YPos) != 'm')
+                {
+                    snake.XPos = random.Next(0, map.Width);
+                    snake.YPos = random.Next(0, map.Height);
+                }
+                map.SetOverlayTileChar(snake.XPos, snake.YPos, snake.SpriteRef);
+                Npcs.Add(snake);
+            }
+            map.SetOverlayTileChar(finalBoss.XPos, finalBoss.YPos, finalBoss.SpriteRef);
+            Npcs.Add(finalBoss);
+        }
+
         // Movement
         public void MoveUp()
         {
@@ -17,7 +91,7 @@ namespace NeaProject.Classes
             }
             Player.DirectionFacing = 'U';
             Player.FrameIndex = 3;
-            Player.Move(Map, 0, -1, Camera);
+            Player.Move(0, -1);
             
         }
         public void MoveRight()
@@ -28,7 +102,7 @@ namespace NeaProject.Classes
             }
             Player.DirectionFacing = 'R';
             Player.FrameIndex = 1;
-            Player.Move(Map, 1, 0, Camera);
+            Player.Move(1, 0);
         }
         public void MoveDown()
         {
@@ -38,7 +112,7 @@ namespace NeaProject.Classes
             }
             Player.DirectionFacing = 'D';
             Player.FrameIndex = 0;
-            Player.Move(Map, 0, 1, Camera);
+            Player.Move(0, 1);
         }
         public void MoveLeft()
         {
@@ -48,7 +122,7 @@ namespace NeaProject.Classes
             }
             Player.DirectionFacing = 'L';
             Player.FrameIndex = 2;
-            Player.Move(Map, -1, 0, Camera);
+            Player.Move(-1, 0);
         }
     }
 }

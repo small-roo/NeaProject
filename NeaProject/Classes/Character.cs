@@ -17,8 +17,12 @@ namespace NeaProject.Classes
         public bool LookForFight { get; set; } = false;
         public List<char> AllowedTiles { get; set; } = new List<char>();
         public List<string> Inventory { get; set; } = new List<string>();
-
-        public virtual void Move(Map _map, int moveX, int moveY, Camera _camera)
+        private readonly Map _map;
+        public Character(Map map)
+        {
+            _map = map;
+        }
+        public virtual void Move(int moveX, int moveY)
         {
             if (XPos + moveX <= -1 || XPos + moveX >= _map.Width || YPos + moveY <= -1 || YPos + moveY >= _map.Height)
             {
@@ -34,11 +38,11 @@ namespace NeaProject.Classes
             }
             //character is moving to a tile it is allowed to move to
 
-            MoveRules(moveX, moveY, _map, _camera);
+            MoveRules(moveX, moveY);
         }
 
         public virtual void Animate() { }
-        public abstract void MoveRules(int moveX, int moveY, Map _map, Camera _camera);
+        public abstract void MoveRules(int moveX, int moveY);
         public virtual string? CollidingNpcBehaviour() { return ""; }
 
         public bool IsDead()

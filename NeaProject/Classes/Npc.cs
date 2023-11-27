@@ -6,7 +6,9 @@ namespace NeaProject.Classes
     [JsonDerivedType(typeof(FinalBoss), typeDiscriminator: "FinalBoss")]
     public abstract class Npc : Character
     {
-        protected Npc():base() { }
+        public Npc(Map map):base(map)
+        { }
+
         public abstract string Chat(Player player);
     }
 }

@@ -17,7 +17,7 @@ namespace NeaProject.Pages
         // interop-ing more than it seems, another copy of the byte array for the surface would cause about the level of
         // slowdown I saw. But 2D canvas is fine - after all, just a 2D game.
 
-        private Game _game = new();
+        private Game? _game;
         private Npc? _talkingToNpc;
         private Dictionary<char, Sprite?>? _sprites;
         private FpsCounter? _fpsCounter;
@@ -41,13 +41,6 @@ namespace NeaProject.Pages
             await buttonRef.FocusAsync();
         }
 
-        private async Task LoadDataAsync()
-        {
-            if (LocalStorage == null)
-            { return; }
-            _game = await LocalStorage.GetItemAsync<Game>("game");
-        }
-
         private async Task ClearDataAsync()
         {
             if (LocalStorage == null)
@@ -58,7 +51,7 @@ namespace NeaProject.Pages
 
         private void KeyDown(KeyboardEventArgs keyEvent)
         {
-            if (_renderer == null)
+            if (_renderer == null || _game == null)
             { return; }
             var pressedKey = keyEvent.Key;
             lastPressed = pressedKey;
@@ -106,26 +99,15 @@ namespace NeaProject.Pages
             
             if (await LocalStorage.ContainKeyAsync("game"))
             {
-                await LoadDataAsync();
+                _game = await LocalStorage.GetItemAsync<Game>("game");
             }
             else
             {
                 var mapUri = new Uri($"{NavigationManager.Uri}map-data/map_0.txt?_={DateTime.Now}");
                 string mapString = await DownloadAsync(mapUri);
-                _game.Map = new Map(mapString);
-                _game.Player = new Player
-                {
-                    CurrentHp = 100,
-                    // XPos = _map.Width / 2,
-                    // YPos = _map.Height / 2,
-                    XPos = 10,
-                    YPos = 5,
-                    Name = "Mellie",
-                    SpriteRef = 'p',
-                    AllowedTiles = new List<char> { 'g', 'm', 's', 'w' }
-                };
-                SetUpNpcs(_game.Map);
+                _game = new Game(mapString);
             }
+
             ImageLoader imageLoader = new(tileSheetUri);
             SKBitmap mapTileSheet = await imageLoader.GetBitmapAsync();
             _sprites = new Dictionary<char, Sprite?>()
@@ -155,56 +137,6 @@ namespace NeaProject.Pages
             _bitmap = new SKBitmap(_renderer.ViewportWidth, _renderer.ViewportHeight);
         }
 
-        private void SetUpNpcs(Map map)
-        {
-            _game.Npcs.Clear();
-            Random random = new();
-            for (int birdNumber = 1; birdNumber <= 20; birdNumber++) //bird
-            {
-                BirdEnemy bird = new()
-                {
-                    Name = $"bird{birdNumber}",
-                    SpriteRef = 'B',
-                    XPos = random.Next(0, map.Width),
-                    YPos = random.Next(0, map.Height),
-                    FrameIndex = random.Next(0, 2),
-                };
-                while (map.GetOverlayTileChar(bird.XPos, bird.YPos) != '.' || map.GetTileChar(bird.XPos, bird.YPos) != 'g')
-                {
-                    bird.XPos = random.Next(0, map.Width);
-                    bird.YPos = random.Next(0, map.Height);
-                }
-                map.SetOverlayTileChar(bird.XPos, bird.YPos, bird.SpriteRef);
-                _game.Npcs.Add(bird);
-            }
-            FinalBoss finalBoss = new() //final boss
-            { 
-                Name = "Mellow", 
-                SpriteRef = 'F', 
-                XPos = 29, YPos = 13 
-            };
-            for (int snakeNumber = 1; snakeNumber <= 10; snakeNumber++) //snake
-            {
-                SnakeEnemy snake = new()
-                {
-                    Name = $"snake{snakeNumber}",
-                    SpriteRef = 'S',
-                    XPos = random.Next(0,map.Width),
-                    YPos = random.Next(0,map.Height),
-                    FrameIndex = random.Next(0,2)
-                };
-                while (map.GetOverlayTileChar(snake.XPos, snake.YPos) != '.' || map.GetTileChar(snake.XPos, snake.YPos) != 'm')
-                { 
-                    snake.XPos = random.Next(0, map.Width);
-                    snake.YPos = random.Next(0, map.Height);
-                }
-                map.SetOverlayTileChar(snake.XPos, snake.YPos, snake.SpriteRef);
-                _game.Npcs.Add(snake);
-            }
-            map.SetOverlayTileChar(finalBoss.XPos, finalBoss.YPos, finalBoss.SpriteRef);
-            _game.Npcs.Add(finalBoss);
-        }
-
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -215,7 +147,7 @@ namespace NeaProject.Pages
 
         protected void OnPaintSurface(SKPaintSurfaceEventArgs e)
         {
-            if (_renderer == null || _bitmap == null || _fpsCounter == null)
+            if (_renderer == null || _bitmap == null || _fpsCounter == null || _game == null)
             {
                 return;
             }

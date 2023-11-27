@@ -7,12 +7,19 @@ namespace NeaProject.Classes
 {
     public class Player : Character
     {
+        readonly Map _map;
+        readonly Camera _camera;
+        public Player(Map map, Camera camera):base(map) 
+        {
+            _camera = camera;
+            _map = map;
+        }
         public bool HasWon()
         {
             return Inventory.Contains("Heartfelt Gift");
         }
 
-        public override void MoveRules(int moveX, int moveY, Map _map, Camera _camera)
+        public override void MoveRules(int moveX, int moveY)
         {
             switch (NextOverlayTile)
             {
@@ -30,7 +37,7 @@ namespace NeaProject.Classes
                     {
                         XPos += moveX;
                         YPos += moveY;
-                        Teleport(_map, _camera);
+                        Teleport();
                         break;
                     }
                 case 'd':
@@ -62,7 +69,7 @@ namespace NeaProject.Classes
             }
         }
 
-        private void Teleport(Map _map, Camera _camera)
+        private void Teleport()
         {
             int charX = 0;
             int charY = 0;
@@ -85,7 +92,7 @@ namespace NeaProject.Classes
             }
         }
 
-        public override void Move(Map _map, int moveX, int moveY, Camera _camera)
+        public override void Move(int moveX, int moveY)
         {
             if (XPos + moveX <= -1 || XPos + moveX >= _map.Width || YPos + moveY <= -1 || YPos + moveY >= _map.Height)
             {
@@ -104,7 +111,7 @@ namespace NeaProject.Classes
             }
             //character is moving to a tile it is allowed to move to
 
-            MoveRules(moveX, moveY, _map, _camera);
+            MoveRules(moveX, moveY);
             string? collidingNpcBehaviour = CollidingNpcBehaviour();
             if (collidingNpcBehaviour != null)
             {

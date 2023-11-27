@@ -23,7 +23,8 @@
 </div>
 
 <div style="background-color:#559">
-    @if (_game.Player?.IsDead() == true)
+    @if (_game == null){ }
+    else if (_game.Player?.IsDead() == true)
     {
         <h1>YOU LOSE!!</h1>
     }
@@ -116,20 +117,23 @@
     }
 </div>
 
-<div class="d-lg-none">
-    <button @onclick="_game.MoveUp">
-        ↑
-    </button>
-    <button @onclick="_game.MoveLeft">
-        ←
-    </button>
-    <button @onclick="_game.MoveDown">
-        ↓
-    </button>
-    <button @onclick="_game.MoveRight">
-        →
-    </button>
-</div>
+@if (_game != null)
+{
+    <div class="d-lg-none">
+        <button @onclick="_game.MoveUp">
+            ↑
+        </button>
+        <button @onclick="_game.MoveLeft">
+            ←
+        </button>
+        <button @onclick="_game.MoveDown">
+            ↓
+        </button>
+        <button @onclick="_game.MoveRight">
+            →
+        </button>
+    </div>
+}
 <div>
     <button class="massive-invisible-button" @onclick="SaveDataAsync">
         Save

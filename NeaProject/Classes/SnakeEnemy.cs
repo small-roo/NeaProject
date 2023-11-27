@@ -6,7 +6,7 @@ namespace NeaProject.Classes
     {
         private int _animationCountdown;
         private static readonly Random _random = new();
-        public SnakeEnemy()
+        public SnakeEnemy(Map map) : base(map)
         {
             ResetAnimationCountdown();
         }
@@ -14,7 +14,7 @@ namespace NeaProject.Classes
         {
             throw new NotImplementedException();
         }
-        public override void MoveRules(int moveX, int moveY, Map _map, Camera _camera)
+        public override void MoveRules(int moveX, int moveY)
         {
             if (NextOverlayTile == '.')
             {

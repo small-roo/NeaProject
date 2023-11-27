@@ -4,6 +4,8 @@ namespace NeaProject.Classes
 {
     public class FinalBoss : Npc
     {
+        public FinalBoss(Map map) : base(map)
+        { }
         public int SpokenToCount { get; set; } = 0;
         public override string Chat(Player player)
         {
@@ -41,7 +43,7 @@ namespace NeaProject.Classes
                     { return ""; }
             }
         }
-        public override void MoveRules(int moveX, int moveY, Map _map, Camera _camera)
+        public override void MoveRules(int moveX, int moveY)
         {
             throw new NotImplementedException();
         }
