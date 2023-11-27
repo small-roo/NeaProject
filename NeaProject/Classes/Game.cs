@@ -35,6 +35,7 @@ namespace NeaProject.Classes
         {
             Npcs.Clear();
             Random random = new();
+
             for (int birdNumber = 1; birdNumber <= 20; birdNumber++) //bird
             {
                 BirdEnemy bird = new(map)
@@ -53,6 +54,7 @@ namespace NeaProject.Classes
                 map.SetOverlayTileChar(bird.XPos, bird.YPos, bird.SpriteRef);
                 Npcs.Add(bird);
             }
+
             FinalBoss finalBoss = new(map) //final boss
             {
                 Name = "Mellow",
@@ -60,6 +62,7 @@ namespace NeaProject.Classes
                 XPos = 29,
                 YPos = 13
             };
+
             for (int snakeNumber = 1; snakeNumber <= 10; snakeNumber++) //snake
             {
                 SnakeEnemy snake = new(map)
@@ -68,7 +71,8 @@ namespace NeaProject.Classes
                     SpriteRef = 'S',
                     XPos = random.Next(0, map.Width),
                     YPos = random.Next(0, map.Height),
-                    FrameIndex = random.Next(0, 2)
+                    FrameIndex = random.Next(0, 2),
+                    AllowedTiles = { 'm', 's' }
                 };
                 while (map.GetOverlayTileChar(snake.XPos, snake.YPos) != '.' || map.GetTileChar(snake.XPos, snake.YPos) != 'm')
                 {

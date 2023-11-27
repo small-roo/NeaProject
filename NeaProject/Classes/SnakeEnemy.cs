@@ -27,13 +27,19 @@ namespace NeaProject.Classes
             _animationCountdown--;
             if (_animationCountdown == 0)
             {
-                FrameIndex = -FrameIndex + 1;
-                int yMovement = _random.Next(-1, 2);
-                if (yMovement == 0)
+                int doMovement = _random.Next(0, 3); // if the movement  is greater than 1 here, it flips instead of moving
+                if (doMovement == 0)
                 {
+                    Move(FrameIndex * -2 + 1, 0);
+                }
+                else if (doMovement == 1 )
+                {
+                    int yMovement = _random.Next(0, 2);
+                    Move(0, yMovement);
                 }
                 else
                 {
+                    FrameIndex = -FrameIndex + 1;
                 }
                 ResetAnimationCountdown();
             }

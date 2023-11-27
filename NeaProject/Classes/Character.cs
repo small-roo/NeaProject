@@ -38,13 +38,14 @@ namespace NeaProject.Classes
             }
             //character is moving to a tile it is allowed to move to
 
+            _map.SetOverlayTileChar(XPos, YPos, '.'); // deletes previous location from map
             MoveRules(moveX, moveY);
+            _map.SetOverlayTileChar(XPos, YPos, SpriteRef); // adds current location to map
         }
 
         public virtual void Animate() { }
         public abstract void MoveRules(int moveX, int moveY);
         public virtual string? CollidingNpcBehaviour() { return ""; }
-
         public bool IsDead()
         {
             return CurrentHp <= 0;
