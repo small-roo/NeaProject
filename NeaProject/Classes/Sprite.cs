@@ -109,6 +109,12 @@ namespace NeaProject.Classes
                         yOffset = 17;
                         break;
                     }
+                case "Snake":
+                    {
+                        xOffset = 3;
+                        yOffset = 18;
+                        break;
+                    }
                 default:
                     {
                         xOffset = 4;

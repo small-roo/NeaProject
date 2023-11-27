@@ -85,6 +85,36 @@ namespace NeaProject.Classes
             }
         }
 
+        public override void Move(Map _map, int moveX, int moveY, Camera _camera)
+        {
+            if (XPos + moveX <= -1 || XPos + moveX >= _map.Width || YPos + moveY <= -1 || YPos + moveY >= _map.Height)
+            {
+                return;
+            }
+            //character is moving within the map
+
+            LookForDialogue = false;
+            LookForFight = false;
+
+            NextTile = _map.GetTileChar(XPos + moveX, YPos + moveY);
+            NextOverlayTile = _map.GetOverlayTileChar(XPos + moveX, YPos + moveY);
+            if (!AllowedTiles.Contains(NextTile))
+            {
+                return;
+            }
+            //character is moving to a tile it is allowed to move to
+
+            MoveRules(moveX, moveY, _map, _camera);
+            string? collidingNpcBehaviour = CollidingNpcBehaviour();
+            if (collidingNpcBehaviour != null)
+            {
+                if (collidingNpcBehaviour == "Passive" || collidingNpcBehaviour == "Neutral")
+                { LookForDialogue = true; }
+                if (collidingNpcBehaviour == "Hostile" || collidingNpcBehaviour == "Neutral")
+                { LookForFight = true; }
+            }
+        }
+
         public override string? CollidingNpcBehaviour()
         {
             switch (NextOverlayTile) // could be Neutral (will have dialogue and might fight you) Hostile (will fight you) or Passive (has dialogue)

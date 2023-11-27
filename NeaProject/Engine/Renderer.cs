@@ -112,6 +112,7 @@ public class Renderer
                 {
                     case 'B':
                     case 'F':
+                    case 'S':
                     case '.':
                         {
                             break;

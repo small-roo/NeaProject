@@ -146,7 +146,8 @@ namespace NeaProject.Pages
                 { 't', new Sprite(mapTileSheet, "Tree", 1)},
                 { 'w', new Sprite(mapTileSheet, "Water", 1)},
                 { 'B', new Sprite(mapTileSheet, "Bird", 2)}, //capital describes an NPC
-                { 'F', new Sprite(mapTileSheet, "FinalBoss", 4)}
+                { 'F', new Sprite(mapTileSheet, "FinalBoss", 4)},
+                { 'S', new Sprite(mapTileSheet, "Snake", 2) }
             };
 
             _fpsCounter = new FpsCounter();
@@ -158,7 +159,7 @@ namespace NeaProject.Pages
         {
             _game.Npcs.Clear();
             Random random = new();
-            for (int birdNumber = 1; birdNumber <= 20; birdNumber++)
+            for (int birdNumber = 1; birdNumber <= 20; birdNumber++) //bird
             {
                 BirdEnemy bird = new()
                 {
@@ -168,7 +169,7 @@ namespace NeaProject.Pages
                     YPos = random.Next(0, map.Height),
                     FrameIndex = random.Next(0, 2),
                 };
-                while (map.GetOverlayTileChar(bird.XPos, bird.YPos) != '.')
+                while (map.GetOverlayTileChar(bird.XPos, bird.YPos) != '.' || map.GetTileChar(bird.XPos, bird.YPos) != 'g')
                 {
                     bird.XPos = random.Next(0, map.Width);
                     bird.YPos = random.Next(0, map.Height);
@@ -176,12 +177,30 @@ namespace NeaProject.Pages
                 map.SetOverlayTileChar(bird.XPos, bird.YPos, bird.SpriteRef);
                 _game.Npcs.Add(bird);
             }
-            FinalBoss finalBoss = new() 
+            FinalBoss finalBoss = new() //final boss
             { 
                 Name = "Mellow", 
                 SpriteRef = 'F', 
                 XPos = 29, YPos = 13 
             };
+            for (int snakeNumber = 1; snakeNumber <= 10; snakeNumber++) //snake
+            {
+                SnakeEnemy snake = new()
+                {
+                    Name = $"snake{snakeNumber}",
+                    SpriteRef = 'S',
+                    XPos = random.Next(0,map.Width),
+                    YPos = random.Next(0,map.Height),
+                    FrameIndex = random.Next(0,2)
+                };
+                while (map.GetOverlayTileChar(snake.XPos, snake.YPos) != '.' || map.GetTileChar(snake.XPos, snake.YPos) != 'm')
+                { 
+                    snake.XPos = random.Next(0, map.Width);
+                    snake.YPos = random.Next(0, map.Height);
+                }
+                map.SetOverlayTileChar(snake.XPos, snake.YPos, snake.SpriteRef);
+                _game.Npcs.Add(snake);
+            }
             map.SetOverlayTileChar(finalBoss.XPos, finalBoss.YPos, finalBoss.SpriteRef);
             _game.Npcs.Add(finalBoss);
         }
