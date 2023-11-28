@@ -7,19 +7,12 @@ namespace NeaProject.Classes
 {
     public class Player : Character
     {
-        readonly Map _map;
-        readonly Camera _camera;
-        public Player(Map map, Camera camera):base(map) 
-        {
-            _camera = camera;
-            _map = map;
-        }
         public bool HasWon()
         {
             return Inventory.Contains("Heartfelt Gift");
         }
 
-        public override void MoveRules(int moveX, int moveY)
+        public override void MoveRules(int moveX, int moveY, Map map, Camera camera)
         {
             switch (NextOverlayTile)
             {
@@ -37,7 +30,7 @@ namespace NeaProject.Classes
                     {
                         XPos += moveX;
                         YPos += moveY;
-                        Teleport();
+                        Teleport(map, camera);
                         break;
                     }
                 case 'd':
@@ -45,7 +38,7 @@ namespace NeaProject.Classes
                         XPos += moveX;
                         YPos += moveY;
                         Inventory.Add("Flower Bundle");
-                        _map.SetOverlayTileChar(XPos, YPos, '.');
+                        map.SetOverlayTileChar(XPos, YPos, '.');
                         break;
                     }
                 case 'F':
@@ -69,20 +62,20 @@ namespace NeaProject.Classes
             }
         }
 
-        private void Teleport()
+        private void Teleport(Map map, Camera camera)
         {
             int charX = 0;
             int charY = 0;
-            foreach (char[] charRow in _map.OverlayCharMap)
+            foreach (char[] charRow in map.OverlayCharMap)
             {
-                foreach (char tile in _map.OverlayCharMap[charY])
+                foreach (char tile in map.OverlayCharMap[charY])
                 {
                     if (tile == NextOverlayTile && (charX != XPos || charY != YPos))
                     {
                         XPos = charX;
                         YPos = charY;
-                        _camera.DrawingStartTileX = charX - 6;
-                        _camera.DrawingStartTileY = charY - 4;
+                        camera.DrawingStartTileX = charX - 6;
+                        camera.DrawingStartTileY = charY - 4;
                         return;
                     }
                     charX++;
@@ -92,9 +85,9 @@ namespace NeaProject.Classes
             }
         }
 
-        public override void Move(int moveX, int moveY)
+        public override void Move(int moveX, int moveY, Map map, Camera camera)
         {
-            if (XPos + moveX <= -1 || XPos + moveX >= _map.Width || YPos + moveY <= -1 || YPos + moveY >= _map.Height)
+            if (XPos + moveX <= -1 || XPos + moveX >= map.Width || YPos + moveY <= -1 || YPos + moveY >= map.Height)
             {
                 return;
             }
@@ -103,15 +96,15 @@ namespace NeaProject.Classes
             LookForDialogue = false;
             LookForFight = false;
 
-            NextTile = _map.GetTileChar(XPos + moveX, YPos + moveY);
-            NextOverlayTile = _map.GetOverlayTileChar(XPos + moveX, YPos + moveY);
+            NextTile = map.GetTileChar(XPos + moveX, YPos + moveY);
+            NextOverlayTile = map.GetOverlayTileChar(XPos + moveX, YPos + moveY);
             if (!AllowedTiles.Contains(NextTile))
             {
                 return;
             }
             //character is moving to a tile it is allowed to move to
 
-            MoveRules(moveX, moveY);
+            MoveRules(moveX, moveY, map, camera);
             string? collidingNpcBehaviour = CollidingNpcBehaviour();
             if (collidingNpcBehaviour != null)
             {

@@ -5,19 +5,19 @@ namespace NeaProject.Classes
 {
     public class Game
     {
-        public Map Map { get; } = new();
-        public Camera Camera { get; } = new();
-        public List<Npc> Npcs { get; } = new();
-        public Player Player { get; }
+        public Map Map { get; set; } = new(); // needs the sets to deserialise properly
+        public Camera Camera { get; set; } = new();
+        public List<Npc> Npcs { get; set; } = new();
+        public Player Player { get; set; }
 
         public Game()
         {
-            Player = new(Map, Camera) { Name = "", SpriteRef = '\0' };
+            Player = new() { Name = "", SpriteRef = '\0' };
         }
         public Game(string mapString)
         {
             Map = new Map(mapString);
-            Player = new Player(Map, Camera)
+            Player = new Player()
             {
                 CurrentHp = 100,
                 // XPos = _map.Width / 2,
@@ -38,7 +38,7 @@ namespace NeaProject.Classes
 
             for (int birdNumber = 1; birdNumber <= 20; birdNumber++) //bird
             {
-                BirdEnemy bird = new(map)
+                BirdEnemy bird = new()
                 {
                     Name = $"bird{birdNumber}",
                     SpriteRef = 'B',
@@ -55,7 +55,7 @@ namespace NeaProject.Classes
                 Npcs.Add(bird);
             }
 
-            FinalBoss finalBoss = new(map) //final boss
+            FinalBoss finalBoss = new(  ) //final boss
             {
                 Name = "Mellow",
                 SpriteRef = 'F',
@@ -65,7 +65,7 @@ namespace NeaProject.Classes
 
             for (int snakeNumber = 1; snakeNumber <= 10; snakeNumber++) //snake
             {
-                SnakeEnemy snake = new(map)
+                SnakeEnemy snake = new()
                 {
                     Name = $"snake{snakeNumber}",
                     SpriteRef = 'S',
@@ -95,7 +95,7 @@ namespace NeaProject.Classes
             }
             Player.DirectionFacing = 'U';
             Player.FrameIndex = 3;
-            Player.Move(0, -1);
+            Player.Move(0, -1, Map, Camera);
             
         }
         public void MoveRight()
@@ -106,7 +106,7 @@ namespace NeaProject.Classes
             }
             Player.DirectionFacing = 'R';
             Player.FrameIndex = 1;
-            Player.Move(1, 0);
+            Player.Move(1, 0, Map, Camera);
         }
         public void MoveDown()
         {
@@ -116,7 +116,7 @@ namespace NeaProject.Classes
             }
             Player.DirectionFacing = 'D';
             Player.FrameIndex = 0;
-            Player.Move(0, 1);
+            Player.Move(0, 1, Map, Camera);
         }
         public void MoveLeft()
         {
@@ -126,7 +126,7 @@ namespace NeaProject.Classes
             }
             Player.DirectionFacing = 'L';
             Player.FrameIndex = 2;
-            Player.Move(-1, 0);
+            Player.Move(-1, 0, Map, Camera);
         }
     }
 }

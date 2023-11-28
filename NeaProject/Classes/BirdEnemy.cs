@@ -6,7 +6,7 @@ namespace NeaProject.Classes
     {
         private int _animationCountdown;
         private static readonly Random _random = new();
-        public BirdEnemy(Map map):base(map)
+        public BirdEnemy()
         { 
             ResetAnimationCountdown();
         }
@@ -14,7 +14,7 @@ namespace NeaProject.Classes
         {
             throw new NotImplementedException();
         }
-        public override void MoveRules(int moveX, int moveY)
+        public override void MoveRules(int moveX, int moveY, Map map, Camera camera)
         {
             if (NextOverlayTile == '.')
             {
@@ -22,7 +22,7 @@ namespace NeaProject.Classes
                 YPos += moveY;
             }
         }
-        public override void Animate()
+        public override void Animate(Game game)
         {
             _animationCountdown--;
             if (_animationCountdown == 0)

@@ -157,7 +157,7 @@ namespace NeaProject.Pages
 
             unsafe
             {
-                fixed (uint* ptr = _renderer.UpdateFrameBuffer(_game.Camera))
+                fixed (uint* ptr = _renderer.UpdateFrameBuffer(_game))
                 {
                     _bitmap.SetPixels((IntPtr)ptr);
                 }

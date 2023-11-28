@@ -34,7 +34,7 @@ public class Renderer
         _buffer = new uint[ViewportHeight, ViewportWidth];
     }
 
-    public uint[,] UpdateFrameBuffer(Camera camera)
+    public uint[,] UpdateFrameBuffer(Game game)
     {
         bool isAnimationFrame = false;
         if (_stopwatch.ElapsedMilliseconds > 100)
@@ -43,10 +43,10 @@ public class Renderer
             isAnimationFrame = true;
         }
 
-        DrawMap(camera);
-        DrawNpcs(isAnimationFrame, camera);
-        DrawPlayer(isAnimationFrame, camera);
-        
+        DrawMap(game.Camera);
+        DrawNpcs(isAnimationFrame, game);
+        DrawPlayer(isAnimationFrame, game);
+
         return _buffer;
     }
 
@@ -57,7 +57,7 @@ public class Renderer
             camera.DrawingStartTileX--;
         }
         else if (_player.XPos - camera.DrawingStartTileX >= ViewportTileX - ViewportEdgeBuffer)
-        { 
+        {
             camera.DrawingStartTileX++;
         }
 
@@ -71,29 +71,39 @@ public class Renderer
         }
     }
 
-    private void DrawPlayer(bool isAnimationFrame, Camera camera)
+    private void DrawPlayer(bool isAnimationFrame, Game game)
     {
         if (isAnimationFrame)
         {
-            _player.Animate();
+            _player.Animate(game);
         }
-        DrawSprite(_player.YPos - camera.DrawingStartTileY, _player.XPos - camera.DrawingStartTileX, _sprites['p'], _player.FrameIndex);
+        DrawSprite(_player.YPos - game.Camera.DrawingStartTileY, _player.XPos - game.Camera.DrawingStartTileX, _sprites['p'], _player.FrameIndex);
     }
 
-    private void DrawNpcs(bool isAnimationFrame, Camera camera)
-    { 
-        foreach (var npc in _npcs.Where(npc =>
-            npc.YPos >= camera.DrawingStartTileY &&
-            npc.YPos < camera.DrawingStartTileY + ViewportTileY &&
-            npc.XPos >= camera.DrawingStartTileX &&
-            npc.XPos < camera.DrawingStartTileX + ViewportTileX))
+    private void DrawNpcs(bool isAnimationFrame, Game game)
+    {
+        // move any onscreen npcs (which might move them offscreen :])
+        foreach (var npc in OnScreenNpcs(game))
         {
             if (isAnimationFrame)
             {
-                npc.Animate();
+                npc.Animate(game);
             }
-            DrawSprite(npc.YPos - camera.DrawingStartTileY, npc.XPos - camera.DrawingStartTileX, _sprites[npc.SpriteRef], npc.FrameIndex);
         }
+        // draw them if they are still onscreen
+        foreach (var npc in OnScreenNpcs(game))
+        {
+            DrawSprite(npc.YPos - game.Camera.DrawingStartTileY, npc.XPos - game.Camera.DrawingStartTileX, _sprites[npc.SpriteRef], npc.FrameIndex);
+        }
+    }
+
+    private IEnumerable<Npc> OnScreenNpcs(Game game)
+    {
+        return _npcs.Where(npc =>
+                npc.YPos >= game.Camera.DrawingStartTileY &&
+                npc.YPos < game.Camera.DrawingStartTileY + ViewportTileY &&
+                npc.XPos >= game.Camera.DrawingStartTileX &&
+                npc.XPos < game.Camera.DrawingStartTileX + ViewportTileX);
     }
 
     private void DrawMap(Camera camera)
