@@ -26,7 +26,7 @@ namespace NeaProject.Classes
                 YPos = 5,
                 Name = "Mellie",
                 SpriteRef = 'p',
-                AllowedTiles = new List<char> { 'g', 'm', 's', 'w' }
+                AllowedTiles = new List<char> { 'g', 'ĝ', 'ğ', 'ġ', 'ģ', 'm', 's', 'w' }
             };
             SetUpNpcs(Map);
         }
@@ -44,9 +44,10 @@ namespace NeaProject.Classes
                     SpriteRef = 'B',
                     XPos = random.Next(0, map.Width),
                     YPos = random.Next(0, map.Height),
+                    AllowedTiles = { 'g', 'ĝ', 'ğ', 'ġ', 'ģ' },
                     FrameIndex = random.Next(0, 2),
                 };
-                while (map.GetOverlayTileChar(bird.XPos, bird.YPos) != '.' || map.GetTileChar(bird.XPos, bird.YPos) != 'g')
+                while (map.GetOverlayTileChar(bird.XPos, bird.YPos) != '.' || bird.AllowedTiles.Contains(map.GetTileChar(bird.XPos, bird.YPos)) == false)
                 {
                     bird.XPos = random.Next(0, map.Width);
                     bird.YPos = random.Next(0, map.Height);

@@ -112,24 +112,42 @@ namespace NeaProject.Pages
             SKBitmap mapTileSheet = await imageLoader.GetBitmapAsync();
             _sprites = new Dictionary<char, Sprite?>()
             {
-                { '.', null},
-                { '□', new Sprite(mapTileSheet, "Space", 1)},
+                //teleporters
                 { '0', new Sprite(mapTileSheet, "Teleport0", 1)},
                 { '1', new Sprite(mapTileSheet, "Teleport1", 1)},
                 { '2', new Sprite(mapTileSheet, "Teleport2", 1)},
                 { '3', new Sprite(mapTileSheet, "Teleport3", 1)},
                 { '4', new Sprite(mapTileSheet, "Teleport4", 1)},
-                { 'd', new Sprite(mapTileSheet, "Diamond", 1)}, //currently unused                
+
+                //various cacti
+                { 'c', new Sprite(mapTileSheet, "Cactus", 1)},
+                { 'ç', new Sprite(mapTileSheet, "Cactus1", 1)},
+                { 'ć', new Sprite(mapTileSheet, "Cactus2", 1)},
+                { 'ĉ', new Sprite(mapTileSheet, "Cactus3", 1)},
+                { 'č', new Sprite(mapTileSheet, "Cactus4", 1)},
+
+                //grass
                 { 'g', new Sprite(mapTileSheet, "Grass", 1)},
+                { 'ĝ', new Sprite(mapTileSheet, "Grass1", 1)},
+                { 'ğ', new Sprite(mapTileSheet, "Grass2", 1)},
+                { 'ġ', new Sprite(mapTileSheet, "Grass3", 1)},
+                { 'ģ', new Sprite(mapTileSheet, "Grass4", 1)},
+
+                //npcs - described by a capital
+                { 'B', new Sprite(mapTileSheet, "Bird", 2)},
+                { 'F', new Sprite(mapTileSheet, "FinalBoss", 4)},
+                { 'S', new Sprite(mapTileSheet, "Snake", 2) },
+
+                //misc other
+                { '.', null},
+                { '□', new Sprite(mapTileSheet, "Space", 1)},
+                { 'd', new Sprite(mapTileSheet, "Diamond", 1)}, //currently actually flowerbundle
                 { 'm', new Sprite(mapTileSheet, "MarsRock", 1)},
                 { 'p', new Sprite(mapTileSheet, "Player", 4)},
                 { 'r', new Sprite(mapTileSheet, "Rock", 1)},
                 { 's', new Sprite(mapTileSheet, "Sand", 1)},
                 { 't', new Sprite(mapTileSheet, "Tree", 1)},
-                { 'w', new Sprite(mapTileSheet, "Water", 1)},
-                { 'B', new Sprite(mapTileSheet, "Bird", 2)}, //capital describes an NPC
-                { 'F', new Sprite(mapTileSheet, "FinalBoss", 4)},
-                { 'S', new Sprite(mapTileSheet, "Snake", 2) }
+                { 'w', new Sprite(mapTileSheet, "Water", 1)}
             };
 
             _fpsCounter = new FpsCounter();

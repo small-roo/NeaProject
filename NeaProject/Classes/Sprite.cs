@@ -33,6 +33,7 @@ namespace NeaProject.Classes
         {
             switch (name)
             {
+                //teleports
                 case "Teleport0":
                 case "Teleport1":
                 case "Teleport2":
@@ -43,10 +44,68 @@ namespace NeaProject.Classes
                         yOffset = 9;
                         break;
                     }
+
+                //cacti
+                case "Cactus": // left in in case of errors for now
+                    {
+                        xOffset = 39;
+                        yOffset = 1;
+                        break;
+                    }
+                case "Cactus1":
+                    {
+                        xOffset = 39;
+                        yOffset = 2;
+                        break;
+                    }
+                case "Cactus2":
+                    {
+                        xOffset = 40;
+                        yOffset = 2;
+                        break;
+                    }
+                case "Cactus3":
+                    {
+                        xOffset = 39;
+                        yOffset = 3;
+                        break;
+                    }
+                case "Cactus4":
+                    {
+                        xOffset = 40;
+                        yOffset = 3;
+                        break;
+                    }
+
+                //grass
                 case "Grass":
                     {
                         xOffset = 0;
                         yOffset = 0;
+                        break;
+                    }
+                case "Grass1":
+                    {
+                        xOffset = 0;
+                        yOffset = 1;
+                        break;
+                    }
+                case "Grass2":
+                    {
+                        xOffset = 1;
+                        yOffset = 1;
+                        break;
+                    }
+                case "Grass3":
+                    {
+                        xOffset = 0;
+                        yOffset = 2;
+                        break;
+                    }
+                case "Grass4":
+                    {
+                        xOffset = 1;
+                        yOffset = 2;
                         break;
                     }
                 case "Diamond":

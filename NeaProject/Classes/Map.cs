@@ -33,6 +33,8 @@ namespace NeaProject.Classes
                 }
                 rowIndex++;
             }
+            CharMap = RandomiseTiles(CharMap);
+            OverlayCharMap = RandomiseTiles(OverlayCharMap);
         }
 
         public static char[][] CreateJaggedArray(int height, int width) 
@@ -49,6 +51,10 @@ namespace NeaProject.Classes
         {
             return CharMap[yTile][xTile];
         }
+        public void SetTileChar(int xTile, int yTile, char newOverlay)
+        {
+            CharMap[yTile][xTile] = newOverlay;
+        }
 
         public char GetOverlayTileChar(int xTile, int yTile)
         {
@@ -58,6 +64,94 @@ namespace NeaProject.Classes
         public void SetOverlayTileChar(int xTile, int yTile, char newOverlay)
         {
             OverlayCharMap[yTile][xTile] = newOverlay;
+        }
+
+        private static char[][] RandomiseTiles(char[][] currentMap)
+        {
+            Random random = new();
+            int yTile = 0;
+            foreach (char[] tileRow in currentMap) // can be reused for all randomisations
+            {
+                int xTile = 0;
+                foreach (char tileChar in tileRow)
+                {
+                    switch (tileChar)
+                    {
+                        case 'c': //cactus
+                            {
+                                int cactusNumber = random.Next(0, 4);
+                                switch (cactusNumber)
+                                {
+                                    case 0:
+                                        {
+                                            currentMap[yTile][xTile] = 'ç';
+                                            break;
+                                        }
+                                    case 1:
+                                        {
+                                            currentMap[yTile][xTile] = 'ć';
+                                            break;
+                                        }
+                                    case 2:
+                                        {
+                                            currentMap[yTile][xTile] = 'ĉ';
+                                            break;
+                                        }
+                                    case 3:
+                                        {
+                                            currentMap[yTile][xTile] = 'č';
+                                            break;
+                                        }
+                                    default:
+                                        {
+                                            break;
+                                        }
+                                }
+                                break;
+                            }
+                        case 'g': //grass
+                            {
+                                int grassNumber = random.Next(0, 5);
+                                switch (grassNumber)
+                                {
+                                    case 1:
+                                        {
+                                            currentMap[yTile][xTile] = 'ĝ';
+                                            break;
+                                        }
+                                    case 2:
+                                        {
+                                            currentMap[yTile][xTile] = 'ğ';
+                                            break;
+                                        }
+                                    case 3:
+                                        {
+                                            currentMap[yTile][xTile] = 'ġ';
+                                            break;
+                                        }
+                                    case 4:
+                                        {
+                                            currentMap[yTile][xTile] = 'ģ';
+                                            break;
+                                        }
+                                    case 0:
+                                    default:
+                                        {
+                                            break;
+                                        }
+                                }
+                                break;
+                            }
+                        default: 
+                            {
+                                break; 
+                            }
+                    }
+                    xTile++;
+                }
+                yTile++;
+            }
+            return currentMap;
         }
     }
 }
