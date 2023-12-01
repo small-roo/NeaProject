@@ -77,7 +77,9 @@ public class Renderer
         {
             _player.Animate(game);
         }
-        DrawSprite(_player.YPos - game.Camera.DrawingStartTileY, _player.XPos - game.Camera.DrawingStartTileX, _sprites['p'], _player.FrameIndex);
+        char mapChar = _map.GetTileChar(_player.XPos, _player.YPos);
+        Sprite? tileSprite = _sprites[mapChar];
+        DrawSprite(_player.YPos - game.Camera.DrawingStartTileY, _player.XPos - game.Camera.DrawingStartTileX, _sprites['p'], tileSprite, _player.FrameIndex);
     }
 
     private void DrawNpcs(bool isAnimationFrame, Game game)
@@ -93,7 +95,9 @@ public class Renderer
         // draw them if they are still onscreen
         foreach (var npc in OnScreenNpcs(game))
         {
-            DrawSprite(npc.YPos - game.Camera.DrawingStartTileY, npc.XPos - game.Camera.DrawingStartTileX, _sprites[npc.SpriteRef], npc.FrameIndex);
+            char mapChar = _map.GetTileChar(npc.XPos, npc.YPos);
+            Sprite? tileSprite = _sprites[mapChar];
+            DrawSprite(npc.YPos - game.Camera.DrawingStartTileY, npc.XPos - game.Camera.DrawingStartTileX, _sprites[npc.SpriteRef], tileSprite, npc.FrameIndex);
         }
     }
 
@@ -115,9 +119,9 @@ public class Renderer
                 // determine sprite of tile
                 char mapChar = _map.GetTileChar(camera.DrawingStartTileX + drawingTileX, camera.DrawingStartTileY + drawingTileY);
                 Sprite? sprite = _sprites[mapChar];
-                DrawSprite(drawingTileY, drawingTileX, sprite, 0);
+                DrawSprite(drawingTileY, drawingTileX, sprite, null, 0);
                 mapChar = _map.GetOverlayTileChar(camera.DrawingStartTileX + drawingTileX, camera.DrawingStartTileY + drawingTileY);
-                sprite = _sprites[mapChar];
+                Sprite? overlaySprite = _sprites[mapChar];
                 switch (mapChar)
                 {
                     case 'B':
@@ -129,7 +133,7 @@ public class Renderer
                         }
                     default:
                         { 
-                            DrawSprite(drawingTileY, drawingTileX, sprite, 0);
+                            DrawSprite(drawingTileY, drawingTileX, overlaySprite, sprite, 0);
                             break; 
                         }
                 }
@@ -138,7 +142,7 @@ public class Renderer
         }
     }
 
-    private void DrawSprite(int drawingTileY, int drawingTileX, Sprite? sprite, int frameIndex)
+    private void DrawSprite(int drawingTileY, int drawingTileX, Sprite? sprite, Sprite? baseSprite, int frameIndex)
     {
         if (sprite == null)
         {
@@ -154,11 +158,46 @@ public class Renderer
             for (int pixelCol = 0; pixelCol < tileWidth; pixelCol++)
             {
                 uint pixelColour = sprite.GetColourAt(pixelCol, pixelRow, frameIndex);
-                if (pixelColour >> 24 != 0x00) // if not transparent, then draw pixel (checks the alpha channel)
+                uint pixelAlpha = pixelColour >> 24;
+                if (pixelAlpha == 0xff) // if opaque, draw w/o calculating 
                 {
+                    _buffer[pixelRow + yOffset, pixelCol + xOffset] = pixelColour;
+                }
+                else if (pixelAlpha != 0x00) // if transparent, don't draw pixel (checks the alpha channel)
+                {
+                    //seperate into RGB
+                    uint red = pixelColour % 256;
+                    uint green = (pixelColour >> 8) % 256;
+                    uint blue = (pixelColour >> 16) % 256;
+                    uint baseRed;
+                    uint baseGreen;
+                    uint baseBlue;
+                    if (baseSprite != null) //seperate colour underneath into RGB
+                    {
+                        uint basePixelColour = baseSprite.GetColourAt(pixelCol, pixelRow, frameIndex);
+                        baseRed = basePixelColour % 256;
+                        baseGreen = (pixelColour >> 8) % 256;
+                        baseBlue = (pixelColour >> 16) % 256;
+                    }
+                    else //if there is no pixel below, the base colour is black
+                    {
+                        baseRed = 0x00;
+                        baseGreen = 0x00;
+                        baseBlue = 0x00;
+                    }
+                    red = OpacityCalc(red, baseRed, pixelAlpha);
+                    green = OpacityCalc(green, baseGreen, pixelAlpha);
+                    blue = OpacityCalc(blue, baseBlue, pixelAlpha);
+                    pixelColour = (uint)((0xff << 24) | (blue << 16) | (green << 8) | red); //recombine
                     _buffer[pixelRow + yOffset, pixelCol + xOffset] = pixelColour;
                 }
             }
         }
+    }
+
+    public static uint OpacityCalc(uint colour, uint baseColour, uint alpha)
+    {
+        colour = (colour * alpha + (0xff - alpha) * baseColour) / 0xff;
+        return colour;
     }
 }
