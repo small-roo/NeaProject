@@ -176,8 +176,8 @@ public class Renderer
                     {
                         uint basePixelColour = baseSprite.GetColourAt(pixelCol, pixelRow, frameIndex);
                         baseRed = basePixelColour % 256;
-                        baseGreen = (pixelColour >> 8) % 256;
-                        baseBlue = (pixelColour >> 16) % 256;
+                        baseGreen = (basePixelColour >> 8) % 256;
+                        baseBlue = (basePixelColour >> 16) % 256;
                     }
                     else //if there is no pixel below, the base colour is black
                     {

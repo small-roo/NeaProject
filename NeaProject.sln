@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other Files", "Other Files"
 		version.json = version.json
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeaProject.Test", "NeaProject.Test\NeaProject.Test.csproj", "{4C0C6494-3100-491E-A35B-E6C95854772A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +26,10 @@ Global
 		{B27F17CE-EA74-4757-A923-287CE129D4CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B27F17CE-EA74-4757-A923-287CE129D4CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B27F17CE-EA74-4757-A923-287CE129D4CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C0C6494-3100-491E-A35B-E6C95854772A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C0C6494-3100-491E-A35B-E6C95854772A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C0C6494-3100-491E-A35B-E6C95854772A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C0C6494-3100-491E-A35B-E6C95854772A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
