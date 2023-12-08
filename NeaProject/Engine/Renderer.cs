@@ -126,7 +126,9 @@ public class Renderer
                 {
                     case 'B':
                     case 'F':
+                    case 'I':
                     case 'S':
+                    case 'p':
                     case '.':
                         {
                             break;
@@ -141,7 +143,7 @@ public class Renderer
             }
         }
     }
-
+    
     private void DrawSprite(int drawingTileY, int drawingTileX, Sprite? sprite, Sprite? baseSprite, int frameIndex)
     {
         if (sprite == null)

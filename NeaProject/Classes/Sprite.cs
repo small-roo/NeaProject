@@ -108,6 +108,8 @@ namespace NeaProject.Classes
                         yOffset = 2;
                         break;
                     }
+
+                //other
                 case "Diamond":
                     {
                         xOffset = 23;
@@ -156,6 +158,7 @@ namespace NeaProject.Classes
                         yOffset = 4;
                         break;
                     }
+                //npcs
                 case "Bird":
                     {
                         xOffset = 0;
@@ -166,6 +169,12 @@ namespace NeaProject.Classes
                     {
                         xOffset = 0;
                         yOffset = 17;
+                        break;
+                    }
+                case "Fish":
+                    {
+                        xOffset = 5;
+                        yOffset = 18;
                         break;
                     }
                 case "Snake":

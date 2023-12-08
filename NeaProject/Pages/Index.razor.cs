@@ -136,6 +136,7 @@ namespace NeaProject.Pages
                 //npcs - described by a capital
                 { 'B', new Sprite(mapTileSheet, "Bird", 2)},
                 { 'F', new Sprite(mapTileSheet, "FinalBoss", 4)},
+                { 'I', new Sprite(mapTileSheet, "Fish", 2)},
                 { 'S', new Sprite(mapTileSheet, "Snake", 2) },
 
                 //misc other

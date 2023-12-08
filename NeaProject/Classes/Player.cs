@@ -104,7 +104,10 @@ namespace NeaProject.Classes
             }
             //character is moving to a tile it is allowed to move to
 
+            map.SetOverlayTileChar(XPos, YPos, '.'); // deletes previous location from map
             MoveRules(moveX, moveY, map, camera);
+            map.SetOverlayTileChar(XPos, YPos, SpriteRef); // adds current location to map
+
             string? collidingNpcBehaviour = CollidingNpcBehaviour();
             if (collidingNpcBehaviour != null)
             {

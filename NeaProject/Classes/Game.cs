@@ -56,13 +56,33 @@ namespace NeaProject.Classes
                 Npcs.Add(bird);
             }
 
-            FinalBoss finalBoss = new(  ) //final boss
+            FinalBoss finalBoss = new() //final boss
             {
                 Name = "Mellow",
                 SpriteRef = 'F',
                 XPos = 29,
                 YPos = 13
             };
+
+            for (int fishNumber = 1; fishNumber <= 30; fishNumber++) //fish
+            {
+                FishEnemy fish = new()
+                {
+                    Name = $"fish{fishNumber}",
+                    SpriteRef = 'I',
+                    XPos = random.Next(0, map.Width),
+                    YPos = random.Next(0, map.Height),
+                    FrameIndex = random.Next(0, 2),
+                    AllowedTiles = { 'w' }
+                };
+                while (map.GetOverlayTileChar(fish.XPos, fish.YPos) != '.' || map.GetTileChar(fish.XPos, fish.YPos) != 'w')
+                {
+                    fish.XPos = random.Next(0, map.Width);
+                    fish.YPos = random.Next(0, map.Height);
+                }
+                map.SetOverlayTileChar(fish.XPos, fish.YPos, fish.SpriteRef);
+                Npcs.Add(fish);
+            }
 
             for (int snakeNumber = 1; snakeNumber <= 10; snakeNumber++) //snake
             {
