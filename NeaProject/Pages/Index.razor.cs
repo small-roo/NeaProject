@@ -88,7 +88,6 @@ namespace NeaProject.Pages
                     }
 
             }
-            _renderer.MoveCamera(_game.Camera);
         }
 
         protected override async Task OnInitializedAsync()
@@ -153,7 +152,7 @@ namespace NeaProject.Pages
 
             _fpsCounter = new FpsCounter();
             _renderer = new Renderer(_game, _sprites);
-            _bitmap = new SKBitmap(_renderer.ViewportWidth, _renderer.ViewportHeight);
+            _bitmap = new SKBitmap(Renderer.ViewportWidth, Renderer.ViewportHeight);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -184,7 +183,7 @@ namespace NeaProject.Pages
 
             var canvas = e.Surface.Canvas;
             canvas.Clear(SKColors.White);
-            canvas.DrawBitmap(_bitmap, new SKRect(0, 0, _renderer.ViewportWidth * 1, _renderer.ViewportHeight * 1));
+            canvas.DrawBitmap(_bitmap, new SKRect(0, 0, Renderer.ViewportWidth * 1, Renderer.ViewportHeight * 1));
             var fps = _fpsCounter.GetCurrentFps();
             using var paint = new SKPaint
             {

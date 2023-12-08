@@ -106,6 +106,7 @@ namespace NeaProject.Classes
 
             map.SetOverlayTileChar(XPos, YPos, '.'); // deletes previous location from map
             MoveRules(moveX, moveY, map, camera);
+            MoveCamera(camera);
             map.SetOverlayTileChar(XPos, YPos, SpriteRef); // adds current location to map
 
             string? collidingNpcBehaviour = CollidingNpcBehaviour();
@@ -125,6 +126,26 @@ namespace NeaProject.Classes
                 case 'F':
                     { return "Neutral"; }
                 default: return null;
+            }
+        }
+
+        public void MoveCamera(Camera camera)
+        {
+            if (XPos - camera.DrawingStartTileX < Engine.Renderer.ViewportEdgeBuffer) //moves left
+            {
+                camera.DrawingStartTileX--;
+            }
+            else if (XPos - camera.DrawingStartTileX >= Engine.Renderer.ViewportTileX - Engine.Renderer.ViewportEdgeBuffer) //moves right
+            {
+                camera.DrawingStartTileX++;
+            }
+            if (YPos - camera.DrawingStartTileY < Engine.Renderer.ViewportEdgeBuffer) //moves up
+            {
+                camera.DrawingStartTileY--;
+            }
+            else if (YPos - camera.DrawingStartTileY >= Engine.Renderer.ViewportTileY - Engine.Renderer.ViewportEdgeBuffer) //moves down
+            {
+                camera.DrawingStartTileY++;
             }
         }
 

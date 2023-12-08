@@ -11,11 +11,11 @@ public class Renderer
     const int tileWidth = Sprite.tileSize;
     const int tileHeight = Sprite.tileSize;
 
-    public int ViewportHeight = 320;
-    public int ViewportWidth = 640;
-    public int ViewportTileX = 20;
-    public int ViewportTileY = 10;
-    public int ViewportEdgeBuffer = 3;
+    public const int ViewportHeight = 320;
+    public const int ViewportWidth = 640;
+    public const int ViewportTileX = 20;
+    public const int ViewportTileY = 10;
+    public const int ViewportEdgeBuffer = 3;
 
     private readonly Map _map;
     private readonly Player _player;
@@ -48,27 +48,6 @@ public class Renderer
         DrawPlayer(isAnimationFrame, game);
 
         return _buffer;
-    }
-
-    public void MoveCamera(Camera camera)
-    {
-        if (_player.XPos - camera.DrawingStartTileX < ViewportEdgeBuffer)
-        {
-            camera.DrawingStartTileX--;
-        }
-        else if (_player.XPos - camera.DrawingStartTileX >= ViewportTileX - ViewportEdgeBuffer)
-        {
-            camera.DrawingStartTileX++;
-        }
-
-        if (_player.YPos - camera.DrawingStartTileY < ViewportEdgeBuffer)
-        {
-            camera.DrawingStartTileY--;
-        }
-        else if (_player.YPos - camera.DrawingStartTileY >= ViewportTileY - ViewportEdgeBuffer)
-        {
-            camera.DrawingStartTileY++;
-        }
     }
 
     private void DrawPlayer(bool isAnimationFrame, Game game)
