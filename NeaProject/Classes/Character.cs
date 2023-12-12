@@ -17,7 +17,7 @@ namespace NeaProject.Classes
         public bool LookForFight { get; set; } = false;
         public List<char> AllowedTiles { get; set; } = new List<char>();
         public List<string> Inventory { get; set; } = new List<string>();
-        public virtual void Move(int moveX, int moveY, Map map, Camera camera)
+        public virtual void Move(int moveX, int moveY, Map map, Camera camera, int screenWidth, int screenHeight)
         {
             if (XPos + moveX <= -1 || XPos + moveX >= map.Width || YPos + moveY <= -1 || YPos + moveY >= map.Height)
             {

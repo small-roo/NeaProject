@@ -9,6 +9,8 @@ namespace NeaProject.Classes
         public Camera Camera { get; set; } = new();
         public List<Npc> Npcs { get; set; } = new();
         public Player Player { get; set; }
+        public int ScreenTileWidth { get; set; }
+        public int ScreenTileHeight { get; set; }
 
         public Game()
         {
@@ -116,7 +118,7 @@ namespace NeaProject.Classes
             }
             Player.DirectionFacing = 'U';
             Player.FrameIndex = 3;
-            Player.Move(0, -1, Map, Camera);
+            Player.Move(0, -1, Map, Camera, ScreenTileWidth, ScreenTileHeight);
             
         }
         public void MoveRight()
@@ -127,7 +129,7 @@ namespace NeaProject.Classes
             }
             Player.DirectionFacing = 'R';
             Player.FrameIndex = 1;
-            Player.Move(1, 0, Map, Camera);
+            Player.Move(1, 0, Map, Camera, ScreenTileWidth, ScreenTileHeight);
         }
         public void MoveDown()
         {
@@ -137,7 +139,7 @@ namespace NeaProject.Classes
             }
             Player.DirectionFacing = 'D';
             Player.FrameIndex = 0;
-            Player.Move(0, 1, Map, Camera);
+            Player.Move(0, 1, Map, Camera, ScreenTileWidth, ScreenTileHeight);
         }
         public void MoveLeft()
         {
@@ -147,7 +149,7 @@ namespace NeaProject.Classes
             }
             Player.DirectionFacing = 'L';
             Player.FrameIndex = 2;
-            Player.Move(-1, 0, Map, Camera);
+            Player.Move(-1, 0, Map, Camera, ScreenTileWidth, ScreenTileHeight);
         }
     }
 }

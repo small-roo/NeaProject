@@ -26,6 +26,7 @@ namespace NeaProject.Pages
         private int currentCount = 0;
         private string? lastPressed;
         private ElementReference buttonRef;
+        private SKCanvasView? _skCanvasView;
 
         private void IncrementCount()
         {
@@ -152,7 +153,7 @@ namespace NeaProject.Pages
 
             _fpsCounter = new FpsCounter();
             _renderer = new Renderer(_game, _sprites);
-            _bitmap = new SKBitmap(Renderer.ViewportWidth, Renderer.ViewportHeight);
+            _bitmap = new SKBitmap(_renderer.ViewportWidth, _renderer.ViewportHeight);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -173,17 +174,22 @@ namespace NeaProject.Pages
             //  https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/bitmaps/pixel-bits
             // Having tried them all maintaining and then setting the pixel byte array is the most performant for us.
 
+            if (e.Info.Width != _bitmap.Width || e.Info.Height != _bitmap.Height)
+            {
+                _bitmap = new SKBitmap(_renderer.ViewportWidth, _renderer.ViewportHeight);
+            }
             unsafe
             {
-                fixed (uint* ptr = _renderer.UpdateFrameBuffer(_game))
+                fixed (uint* ptr = _renderer.UpdateFrameBuffer(_game, e.Info.Width, e.Info.Height))
                 {
                     _bitmap.SetPixels((IntPtr)ptr);
+                        
                 }
             }
 
             var canvas = e.Surface.Canvas;
             canvas.Clear(SKColors.White);
-            canvas.DrawBitmap(_bitmap, new SKRect(0, 0, Renderer.ViewportWidth * 1, Renderer.ViewportHeight * 1));
+            canvas.DrawBitmap(_bitmap, new SKRect(0, 0, _renderer.ViewportWidth * 1, _renderer.ViewportHeight * 1));
             var fps = _fpsCounter.GetCurrentFps();
             using var paint = new SKPaint
             {
@@ -204,7 +210,5 @@ namespace NeaProject.Pages
             var content = await client.GetStringAsync(uri);
             return content;
         }
-
-
     }
 }

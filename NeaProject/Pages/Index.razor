@@ -7,22 +7,23 @@
 @using NeaProject.Classes;
 @using System.Drawing;
 
+<div style="background-color:#222">
 
-
-<div style="background-color:#955">
+<div style="width:100%; background-color:#222">
     <button
         @ref="buttonRef"
         class="massive-invisible-button"
         @onkeydown="KeyDown">
                 <SKCanvasView 
+                    @ref="_skCanvasView"
                     OnPaintSurface="OnPaintSurface" 
                     IgnorePixelScaling="true"
                     EnableRenderLoop="true" 
-                    style="width:640px; height:320px; margin:auto; display:block"/>
+                    style="width:80%; margin:auto; border-style:solid; border-color:#fff; display:block"/>
     </button>
 </div>
 
-<div style="background-color:#559">
+<div style="background-color:#222;height:10%">
     @if (_game == null){ }
     else if (_game.Player?.IsDead() == true)
     {
@@ -34,9 +35,9 @@
     }
     else if (_game.Player != null && NavigationManager != null)
     {
-        <table class="table-center">
+        <table class="table-center" style="color:#fff;width:79%;height:100px">
             <tr>
-                <td style="width:16%;" rowspan="2">
+                <td style="width:12.5%" rowspan="2">
                     @if (_game.Player.LookForDialogue == true)
                     {
                         switch (_game.Player.NextOverlayTile)
@@ -88,59 +89,63 @@
                         }
                     }
                  </td>
-            <td style="width:8%">wooc</td>
-            <td class="stat" style="width:8%">wood</td>
-        </tr>
-        <tr>
-            <td>wooe</td>
-            <td class ="stat">woof</td>
-        </tr>
-        <tr>
-                <td rowspan="4"><img src="@($"{NavigationManager.Uri}images/Sprites/Mellie-Neutral.png")" style="width:100%" /></td>
-            <td>@NavigationManager?.Uri</td>
-            <td rowspan="2">@_game.Player?.Name</td>
-            <td class="stat" rowspan="2">HP: 
-                @(_game.Player?.CurrentHp ?? 0)</td>
-        </tr>
-        <tr>
-            <td>wook</td>
-        </tr>
-        <tr>
-            <td>wool</td>
-            <td rowspan="2">woom</td>
-            <td class="stat" rowspan="2">woon</td>
-        </tr>
-        <tr>
-            <td>wooo</td>
-        </tr>
-    </table>
+                <td style="width:4%"></td>
+            <td style="width:4%">
+                <div class="d-lg-none">
+                        <button style="background-color:transparent;border-block-color:#fff;color:#fff" @onclick="_game.MoveUp">
+                            ↑
+                        </button></div></td>
+                <td style="width:4%"></td>
+            </tr>
+            <tr>
+        <td>
+            <div class="d-lg-none">
+                <button style="background-color:transparent;border-block-color:#fff;color:#fff" @onclick="_game.MoveLeft">
+                    ←
+                </button>
+            </div>
+        </td>
+        <td>
+            <div class="d-lg-none">
+                        <button style="background-color:transparent;border-block-color:#fff;color:#fff" @onclick="_game.MoveDown">
+                    ↓
+                </button>
+            </div>
+        </td>
+        <td>
+            <div class="d-lg-none">
+                        <button style="background-color:transparent;border-block-color:#fff;color:#fff" @onclick="_game.MoveRight">
+                    →
+                </button>
+            </div>
+        </td>
+            </tr>
+            <tr>
+                <td rowspan="2"><img src="@($"{NavigationManager.Uri}images/Sprites/Mellie-Neutral.png")" style="width:100%" /></td>
+                <td>@NavigationManager?.Uri</td>
+                <td>|@_game.Player?.Name|</td>
+                <td>|HP:</td>
+                <td>@(_game.Player?.CurrentHp ?? 0)|</td>
+            </tr>
+            <tr>
+                <td>l</td>
+                <td>m</td>
+                <td>n</td>
+                <td>o</td>
+            </tr>
+        </table>
     }
 </div>
 
-@if (_game != null)
-{
-    <div class="d-lg-none">
-        <button @onclick="_game.MoveUp">
-            ↑
-        </button>
-        <button @onclick="_game.MoveLeft">
-            ←
-        </button>
-        <button @onclick="_game.MoveDown">
-            ↓
-        </button>
-        <button @onclick="_game.MoveRight">
-            →
-        </button>
-    </div>
-}
+
 <div>
-    <button class="massive-invisible-button" @onclick="SaveDataAsync">
+    <button class="massive-invisible-button" style="border-style:solid; border-color:#fff;" @onclick="SaveDataAsync">
         Save
     </button>
 </div>
 <div>
-    <button class="massive-invisible-button" @onclick="ClearDataAsync">
+    <button class="massive-invisible-button" style="border-style:solid; border-color:#fff;" @onclick="ClearDataAsync">
         Delete Save Data
     </button>
+</div>
 </div>

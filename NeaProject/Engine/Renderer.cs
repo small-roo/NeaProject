@@ -11,18 +11,21 @@ public class Renderer
     const int tileWidth = Sprite.tileSize;
     const int tileHeight = Sprite.tileSize;
 
-    public const int ViewportHeight = 320;
-    public const int ViewportWidth = 640;
-    public const int ViewportTileX = 20;
-    public const int ViewportTileY = 10;
     public const int ViewportEdgeBuffer = 3;
+
+    public int ViewportHeight = 320;
+    public int ViewportWidth = 640;
+    private int ViewportTileY = 20;
+    private int ViewportTileX = 10;
+    private int TileRemainderX = 0;
+    private int TileRemainderY = 0;
 
     private readonly Map _map;
     private readonly Player _player;
     private readonly Dictionary<char, Sprite?> _sprites;
     private readonly List<Npc> _npcs;
     private readonly Stopwatch _stopwatch;
-    private readonly uint[,] _buffer;
+    private uint[,] _buffer = new uint[320, 640];
 
     public Renderer(Game game, Dictionary<char, Sprite?> sprites)
     {
@@ -31,11 +34,22 @@ public class Renderer
         _npcs = game.Npcs;
         _sprites = sprites;
         _stopwatch = Stopwatch.StartNew();
-        _buffer = new uint[ViewportHeight, ViewportWidth];
     }
 
-    public uint[,] UpdateFrameBuffer(Game game)
+    public uint[,] UpdateFrameBuffer(Game game, int viewportWidth, int viewportHeight)
     {
+        if (viewportHeight != ViewportHeight || viewportWidth != ViewportWidth) //calculating how big to draw pixels
+        {
+            _buffer = new uint[viewportHeight, viewportWidth];
+            ViewportHeight = viewportHeight;
+            ViewportWidth = viewportWidth;
+            ViewportTileY = viewportHeight/32;
+            ViewportTileX = viewportWidth/32;
+            game.ScreenTileHeight = ViewportTileY;
+            game.ScreenTileWidth = ViewportTileX;
+            TileRemainderX = ViewportTileX % 32;
+            TileRemainderY = ViewportTileY % 32;
+        }
         bool isAnimationFrame = false;
         if (_stopwatch.ElapsedMilliseconds > 100)
         {
@@ -118,7 +132,6 @@ public class Renderer
                             break; 
                         }
                 }
-                
             }
         }
     }
@@ -140,6 +153,7 @@ public class Renderer
             {
                 uint pixelColour = sprite.GetColourAt(pixelCol, pixelRow, frameIndex);
                 uint pixelAlpha = pixelColour >> 24;
+
                 if (pixelAlpha == 0xff) // if opaque, draw w/o calculating 
                 {
                     _buffer[pixelRow + yOffset, pixelCol + xOffset] = pixelColour;
