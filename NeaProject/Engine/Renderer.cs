@@ -11,7 +11,7 @@ public class Renderer
     const int tileWidth = Sprite.tileSize;
     const int tileHeight = Sprite.tileSize;
 
-    public const int ViewportEdgeBuffer = 3;
+    public const int ViewportEdgeBuffer = 2;
 
     public int ViewportHeight = 320;
     public int ViewportWidth = 640;

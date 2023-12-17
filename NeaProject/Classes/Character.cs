@@ -9,6 +9,7 @@ namespace NeaProject.Classes
         public int YPos { get; set; }
         public char NextTile { get; set; }
         public char NextOverlayTile { get; set; }
+        public char PreviousOverlayTile { get; set; } = '.';
         public char DirectionFacing { get; set; }
         public int FrameIndex { get; set; }
         public required string Name { get; set; }

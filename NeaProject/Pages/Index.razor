@@ -43,19 +43,23 @@
                         switch (_game.Player.NextOverlayTile)
                         {
                             case 'F':
-                                {
-                                    <img src="@($"{NavigationManager.Uri}images/Sprites/Mellow-Neutral.png")" style="width:100%" />
-                                    break;
-                                }
+                            {
+                                <img src="@($"{NavigationManager.Uri}images/Sprites/Mellow-Neutral.png")" style="width:100%" />
+                                break;
+                            }
                             default:
-                                {
-                                    <p>wooa</p>
-                                    break;
-                                }
+                            {
+                                <p>wooa</p>
+                                break;
+                            }
                         }
-                    } 
+                    }
+                    else
+                    {
+                        <img src="@($"{NavigationManager.Uri}images/Sprites/Mellie-Neutral.png")" style="width:100%" />
+                    }
                     </td>
-                <td rowspan="2">
+                <td rowspan="2" style="width:75.5%">
                     @if (_game.Player != null)
                     {
                         if (_game.Player.LookForDialogue == true)
@@ -88,50 +92,15 @@
                             }
                         }
                     }
-                 </td>
-                <td style="width:4%"></td>
-            <td style="width:4%">
-                <div class="d-lg-none">
-                        <button style="background-color:transparent;border-block-color:#fff;color:#fff" @onclick="_game.MoveUp">
-                            ↑
-                        </button></div></td>
-                <td style="width:4%"></td>
+                </td>
+                <td style="width:4%"> |@_game.Player?.Name|</td>
+                <td style="width:4%">|HP:</td>
+                <td style="width:4%">@(_game.Player?.CurrentHp ?? 0)|</td>
             </tr>
             <tr>
-        <td>
-            <div class="d-lg-none">
-                <button style="background-color:transparent;border-block-color:#fff;color:#fff" @onclick="_game.MoveLeft">
-                    ←
-                </button>
-            </div>
-        </td>
-        <td>
-            <div class="d-lg-none">
-                        <button style="background-color:transparent;border-block-color:#fff;color:#fff" @onclick="_game.MoveDown">
-                    ↓
-                </button>
-            </div>
-        </td>
-        <td>
-            <div class="d-lg-none">
-                        <button style="background-color:transparent;border-block-color:#fff;color:#fff" @onclick="_game.MoveRight">
-                    →
-                </button>
-            </div>
-        </td>
-            </tr>
-            <tr>
-                <td rowspan="2"><img src="@($"{NavigationManager.Uri}images/Sprites/Mellie-Neutral.png")" style="width:100%" /></td>
-                <td>@NavigationManager?.Uri</td>
-                <td>|@_game.Player?.Name|</td>
-                <td>|HP:</td>
-                <td>@(_game.Player?.CurrentHp ?? 0)|</td>
-            </tr>
-            <tr>
-                <td>l</td>
-                <td>m</td>
-                <td>n</td>
-                <td>o</td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
         </table>
     }
@@ -148,4 +117,49 @@
         Delete Save Data
     </button>
 </div>
+    @if (_game != null && _game.Player != null && NavigationManager != null && _game.Player.HasWon()!=true&&_game.Player.IsDead()!=true)
+    {
+        <table>
+            <tr style="height:32px"></tr>
+            <tr>
+                <td style="width:35%"></td>
+                <td style="width:10%"></td>
+                <td style="width:10%; font-size:32px">
+                    <div class="d-lg-none">
+                        <button style="width:56px; background-color:transparent;border-block-color:#fff;color:#fff" @onclick="_game.MoveUp">
+                            ↑
+                        </button>
+                    </div>
+                </td>
+                <td></td>
+                <td style="width:35%"></td>
+            </tr>
+
+            <tr>
+                <td style="width:35%"></td>
+                <td style="width:10%; font-size:32px">
+                    <div class="d-lg-none">
+                        <button style="width:56px; background-color:transparent;border-block-color:#fff;color:#fff" @onclick="_game.MoveLeft">
+                            ←
+                        </button>
+                    </div>
+                </td>
+                <td style="width:10%; font-size:32px">
+                    <div class="d-lg-none">
+                        <button style="width:56px; background-color:transparent;border-block-color:#fff;color:#fff" @onclick="_game.MoveDown">
+                            ↓
+                        </button>
+                    </div>
+                </td>
+                <td style="width:10%; font-size:32px">
+                    <div class="d-lg-none">
+                        <button style="width:56px; background-color:transparent;border-block-color:#fff;color:#fff" @onclick="_game.MoveRight">
+                            →
+                        </button>
+                    </div>
+                </td>
+                <td style="width:35%"></td>
+            </tr>
+        </table>
+    }
 </div>

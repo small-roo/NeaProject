@@ -7,6 +7,7 @@ namespace NeaProject.Classes
 {
     public class Player : Character
     {
+
         public bool HasWon()
         {
             return Inventory.Contains("Heartfelt Gift");
@@ -20,6 +21,7 @@ namespace NeaProject.Classes
                     {
                         XPos += moveX;
                         YPos += moveY;
+                        PreviousOverlayTile = map.GetOverlayTileChar(XPos, YPos);
                         break;
                     }
                 case '0':
@@ -31,6 +33,7 @@ namespace NeaProject.Classes
                         XPos += moveX;
                         YPos += moveY;
                         Teleport(map, camera);
+                        PreviousOverlayTile = map.GetOverlayTileChar(XPos, YPos);
                         break;
                     }
                 case 'd':
@@ -39,6 +42,7 @@ namespace NeaProject.Classes
                         YPos += moveY;
                         Inventory.Add("Flower Bundle");
                         map.SetOverlayTileChar(XPos, YPos, '.');
+                        PreviousOverlayTile = '.';
                         break;
                     }
                 case 'F':
@@ -61,6 +65,8 @@ namespace NeaProject.Classes
             
             }
         }
+
+
 
         private void Teleport(Map map, Camera camera)
         {
@@ -104,7 +110,7 @@ namespace NeaProject.Classes
             }
             //character is moving to a tile it is allowed to move to
 
-            map.SetOverlayTileChar(XPos, YPos, '.'); // deletes previous location from map
+            map.SetOverlayTileChar(XPos, YPos, PreviousOverlayTile); // deletes previous location from map
             MoveRules(moveX, moveY, map, camera);
             MoveCamera(camera, screenWidth, screenHeight);
             map.SetOverlayTileChar(XPos, YPos, SpriteRef); // adds current location to map

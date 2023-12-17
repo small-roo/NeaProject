@@ -24,8 +24,8 @@ namespace NeaProject.Classes
                 CurrentHp = 100,
                 // XPos = _map.Width / 2,
                 // YPos = _map.Height / 2,
-                XPos = 10,
-                YPos = 5,
+                XPos = 9,
+                YPos = 4,
                 Name = "Mellie",
                 SpriteRef = 'p',
                 AllowedTiles = new List<char> { 'g', 'ĝ', 'ğ', 'ġ', 'ģ', 'm', 's', 'w' }
