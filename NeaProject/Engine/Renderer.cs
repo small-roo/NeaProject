@@ -11,12 +11,12 @@ public class Renderer
     const int tileWidth = Sprite.tileSize;
     const int tileHeight = Sprite.tileSize;
 
-    public const int ViewportEdgeBuffer = 2;
+    public const int ViewportEdgeBuffer = 1;
 
-    public int ViewportHeight = 320;
+    public int ViewportHeight = 400;
     public int ViewportWidth = 640;
-    private int ViewportTileY = 20;
-    private int ViewportTileX = 10;
+    private int ViewportTileY = 12;
+    private int ViewportTileX = 20;
     private int TileRemainderX = 0;
     private int TileRemainderY = 0;
 
@@ -25,7 +25,7 @@ public class Renderer
     private readonly Dictionary<char, Sprite?> _sprites;
     private readonly List<Npc> _npcs;
     private readonly Stopwatch _stopwatch;
-    private uint[,] _buffer = new uint[320, 640];
+    private uint[,] _buffer = new uint[400, 640];
 
     public Renderer(Game game, Dictionary<char, Sprite?> sprites)
     {
