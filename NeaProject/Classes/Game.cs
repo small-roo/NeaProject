@@ -19,13 +19,33 @@ namespace NeaProject.Classes
         public Game(string mapString)
         {
             Map = new Map(mapString);
+            int playerSpawnX=20;
+            int playerSpawnY=20;
+            int charX = 0;
+            int charY = 0;
+            foreach (char[] charRow in Map.OverlayCharMap)
+            {
+                foreach (char tile in Map.OverlayCharMap[charY])
+                {
+                    if (tile == '0')
+                    {
+                        playerSpawnX = charX;
+                        playerSpawnY = charY;
+                    }
+                    charX++;
+                }
+                charX = 0;
+                charY++;
+            }
+            Camera.DrawingStartTileX = playerSpawnX - 6;
+            Camera.DrawingStartTileY = playerSpawnY - 4;
             Player = new Player()
             {
                 CurrentHp = 100,
                 // XPos = _map.Width / 2,
                 // YPos = _map.Height / 2,
-                XPos = 9,
-                YPos = 4,
+                XPos = playerSpawnX,
+                YPos = playerSpawnY,
                 Name = "Mellie",
                 SpriteRef = 'p',
                 AllowedTiles = new List<char> { 'g', 'ĝ', 'ğ', 'ġ', 'ģ', 'm', 's', 'w' }

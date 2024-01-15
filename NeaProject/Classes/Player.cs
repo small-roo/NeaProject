@@ -80,8 +80,8 @@ namespace NeaProject.Classes
                     {
                         XPos = charX;
                         YPos = charY;
-                        camera.DrawingStartTileX = charX - 6;
-                        camera.DrawingStartTileY = charY - 4;
+                        camera.DrawingStartTileX = charX - map.VisibleWidth / 2;
+                        camera.DrawingStartTileY = charY - map.VisibleHeight / 2;
                         return;
                     }
                     charX++;

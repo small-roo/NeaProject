@@ -59,6 +59,8 @@ public class Renderer
             {
                 ViewportEdgeBuffer = 1;
             }
+            _map.VisibleHeight = ViewportTileY;
+            _map.VisibleWidth = ViewportTileX;
         }
         bool isAnimationFrame = false;
         if (_stopwatch.ElapsedMilliseconds > 100)

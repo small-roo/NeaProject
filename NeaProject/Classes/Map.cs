@@ -6,6 +6,8 @@ namespace NeaProject.Classes
     {
         public int Height { get; set; }
         public int Width { get; set; }
+        public int VisibleHeight { get; set; }
+        public int VisibleWidth { get; set; }
         public char[][] CharMap { get; set; } = Array.Empty<char[]>();
         public char[][] OverlayCharMap { get; set; } = Array.Empty<char[]>();
 

@@ -34,7 +34,7 @@ namespace NeaProject.Classes
             switch (name)
             {
                 //teleports
-                case "Teleport0":
+                case "Spawn":
                 case "Teleport1":
                 case "Teleport2":
                 case "Teleport3":

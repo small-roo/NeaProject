@@ -120,7 +120,7 @@ namespace NeaProject.Pages
             _sprites = new Dictionary<char, Sprite?>()
             {
                 //teleporters
-                { '0', new Sprite(mapTileSheet, "Teleport0", 1)},
+                { '0', new Sprite(mapTileSheet, "Spawn", 1)},
                 { '1', new Sprite(mapTileSheet, "Teleport1", 1)},
                 { '2', new Sprite(mapTileSheet, "Teleport2", 1)},
                 { '3', new Sprite(mapTileSheet, "Teleport3", 1)},
