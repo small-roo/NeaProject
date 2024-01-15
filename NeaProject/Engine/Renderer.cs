@@ -11,21 +11,21 @@ public class Renderer
     const int tileWidth = Sprite.tileSize;
     const int tileHeight = Sprite.tileSize;
 
-    public const int ViewportEdgeBuffer = 1;
+    public const int MaxViewportHeight = 360;
+    public const int MaxViewportWidth = 720;
 
+    public int ViewportEdgeBuffer = 3;
     public int ViewportHeight = 400;
     public int ViewportWidth = 640;
     private int ViewportTileY = 12;
     private int ViewportTileX = 20;
-    private int TileRemainderX = 0;
-    private int TileRemainderY = 0;
 
     private readonly Map _map;
     private readonly Player _player;
     private readonly Dictionary<char, Sprite?> _sprites;
     private readonly List<Npc> _npcs;
     private readonly Stopwatch _stopwatch;
-    private uint[,] _buffer = new uint[400, 640];
+    private uint[,] _buffer = new uint[320, 640];
 
     public Renderer(Game game, Dictionary<char, Sprite?> sprites)
     {
@@ -38,17 +38,27 @@ public class Renderer
 
     public uint[,] UpdateFrameBuffer(Game game, int viewportWidth, int viewportHeight)
     {
-        if (viewportHeight != ViewportHeight || viewportWidth != ViewportWidth) //calculating how big to draw pixels
+        if (viewportHeight != ViewportHeight || viewportWidth != ViewportWidth) //if doesn't match and isn't bigger than the max and the value isn't currently the max
         {
             _buffer = new uint[viewportHeight, viewportWidth];
             ViewportHeight = viewportHeight;
             ViewportWidth = viewportWidth;
-            ViewportTileY = viewportHeight/32;
-            ViewportTileX = viewportWidth/32;
+            ViewportTileY = viewportHeight / 32;
+            ViewportTileX = viewportWidth / 32;
             game.ScreenTileHeight = ViewportTileY;
             game.ScreenTileWidth = ViewportTileX;
-            TileRemainderX = ViewportTileX % 32;
-            TileRemainderY = ViewportTileY % 32;
+            if (ViewportTileX > 15)
+            {
+                ViewportEdgeBuffer = 3;
+            }
+            else if (ViewportTileX > 11)
+            {
+                ViewportEdgeBuffer = 2;
+            }
+            else
+            {
+                ViewportEdgeBuffer = 1;
+            }
         }
         bool isAnimationFrame = false;
         if (_stopwatch.ElapsedMilliseconds > 100)
@@ -194,5 +204,25 @@ public class Renderer
     {
         colour = (colour * alpha + (0xff - alpha) * baseColour) / 0xff;
         return colour;
+    }
+
+    public void MoveCamera(Game game)
+    {
+        if (_player.XPos - game.Camera.DrawingStartTileX < ViewportEdgeBuffer) //moves left
+        {
+            game.Camera.DrawingStartTileX--;
+        }
+        else if (_player.XPos - game.Camera.DrawingStartTileX >= game.ScreenTileWidth - ViewportEdgeBuffer) //moves right
+        {
+            game.Camera.DrawingStartTileX++;
+        }
+        if (_player.YPos - game.Camera.DrawingStartTileY < ViewportEdgeBuffer) //moves up
+        {
+            game.Camera.DrawingStartTileY--;
+        }
+        else if (_player.YPos - game.Camera.DrawingStartTileY >= game.ScreenTileHeight - ViewportEdgeBuffer) //moves down
+        {
+            game.Camera.DrawingStartTileY++;
+        }
     }
 }

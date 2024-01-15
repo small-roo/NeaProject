@@ -52,11 +52,17 @@ namespace NeaProject.Pages
 
         private void KeyDown(KeyboardEventArgs keyEvent)
         {
-            if (_renderer == null || _game == null)
+            Move(keyEvent.Key);
+        }
+
+        private void Move(string pressedKey)
+        {
+            if (_game == null || _renderer == null)
             { return; }
-            var pressedKey = keyEvent.Key;
+
             lastPressed = pressedKey;
             pressedKey = pressedKey.ToLower();
+
             switch (pressedKey)
             {
                 case "arrowup":
@@ -89,6 +95,7 @@ namespace NeaProject.Pages
                     }
 
             }
+            _renderer.MoveCamera(_game);
         }
 
         protected override async Task OnInitializedAsync()

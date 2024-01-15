@@ -19,7 +19,7 @@
                     OnPaintSurface="OnPaintSurface" 
                     IgnorePixelScaling="true"
                     EnableRenderLoop="true" 
-                    style="width:100%; margin:auto; border-style:solid; border-color:#fff; display:block"/>
+                    style="width:100%; max-width:899px; margin:auto; border-style:solid; border-color:#fff; display:block"/>
     </button>
 </div>
 
@@ -126,7 +126,7 @@
                 <td style="width:10%"></td>
                 <td style="width:10%; font-size:32px">
                     <div class="d-lg-none">
-                        <button style="width:56px; background-color:transparent;border-block-color:#fff;color:#fff" @onclick="_game.MoveUp">
+                        <button style="width:56px; background-color:transparent;border-block-color:#fff;color:#fff" @onclick="@(()=>Move("w"))">
                             ↑
                         </button>
                     </div>
@@ -139,21 +139,21 @@
                 <td style="width:35%"></td>
                 <td style="width:10%; font-size:32px">
                     <div class="d-lg-none">
-                        <button style="width:56px; background-color:transparent;border-block-color:#fff;color:#fff" @onclick="_game.MoveLeft">
+                        <button style="width:56px; background-color:transparent;border-block-color:#fff;color:#fff" @onclick="@(()=>Move("a"))">
                             ←
                         </button>
                     </div>
                 </td>
                 <td style="width:10%; font-size:32px">
                     <div class="d-lg-none">
-                        <button style="width:56px; background-color:transparent;border-block-color:#fff;color:#fff" @onclick="_game.MoveDown">
+                        <button style="width:56px; background-color:transparent;border-block-color:#fff;color:#fff" @onclick="@(()=>Move("s"))">
                             ↓
                         </button>
                     </div>
                 </td>
                 <td style="width:10%; font-size:32px">
                     <div class="d-lg-none">
-                        <button style="width:56px; background-color:transparent;border-block-color:#fff;color:#fff" @onclick="_game.MoveRight">
+                        <button style="width:56px; background-color:transparent;border-block-color:#fff;color:#fff" @onclick="@(()=>Move("d"))">
                             →
                         </button>
                     </div>

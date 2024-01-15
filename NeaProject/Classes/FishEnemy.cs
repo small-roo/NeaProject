@@ -30,7 +30,7 @@ namespace NeaProject.Classes
                     int doMovement = _random.Next(0, 3); // if the movement  is greater than 1 here, it flips instead of moving
                     if (doMovement == 0||doMovement == 1)
                     {
-                        Move(FrameIndex * -2 + 1, 0, game.Map, game.Camera, game.ScreenTileWidth, game.ScreenTileHeight);
+                        Move(FrameIndex * -2 + 1, 0, game.Map, game.Camera);
                     }
                     else
                     {

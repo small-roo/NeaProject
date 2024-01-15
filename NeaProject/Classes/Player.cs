@@ -91,7 +91,7 @@ namespace NeaProject.Classes
             }
         }
 
-        public override void Move(int moveX, int moveY, Map map, Camera camera, int screenWidth, int screenHeight)
+        public override void Move(int moveX, int moveY, Map map, Camera camera)
         {
             if (XPos + moveX <= -1 || XPos + moveX >= map.Width || YPos + moveY <= -1 || YPos + moveY >= map.Height)
             {
@@ -112,7 +112,6 @@ namespace NeaProject.Classes
 
             map.SetOverlayTileChar(XPos, YPos, PreviousOverlayTile); // deletes previous location from map
             MoveRules(moveX, moveY, map, camera);
-            MoveCamera(camera, screenWidth, screenHeight);
             map.SetOverlayTileChar(XPos, YPos, SpriteRef); // adds current location to map
 
             string? collidingNpcBehaviour = CollidingNpcBehaviour();
@@ -135,25 +134,7 @@ namespace NeaProject.Classes
             }
         }
 
-        public void MoveCamera(Camera camera, int screenWidth, int screenHeight)
-        {
-            if (XPos - camera.DrawingStartTileX < Engine.Renderer.ViewportEdgeBuffer) //moves left
-            {
-                camera.DrawingStartTileX--;
-            }
-            else if (XPos - camera.DrawingStartTileX >= screenWidth - Engine.Renderer.ViewportEdgeBuffer) //moves right
-            {
-                camera.DrawingStartTileX++;
-            }
-            if (YPos - camera.DrawingStartTileY < Engine.Renderer.ViewportEdgeBuffer) //moves up
-            {
-                camera.DrawingStartTileY--;
-            }
-            else if (YPos - camera.DrawingStartTileY >= screenHeight - Engine.Renderer.ViewportEdgeBuffer) //moves down
-            {
-                camera.DrawingStartTileY++;
-            }
-        }
+        
 
     }
 }
