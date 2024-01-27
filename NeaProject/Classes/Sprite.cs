@@ -35,13 +35,18 @@ namespace NeaProject.Classes
             {
                 //teleports
                 case "Spawn":
+                    {
+                        xOffset = 23;
+                        yOffset = 9;
+                        break;
+                    }
                 case "Teleport1":
                 case "Teleport2":
                 case "Teleport3":
                 case "Teleport4":
                     {
-                        xOffset = 23;
-                        yOffset = 9;
+                        xOffset = 1;
+                        yOffset = 8;
                         break;
                     }
 
@@ -246,9 +251,9 @@ namespace NeaProject.Classes
             Name = name;
         }
 
-        public uint GetColourAt(int x, int y, int frameIndex) 
+        public uint GetColourAt(int x, int y, int frameIndex)
         {
-            return _colour[x,y,frameIndex];
+            return _colour[x, y, frameIndex];
         }
 
         private static uint MakePixel(Color colour)

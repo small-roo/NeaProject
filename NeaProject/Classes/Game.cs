@@ -138,8 +138,7 @@ namespace NeaProject.Classes
             }
             Player.DirectionFacing = 'U';
             Player.FrameIndex = 3;
-            Player.Move(0, -1, Map, Camera);
-            
+            Player.Move(0, -1, Map, Camera); 
         }
         public void MoveRight()
         {

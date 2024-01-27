@@ -22,6 +22,10 @@ namespace NeaProject.Classes
                         XPos += moveX;
                         YPos += moveY;
                         PreviousOverlayTile = map.GetOverlayTileChar(XPos, YPos);
+                        if (map.GetTileChar(XPos, YPos) == 'w')
+                        {
+                            FrameIndex += 12;
+                        }
                         break;
                     }
                 case '0':
@@ -34,6 +38,7 @@ namespace NeaProject.Classes
                         YPos += moveY;
                         Teleport(map, camera);
                         PreviousOverlayTile = map.GetOverlayTileChar(XPos, YPos);
+                        FrameIndex = 16;
                         break;
                     }
                 case 'd':

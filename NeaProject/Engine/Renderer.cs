@@ -184,7 +184,7 @@ public class Renderer
                     uint baseBlue;
                     if (baseSprite != null) //seperate colour underneath into RGB
                     {
-                        uint basePixelColour = baseSprite.GetColourAt(pixelCol, pixelRow, frameIndex);
+                        uint basePixelColour = baseSprite.GetColourAt(pixelCol, pixelRow, 0);
                         baseRed = basePixelColour % 256;
                         baseGreen = (basePixelColour >> 8) % 256;
                         baseBlue = (basePixelColour >> 16) % 256;

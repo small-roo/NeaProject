@@ -151,7 +151,7 @@ namespace NeaProject.Pages
                 { '□', new Sprite(mapTileSheet, "Space", 1)},
                 { 'd', new Sprite(mapTileSheet, "Diamond", 1)}, //currently actually flowerbundle
                 { 'm', new Sprite(mapTileSheet, "MarsRock", 1)},
-                { 'p', new Sprite(mapTileSheet, "Player", 4)},
+                { 'p', new Sprite(mapTileSheet, "Player", 17)},
                 { 'r', new Sprite(mapTileSheet, "Rock", 1)},
                 { 's', new Sprite(mapTileSheet, "Sand", 1)},
                 { 't', new Sprite(mapTileSheet, "Tree", 1)},
