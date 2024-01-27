@@ -38,7 +38,7 @@ public class Renderer
 
     public uint[,] UpdateFrameBuffer(Game game, int viewportWidth, int viewportHeight)
     {
-        if (viewportHeight != ViewportHeight || viewportWidth != ViewportWidth) //if doesn't match and isn't bigger than the max and the value isn't currently the max
+        if (viewportHeight != ViewportHeight || viewportWidth != ViewportWidth) //if doesn't match, recalculate size, viewport and recentre
         {
             _buffer = new uint[viewportHeight, viewportWidth];
             ViewportHeight = viewportHeight;
@@ -47,7 +47,8 @@ public class Renderer
             ViewportTileX = viewportWidth / 32;
             game.ScreenTileHeight = ViewportTileY;
             game.ScreenTileWidth = ViewportTileX;
-            if (ViewportTileX > 15)
+
+            if (ViewportTileX > 15) // how far from edge of screen it moves when the player takes a step
             {
                 ViewportEdgeBuffer = 3;
             }
@@ -61,6 +62,8 @@ public class Renderer
             }
             _map.VisibleHeight = ViewportTileY;
             _map.VisibleWidth = ViewportTileX;
+            game.Camera.DrawingStartTileX = game.Player.XPos - game.Map.VisibleWidth / 2;
+            game.Camera.DrawingStartTileY = game.Player.YPos - game.Map.VisibleHeight / 2;
         }
         bool isAnimationFrame = false;
         if (_stopwatch.ElapsedMilliseconds > 100)
