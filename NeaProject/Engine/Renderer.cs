@@ -24,7 +24,6 @@ public class Renderer
     private readonly Player _player;
     private readonly Dictionary<char, Sprite?> _sprites;
     private readonly List<Npc> _npcs;
-    private readonly Stopwatch _stopwatch;
     private uint[,] _buffer = new uint[320, 640];
 
     public Renderer(Game game, Dictionary<char, Sprite?> sprites)
@@ -33,7 +32,7 @@ public class Renderer
         _player = game.Player;
         _npcs = game.Npcs;
         _sprites = sprites;
-        _stopwatch = Stopwatch.StartNew();
+        
     }
 
     public uint[,] UpdateFrameBuffer(Game game, int viewportWidth, int viewportHeight)
@@ -66,9 +65,9 @@ public class Renderer
             game.Camera.DrawingStartTileY = game.Player.YPos - game.Map.VisibleHeight / 2;
         }
         bool isAnimationFrame = false;
-        if (_stopwatch.ElapsedMilliseconds > 100)
+        if (game.GameStopwatch.ElapsedMilliseconds > 100)
         {
-            _stopwatch.Restart();
+            game.GameStopwatch.Restart();
             isAnimationFrame = true;
         }
 
@@ -184,7 +183,7 @@ public class Renderer
                     uint baseBlue;
                     if (baseSprite != null) //seperate colour underneath into RGB
                     {
-                        uint basePixelColour = baseSprite.GetColourAt(pixelCol, pixelRow, 0);
+                        uint basePixelColour = baseSprite.GetColourAt(pixelCol, pixelRow, 0); // assume that the base sprite only has 1 frame.
                         baseRed = basePixelColour % 256;
                         baseGreen = (basePixelColour >> 8) % 256;
                         baseBlue = (basePixelColour >> 16) % 256;

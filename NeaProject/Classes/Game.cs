@@ -1,20 +1,24 @@
 ﻿using NeaProject.Engine;
+using System.Diagnostics;
 using System.Xml.Linq;
 
 namespace NeaProject.Classes
 {
     public class Game
     {
+        public readonly Stopwatch GameStopwatch = new();
         public Map Map { get; set; } = new(); // needs the sets to deserialise properly
         public Camera Camera { get; set; } = new();
         public List<Npc> Npcs { get; set; } = new();
         public Player Player { get; set; }
         public int ScreenTileWidth { get; set; }
         public int ScreenTileHeight { get; set; }
+        
 
         public Game()
         {
             Player = new() { Name = "", SpriteRef = '\0' };
+            GameStopwatch = Stopwatch.StartNew();
         }
         public Game(string mapString)
         {
@@ -51,6 +55,7 @@ namespace NeaProject.Classes
                 AllowedTiles = new List<char> { 'g', 'ĝ', 'ğ', 'ġ', 'ģ', 'm', 's', 'w' }
             };
             SetUpNpcs(Map);
+            GameStopwatch = Stopwatch.StartNew();
         }
 
         private void SetUpNpcs(Map map)
@@ -138,7 +143,7 @@ namespace NeaProject.Classes
             }
             Player.DirectionFacing = 'U';
             Player.FrameIndex = 3;
-            Player.Move(0, -1, Map, Camera); 
+            Player.Move(0, -1, Map, Camera);
         }
         public void MoveRight()
         {

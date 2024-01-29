@@ -5,6 +5,7 @@ using NeaProject.Engine;
 using SkiaSharp.Views.Blazor;
 using SkiaSharp;
 using Blazored.LocalStorage;
+using System.Diagnostics;
 
 namespace NeaProject.Pages
 {
@@ -27,6 +28,7 @@ namespace NeaProject.Pages
         private string? lastPressed;
         private ElementReference buttonRef;
         private SKCanvasView? _skCanvasView;
+        private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
 
         private void IncrementCount()
         {
@@ -57,8 +59,9 @@ namespace NeaProject.Pages
 
         private void Move(string pressedKey)
         {
-            if (_game == null || _renderer == null)
+            if (_game == null || _renderer == null || _stopwatch.ElapsedMilliseconds < 50)
             { return; }
+            _stopwatch.Restart();
 
             lastPressed = pressedKey;
             pressedKey = pressedKey.ToLower();
