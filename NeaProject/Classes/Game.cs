@@ -63,7 +63,7 @@ namespace NeaProject.Classes
             Npcs.Clear();
             Random random = new();
 
-            for (int birdNumber = 1; birdNumber <= 20; birdNumber++) //bird
+            for (int birdNumber = 1; birdNumber <= 100; birdNumber++) //bird
             {
                 BirdEnemy bird = new()
                 {
@@ -91,7 +91,7 @@ namespace NeaProject.Classes
                 YPos = 13
             };
 
-            for (int fishNumber = 1; fishNumber <= 30; fishNumber++) //fish
+            for (int fishNumber = 1; fishNumber <= 150; fishNumber++) //fish
             {
                 FishEnemy fish = new()
                 {
@@ -111,7 +111,7 @@ namespace NeaProject.Classes
                 Npcs.Add(fish);
             }
 
-            for (int snakeNumber = 1; snakeNumber <= 10; snakeNumber++) //snake
+            for (int snakeNumber = 1; snakeNumber <= 50; snakeNumber++) //snake
             {
                 SnakeEnemy snake = new()
                 {
