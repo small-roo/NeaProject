@@ -99,6 +99,7 @@ namespace NeaProject.Pages
 
             }
             _renderer.MoveCamera(_game);
+            _game.PlayerEnemyCollision();
         }
 
         protected override async Task OnInitializedAsync()

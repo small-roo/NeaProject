@@ -5,6 +5,9 @@ namespace NeaProject.Classes
     public abstract class Character
     {
         public int CurrentHp { get; set; }
+        public int MaxHp { get; set; }
+        public int Attack { get; set; }
+        public int Defence { get; set; }
         public int XPos { get; set; }
         public int YPos { get; set; }
         public char NextTile { get; set; }

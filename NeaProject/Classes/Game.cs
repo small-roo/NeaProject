@@ -50,6 +50,8 @@ namespace NeaProject.Classes
                 // YPos = _map.Height / 2,
                 XPos = playerSpawnX,
                 YPos = playerSpawnY,
+                Attack = 5,
+                Defence = 5,
                 Name = "Mellie",
                 SpriteRef = 'p',
                 AllowedTiles = new List<char> { 'g', 'ĝ', 'ğ', 'ġ', 'ģ', 'm', 's', 'w' }
@@ -71,6 +73,9 @@ namespace NeaProject.Classes
                     SpriteRef = 'B',
                     XPos = random.Next(0, map.Width),
                     YPos = random.Next(0, map.Height),
+                    MaxHp = 20,
+                    Attack = 10,
+                    Defence = 5,
                     AllowedTiles = { 'g', 'ĝ', 'ğ', 'ġ', 'ģ' },
                     FrameIndex = random.Next(0, 2),
                 };
@@ -88,7 +93,8 @@ namespace NeaProject.Classes
                 Name = "Mellow",
                 SpriteRef = 'F',
                 XPos = 29,
-                YPos = 13
+                YPos = 13,
+                MaxHp = 2000
             };
 
             for (int fishNumber = 1; fishNumber <= 150; fishNumber++) //fish
@@ -99,6 +105,9 @@ namespace NeaProject.Classes
                     SpriteRef = 'I',
                     XPos = random.Next(0, map.Width),
                     YPos = random.Next(0, map.Height),
+                    MaxHp = 25,
+                    Attack = 5,
+                    Defence = 10,
                     FrameIndex = random.Next(0, 2),
                     AllowedTiles = { 'w' }
                 };
@@ -119,6 +128,9 @@ namespace NeaProject.Classes
                     SpriteRef = 'S',
                     XPos = random.Next(0, map.Width),
                     YPos = random.Next(0, map.Height),
+                    MaxHp = 30,
+                    Attack = 10,
+                    Defence = 15,
                     FrameIndex = random.Next(0, 2),
                     AllowedTiles = { 'm', 's' }
                 };
@@ -174,6 +186,43 @@ namespace NeaProject.Classes
             Player.DirectionFacing = 'L';
             Player.FrameIndex = 2;
             Player.Move(-1, 0, Map, Camera);
+        }
+
+        // Fights
+        public void PlayerEnemyCollision()
+        {
+            if (Player.LookForFight == true)
+            {
+                int enemyTileX = Player.XPos;
+                int enemyTileY = Player.YPos;
+                if (Player.DirectionFacing == 'U')
+                {
+                    enemyTileY += 1;
+                }
+                else if (Player.DirectionFacing == 'R')
+                {
+                    enemyTileX += 1;
+                }
+                else if (Player.DirectionFacing == 'D')
+                {
+                    enemyTileY -= 1;
+                }
+                else if (Player.DirectionFacing == 'L')
+                {
+                    enemyTileX -= 1;
+                }
+
+                     
+                foreach (Npc npc in Npcs)
+                {
+                    if (npc.XPos == enemyTileX && npc.YPos == enemyTileY)
+                    {
+                        Player.CurrentHp -= (2 * npc.Attack / Player.Defence + 1);
+                        npc.CurrentHp -= (2 * Player.Attack / npc.Defence + 1);
+                        return;
+                    }
+                }
+            }
         }
     }
 }

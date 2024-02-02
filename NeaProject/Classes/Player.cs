@@ -62,6 +62,12 @@ namespace NeaProject.Classes
                         }
                         break;
                     }
+                case 'B':
+                case 'I':
+                case 'S':
+                    {
+                        break;
+                    }
                 default:
                     {
                         CurrentHp--;
@@ -135,6 +141,10 @@ namespace NeaProject.Classes
             {
                 case 'F':
                     { return "Neutral"; }
+                case 'B':
+                case 'I':
+                case 'S':
+                    { return "Hostile"; }
                 default: return null;
             }
         }
