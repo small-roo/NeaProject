@@ -147,6 +147,11 @@ namespace NeaProject.Classes
             }
             map.SetOverlayTileChar(finalBoss.XPos, finalBoss.YPos, finalBoss.SpriteRef);
             Npcs.Add(finalBoss);
+
+            foreach (Npc npc in Npcs)
+            {
+                npc.CurrentHp = npc.MaxHp;
+            }
         }
 
         // Movement
@@ -273,7 +278,8 @@ namespace NeaProject.Classes
             }
             //and then see if enemies reside there
 
-            foreach (Npc npc in Npcs) //currently does NOT work
+
+            foreach (Npc npc in Npcs.ToList()) 
             {
                 if (npc.XPos == checkingTiles[0, 0] && npc.YPos == checkingTiles[1, 0])
                 { //tile location 1
@@ -302,6 +308,5 @@ namespace NeaProject.Classes
                 Player.Defence += npc.Defence / 10;
             }
         }
-
     }
 }
