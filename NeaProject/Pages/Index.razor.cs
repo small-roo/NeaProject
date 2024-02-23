@@ -59,7 +59,7 @@ namespace NeaProject.Pages
 
         private void Move(string pressedKey)
         {
-            if (_game == null || _renderer == null || _stopwatch.ElapsedMilliseconds < 50)
+            if (_game == null || _renderer == null || _stopwatch.ElapsedMilliseconds < 30)
             { return; }
             _stopwatch.Restart();
 
@@ -92,6 +92,14 @@ namespace NeaProject.Pages
                         _game.MoveRight();
                         break;
                     }
+                case ".":
+                    {
+                        if (_game.Player.Inventory.Contains("Sword")) //currently cannot happen
+                        {
+                            _game.SwordSweep();
+                        }
+                        break;
+                    }
                 default:
                     {
                         break;
@@ -99,7 +107,25 @@ namespace NeaProject.Pages
 
             }
             _renderer.MoveCamera(_game);
-            _game.PlayerEnemyCollision();
+            switch (pressedKey)
+            {
+                case "arrowup":
+                case "arrowdown":
+                case "arrowleft":
+                case "arrowright":
+                case "w":
+                case "s":
+                case "a":
+                case "d":
+                    {
+                        _game.PlayerEnemyCollision();
+                        break;
+                    }
+                default:
+                    {
+                        break; 
+                    }
+        }
         }
 
         protected override async Task OnInitializedAsync()
@@ -153,7 +179,7 @@ namespace NeaProject.Pages
                 //misc other
                 { '.', null},
                 { '□', new Sprite(mapTileSheet, "Space", 1)},
-                { 'd', new Sprite(mapTileSheet, "Diamond", 1)}, //currently actually flowerbundle
+                { 'd', new Sprite(mapTileSheet, "Sword", 1)}, //currently actually flowerbundle
                 { 'm', new Sprite(mapTileSheet, "MarsRock", 1)},
                 { 'p', new Sprite(mapTileSheet, "Player", 17)},
                 { 'r', new Sprite(mapTileSheet, "Rock", 1)},

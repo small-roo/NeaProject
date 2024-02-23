@@ -7,7 +7,7 @@ namespace NeaProject.Classes
 {
     public class Player : Character
     {
-
+        private int stepCount = 0;
         public bool HasWon()
         {
             return Inventory.Contains("Heartfelt Gift");
@@ -22,9 +22,18 @@ namespace NeaProject.Classes
                         XPos += moveX;
                         YPos += moveY;
                         PreviousOverlayTile = map.GetOverlayTileChar(XPos, YPos);
+                        stepCount++;
                         if (map.GetTileChar(XPos, YPos) == 'w')
                         {
                             FrameIndex += 12;
+                        }
+                        if (stepCount >= 5)
+                        {
+                            stepCount = 0;
+                            if (CurrentHp < MaxHp)
+                            {
+                                CurrentHp++;
+                            }
                         }
                         break;
                     }
@@ -45,18 +54,19 @@ namespace NeaProject.Classes
                     {
                         XPos += moveX;
                         YPos += moveY;
-                        Inventory.Add("Flower Bundle");
+                        stepCount++;
+                        Inventory.Add("Sword");
                         map.SetOverlayTileChar(XPos, YPos, '.');
                         PreviousOverlayTile = '.';
                         break;
                     }
                 case 'F':
                     {
-                        if (Inventory.Count(i => i == "Flower Bundle") >= 4)
+                        if (Inventory.Count(i => i == "Sword") >= 4)
                         {
                             for (int i = 0; i < 4; i++)
                             {
-                                Inventory.Remove("Flower Bundle");
+                                Inventory.Remove("Sword");
                             }
                             Inventory.Add("Heartfelt Gift");
                         }
@@ -65,6 +75,7 @@ namespace NeaProject.Classes
                 case 'B':
                 case 'I':
                 case 'S':
+                case '□':
                     {
                         break;
                     }
@@ -148,8 +159,5 @@ namespace NeaProject.Classes
                 default: return null;
             }
         }
-
-        
-
     }
 }

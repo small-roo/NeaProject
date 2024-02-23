@@ -46,6 +46,7 @@ namespace NeaProject.Classes
             Player = new Player()
             {
                 CurrentHp = 100,
+                MaxHp = 100,
                 // XPos = _map.Width / 2,
                 // YPos = _map.Height / 2,
                 XPos = playerSpawnX,
@@ -92,9 +93,11 @@ namespace NeaProject.Classes
             {
                 Name = "Mellow",
                 SpriteRef = 'F',
-                XPos = 29,
-                YPos = 13,
-                MaxHp = 2000
+                XPos = 32,
+                YPos = 16,
+                MaxHp = 2000,
+                Attack = 0,
+                Defence = 1
             };
 
             for (int fishNumber = 1; fishNumber <= 150; fishNumber++) //fish
@@ -197,7 +200,7 @@ namespace NeaProject.Classes
                 int enemyTileY = Player.YPos;
                 if (Player.DirectionFacing == 'U')
                 {
-                    enemyTileY += 1;
+                    enemyTileY -= 1;
                 }
                 else if (Player.DirectionFacing == 'R')
                 {
@@ -205,7 +208,7 @@ namespace NeaProject.Classes
                 }
                 else if (Player.DirectionFacing == 'D')
                 {
-                    enemyTileY -= 1;
+                    enemyTileY += 1;
                 }
                 else if (Player.DirectionFacing == 'L')
                 {
@@ -219,10 +222,86 @@ namespace NeaProject.Classes
                     {
                         Player.CurrentHp -= (2 * npc.Attack / Player.Defence + 1);
                         npc.CurrentHp -= (2 * Player.Attack / npc.Defence + 1);
+                        CheckForDeath(npc);
                         return;
                     }
                 }
             }
         }
+
+        public void SwordSweep()
+        {
+            int enemyTileX = Player.XPos;
+            int enemyTileY = Player.YPos;
+            int[,] checkingTiles = new int[2, 3];
+            if (Player.DirectionFacing == 'U')
+            {
+                //play animation
+                enemyTileY -= 1;
+                for (int i = 0; i <= 2; i++)
+                {
+                    checkingTiles[0, i] = enemyTileX + i - 1; //left, mid, right
+                    checkingTiles[1, i] = enemyTileY;
+                }
+            }
+            else if (Player.DirectionFacing == 'R')
+            {
+                enemyTileX += 1;
+                for (int i = 0; i <= 2; i++)
+                {
+                    checkingTiles[0, i] = enemyTileX;
+                    checkingTiles[1, i] = enemyTileY + i - 1; //top, mid, base
+                }
+            }
+            else if (Player.DirectionFacing == 'D')
+            {
+                enemyTileY += 1;
+                for (int i = 0; i <= 2; i++)
+                {
+                    checkingTiles[0, i] = enemyTileX - i + 1; //right, mid, left
+                    checkingTiles[1, i] = enemyTileY;
+                }
+            }
+            else if (Player.DirectionFacing == 'L')
+            {
+                enemyTileX -= 1;
+                for (int i = 0; i <= 2; i++)
+                {
+                    checkingTiles[0, i] = enemyTileX;
+                    checkingTiles[1, i] = enemyTileY - i + 1; //base, mid, top
+                }
+            }
+            //and then see if enemies reside there
+
+            foreach (Npc npc in Npcs) //currently does NOT work
+            {
+                if (npc.XPos == checkingTiles[0, 0] && npc.YPos == checkingTiles[1, 0])
+                { //tile location 1
+                    npc.CurrentHp -= (5 * Player.Attack / npc.Defence + 3); //modifier on the end to add variation to sword sweep
+                }
+                else if (npc.XPos == checkingTiles[0, 1] && npc.YPos == checkingTiles[1, 1])
+                { //tile location 2
+                    npc.CurrentHp -= (5 * Player.Attack / npc.Defence + 5);
+                }
+                else if (npc.XPos == checkingTiles[0, 2] && npc.YPos == checkingTiles[1, 2])
+                { //tile location 3
+                    npc.CurrentHp -= (5 * Player.Attack / npc.Defence + 1);
+                }
+                CheckForDeath(npc);
+            }
+        }
+
+        private void CheckForDeath(Npc npc)
+        {
+            if (npc.IsDead())
+            {
+                Map.SetOverlayTileChar(npc.XPos, npc.YPos, '.');
+                Npcs.Remove(npc);
+                Player.MaxHp += npc.MaxHp / 10;
+                Player.Attack += npc.Attack / 10;
+                Player.Defence += npc.Defence / 10;
+            }
+        }
+
     }
 }

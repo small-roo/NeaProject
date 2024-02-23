@@ -115,10 +115,10 @@ namespace NeaProject.Classes
                     }
 
                 //other
-                case "Diamond":
+                case "Sword":
                     {
-                        xOffset = 23;
-                        yOffset = 10;
+                        xOffset = 2;
+                        yOffset = 8;
                         break;
                     }
                 case "Space":
