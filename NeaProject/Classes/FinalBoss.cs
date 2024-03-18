@@ -8,11 +8,14 @@ namespace NeaProject.Classes
         public override string Chat(Player player)
         {
             int weaponCount = player.Inventory.Count(i => i == "Sword");
-            if (SpokenToCount == 2 && weaponCount > 0)
+            //allows next dialogue option if the player has the sword
+            if (SpokenToCount == 2 && weaponCount > 0) 
             {
                 SpokenToCount++;
             }
-            switch (SpokenToCount)
+
+            //dialogue
+            switch (SpokenToCount) 
             {
                 case 0:
                     {
@@ -60,6 +63,7 @@ namespace NeaProject.Classes
                     }
                 case 9:
                     {
+                        SpokenToCount++;
                         return "Good luck!";
                     }
                 case 10:

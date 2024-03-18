@@ -24,26 +24,20 @@ namespace NeaProject.Pages
         private FpsCounter? _fpsCounter;
         private Renderer? _renderer;
         private SKBitmap? _bitmap;
-        private int currentCount = 0;
-        private string? lastPressed;
         private ElementReference buttonRef;
         private SKCanvasView? _skCanvasView;
         private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
 
-        private void IncrementCount()
-        {
-            currentCount++;
-        }
-
-
+        //store everything in the game object in local storage
         private async Task SaveDataAsync()
         {
             if (LocalStorage == null)
             { return; }
-            await LocalStorage.SetItemAsync("game", _game);
-            await buttonRef.FocusAsync();
+            await LocalStorage.SetItemAsync("game", _game); 
+            await buttonRef.FocusAsync(); //return focus to the game's screen
         }
 
+        //delete the game from local storage
         private async Task ClearDataAsync()
         {
             if (LocalStorage == null)
@@ -59,13 +53,13 @@ namespace NeaProject.Pages
 
         private void Move(string pressedKey)
         {
-            if (_game == null || _renderer == null || _stopwatch.ElapsedMilliseconds < 30)
+            //limited input to stop character from moving multiple times per key press
+            if (_game == null || _renderer == null || _stopwatch.ElapsedMilliseconds < 80)
             { return; }
             _stopwatch.Restart();
 
-            lastPressed = pressedKey;
+            //either arrow key or WASD inputs allowed, and caps lock won't throw things off
             pressedKey = pressedKey.ToLower();
-
             switch (pressedKey)
             {
                 case "arrowup":
@@ -94,7 +88,7 @@ namespace NeaProject.Pages
                     }
                 case ".":
                     {
-                        if (_game.Player.Inventory.Contains("Sword")) //currently cannot happen
+                        if (_game.Player.Inventory.Contains("Sword"))
                         {
                             _game.SwordSweep();
                         }
@@ -128,18 +122,23 @@ namespace NeaProject.Pages
         }
         }
 
+        //when the page loads
         protected override async Task OnInitializedAsync()
         {
             if (LocalStorage == null||NavigationManager == null)
             { return; }
+
+            //grabs the tilesheet. the section after the ? forces the game to use the latest copy, not the one stored in cache memory
             var tileSheetUri = new Uri($"{NavigationManager.Uri}images/MapTiles/all_tiles.png?_={DateTime.Now}");
             
+            //either loads the saved game or begins a new one
             if (await LocalStorage.ContainKeyAsync("game"))
             {
                 _game = await LocalStorage.GetItemAsync<Game>("game");
             }
             else
             {
+                //uses map_0.txt to create a new game
                 var mapUri = new Uri($"{NavigationManager.Uri}map-data/map_0.txt?_={DateTime.Now}");
                 string mapString = await DownloadAsync(mapUri);
                 _game = new Game(mapString);
@@ -176,12 +175,18 @@ namespace NeaProject.Pages
                 { 'I', new Sprite(mapTileSheet, "Fish", 2)},
                 { 'S', new Sprite(mapTileSheet, "Snake", 2) },
 
+                //weapons
+                { '△', new Sprite(mapTileSheet, "SwingUp", 3)},
+                { '▷', new Sprite(mapTileSheet, "SwingRight", 3)},
+                { '▽', new Sprite(mapTileSheet, "SwingDown", 3)},
+                { '◁', new Sprite(mapTileSheet, "SwingLeft", 3)},
+
                 //misc other
                 { '.', null},
                 { '□', new Sprite(mapTileSheet, "Space", 1)},
-                { 'd', new Sprite(mapTileSheet, "Sword", 1)}, //currently actually flowerbundle
+                { 'd', new Sprite(mapTileSheet, "Sword", 1)},
                 { 'm', new Sprite(mapTileSheet, "MarsRock", 1)},
-                { 'p', new Sprite(mapTileSheet, "Player", 17)},
+                { 'p', new Sprite(mapTileSheet, "Player", 21)},
                 { 'r', new Sprite(mapTileSheet, "Rock", 1)},
                 { 's', new Sprite(mapTileSheet, "Sand", 1)},
                 { 't', new Sprite(mapTileSheet, "Tree", 1)},

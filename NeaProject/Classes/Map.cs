@@ -19,22 +19,28 @@ namespace NeaProject.Classes
         public Map(string stringMap)
         {
             string[] mapRows = stringMap.Split('\n');
-            Width = mapRows[0].Length / 2; //don't need to subtract 1 because will always be even, and using integer division
+            //despite extra whitespace character, there are an even number of wanted tiles, so integer division works (don't need to subtract 1)
+            Width = mapRows[0].Length / 2; //divide by 2 because there are two chars per tile
             Height = mapRows.Length;
+
+            //have to use jagged arrays for json deserialisation
             CharMap = CreateJaggedArray(Height, Width);
             OverlayCharMap = CreateJaggedArray(Height, Width); 
             int rowIndex = 0;
             foreach (string row in mapRows) 
             {
-                string trimmedRow = row.Trim();
-                int tileCount = trimmedRow.Length / 2;
+                string trimmedRow = row.Trim(); //remove trailing whitespace
+                int tileCount = trimmedRow.Length / 2; //again, divide by 2 because there are two chars per tile
                 for (int colIndex = 0; colIndex < tileCount; colIndex++)
                 {
+                    //setting up both tilemaps
                     CharMap[rowIndex][colIndex] = trimmedRow[colIndex * 2];
                     OverlayCharMap[rowIndex][colIndex] = trimmedRow[colIndex * 2 + 1];
                 }
                 rowIndex++;
             }
+
+            //set tiles like grass and cacti to be one of their random variants
             CharMap = RandomiseTiles(CharMap);
             OverlayCharMap = RandomiseTiles(OverlayCharMap);
         }
@@ -49,10 +55,12 @@ namespace NeaProject.Classes
             return temp;
         }
 
+        //these public get and set methods are mostly to reduce confusion over which way around x and y are
         public char GetTileChar(int xTile, int yTile)
         {
             return CharMap[yTile][xTile];
         }
+        //unused or not, seems wrong not to have it
         public void SetTileChar(int xTile, int yTile, char newOverlay)
         {
             CharMap[yTile][xTile] = newOverlay;
@@ -68,18 +76,21 @@ namespace NeaProject.Classes
             OverlayCharMap[yTile][xTile] = newOverlay;
         }
 
+        //can be reused for all randomisations
         private static char[][] RandomiseTiles(char[][] currentMap)
         {
             Random random = new();
             int yTile = 0;
-            foreach (char[] tileRow in currentMap) // can be reused for all randomisations
+            foreach (char[] tileRow in currentMap) 
             {
                 int xTile = 0;
                 foreach (char tileChar in tileRow)
                 {
+                    //using unneccesary switches here, again because in a more developed version of the game there may be more random tile textures
                     switch (tileChar)
                     {
-                        case 'c': //cactus
+                        //cactus
+                        case 'c':
                             {
                                 int cactusNumber = random.Next(0, 4);
                                 switch (cactusNumber)
@@ -111,7 +122,8 @@ namespace NeaProject.Classes
                                 }
                                 break;
                             }
-                        case 'g': //grass
+                        //grass
+                        case 'g':
                             {
                                 int grassNumber = random.Next(0, 5);
                                 switch (grassNumber)

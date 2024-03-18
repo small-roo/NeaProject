@@ -12,11 +12,11 @@ namespace NeaProject.Classes
         public Sprite(SKBitmap bitmap, string name, int numOfFrames)
         {
             GetTileOffset(name, out int yOffset, out int xOffset);
-            _colour = new uint[32, 32, numOfFrames];
+            _colour = new uint[32, 32, numOfFrames]; //creates a 32x32 array for the colours used in the tile
 
-            for (int frameIndex = 0; frameIndex < numOfFrames; frameIndex++)
+            for (int frameIndex = 0; frameIndex < numOfFrames; frameIndex++) //loops for if there are multiple sprites for the same object
             {
-                for (int y = 0; y < 32; y++)
+                for (int y = 0; y < 32; y++) //pixel loop
                 {
                     for (int x = 0; x < 32; x++)
                     {
@@ -24,20 +24,20 @@ namespace NeaProject.Classes
                         _colour[x, y, frameIndex] = tileColour;
                     }
                 }
-                xOffset += tileSize;
+                xOffset += tileSize; //sprites with more than one frame follow each other left-to-right in the spritesheet
             }
             Name = name;
         }
 
-        private static void GetTileOffset(string name, out int yOffset, out int xOffset)
+        private static void GetTileOffset(string name, out int yOffset, out int xOffset) //the point in the png to start reading in the sprite
         {
             switch (name)
             {
                 //teleports
                 case "Spawn":
                     {
-                        xOffset = 23;
-                        yOffset = 9;
+                        xOffset = 11;
+                        yOffset = 2;
                         break;
                     }
                 case "Teleport1":
@@ -111,6 +111,32 @@ namespace NeaProject.Classes
                     {
                         xOffset = 1;
                         yOffset = 2;
+                        break;
+                    }
+
+                //weapon
+                case "SwingUp":
+                    {
+                        xOffset = 8;
+                        yOffset = 3;
+                        break;
+                    }
+                case "SwingRight":
+                    {
+                        xOffset = 8;
+                        yOffset = 4;
+                        break;
+                    }
+                case "SwingDown":
+                    {
+                        xOffset = 8;
+                        yOffset = 5;
+                        break;
+                    }
+                case "SwingLeft":
+                    {
+                        xOffset = 8;
+                        yOffset = 6;
                         break;
                     }
 
@@ -196,11 +222,13 @@ namespace NeaProject.Classes
                     }
 
             }
+
+            //and then multiply by the size of the tile to get the position in terms of pixels
             xOffset *= tileSize;
             yOffset *= tileSize;
         }
 
-        public Sprite(string textSprite, string name) 
+        public Sprite(string textSprite, string name) //for if the sprite is read in from a text file, like the map
         {
             _colour = new uint[32, 32, 1];
             string[] spriteRows = textSprite.Split('\n').Skip(1).ToArray();
@@ -237,7 +265,7 @@ namespace NeaProject.Classes
             Name = name;
         }
 
-        public Sprite(Color colour, string name)
+        public Sprite(Color colour, string name) //for if the sprite is a specific colour
         {
             _colour = new uint[32, 32, 1];
             uint tileColour = MakePixel(colour);

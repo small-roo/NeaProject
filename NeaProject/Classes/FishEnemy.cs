@@ -27,10 +27,11 @@ namespace NeaProject.Classes
                 _animationCountdown--;
                 if (_animationCountdown == 0)
                 {
-                    int doMovement = _random.Next(0, 3); // if the movement  is greater than 1 here, it flips instead of moving
-                    if (doMovement == 0||doMovement == 1)
+                    // if the movement is greater than 1 here, it flips instead of moving
+                    int doMovement = _random.Next(0, 3); 
+                    if (doMovement == 0 || doMovement == 1)
                     {
-                        Move(FrameIndex * -2 + 1, 0, game.Map, game.Camera);
+                        Move(FrameIndex * -2 + 1, 0, game.Map, game.Camera); //moves in the direction it's facing
                     }
                     else
                     {

@@ -14,7 +14,7 @@ namespace NeaProject.Classes
         public int ScreenTileWidth { get; set; }
         public int ScreenTileHeight { get; set; }
         
-
+        //a constructor which takes no parameters is needed for json deserialisation
         public Game()
         {
             Player = new() { Name = "", SpriteRef = '\0' };
@@ -23,8 +23,12 @@ namespace NeaProject.Classes
         public Game(string mapString)
         {
             Map = new Map(mapString);
-            int playerSpawnX=20;
-            int playerSpawnY=20;
+
+            //default spawn position in case the map is missing the spawn tile
+            int playerSpawnX = 20;
+            int playerSpawnY = 20;
+
+            //find the actual spawn position
             int charX = 0;
             int charY = 0;
             foreach (char[] charRow in Map.OverlayCharMap)
@@ -41,45 +45,49 @@ namespace NeaProject.Classes
                 charX = 0;
                 charY++;
             }
+
+            //default camera position - will be recalculated immediately if the window size doesn't match
             Camera.DrawingStartTileX = playerSpawnX - 6;
             Camera.DrawingStartTileY = playerSpawnY - 4;
             Player = new Player()
             {
                 CurrentHp = 100,
                 MaxHp = 100,
-                // XPos = _map.Width / 2,
-                // YPos = _map.Height / 2,
                 XPos = playerSpawnX,
                 YPos = playerSpawnY,
                 Attack = 5,
                 Defence = 5,
                 Name = "Mellie",
                 SpriteRef = 'p',
-                AllowedTiles = new List<char> { 'g', 'ĝ', 'ğ', 'ġ', 'ģ', 'm', 's', 'w' }
+                AllowedTiles = new List<char> { 'g', 'ĝ', 'ğ', 'ġ', 'ģ', 'm', 's', 'w' } //all kinds of grass, mars rock, sand and water
             };
             SetUpNpcs(Map);
             GameStopwatch = Stopwatch.StartNew();
         }
 
+        //creates a list of all npcs and places them on the map
         private void SetUpNpcs(Map map)
         {
             Npcs.Clear();
             Random random = new();
 
-            for (int birdNumber = 1; birdNumber <= 100; birdNumber++) //bird
+            //bird
+            for (int birdNumber = 1; birdNumber <= 100; birdNumber++)
             {
                 BirdEnemy bird = new()
                 {
-                    Name = $"bird{birdNumber}",
-                    SpriteRef = 'B',
+                    Name = $"bird{birdNumber}", //unique ID
+                    SpriteRef = 'B', //character used to store them on the map
                     XPos = random.Next(0, map.Width),
                     YPos = random.Next(0, map.Height),
                     MaxHp = 20,
                     Attack = 10,
                     Defence = 5,
-                    AllowedTiles = { 'g', 'ĝ', 'ğ', 'ġ', 'ģ' },
-                    FrameIndex = random.Next(0, 2),
+                    AllowedTiles = { 'g', 'ĝ', 'ğ', 'ġ', 'ģ' }, //can move to any grassy tile
+                    FrameIndex = random.Next(0, 2) //spawns facing random direction
                 };
+
+                //ensures the birds do not overwrite any previously existing overlay tiles and is attempting to spawn on one of its allowed tiles
                 while (map.GetOverlayTileChar(bird.XPos, bird.YPos) != '.' || bird.AllowedTiles.Contains(map.GetTileChar(bird.XPos, bird.YPos)) == false)
                 {
                     bird.XPos = random.Next(0, map.Width);
@@ -89,18 +97,23 @@ namespace NeaProject.Classes
                 Npcs.Add(bird);
             }
 
-            FinalBoss finalBoss = new() //final boss
+            //final boss - note: not actually an enemy at the moment
+            FinalBoss finalBoss = new() 
             {
                 Name = "Mellow",
                 SpriteRef = 'F',
-                XPos = 32,
+                //set spawn point
+                XPos = 32, 
                 YPos = 16,
-                MaxHp = 2000,
-                Attack = 0,
-                Defence = 1
+                MaxHp = 20000,
+                Attack = 100,
+                Defence = 100
             };
+            map.SetOverlayTileChar(finalBoss.XPos, finalBoss.YPos, finalBoss.SpriteRef);
+            Npcs.Add(finalBoss);
 
-            for (int fishNumber = 1; fishNumber <= 150; fishNumber++) //fish
+            //fish
+            for (int fishNumber = 1; fishNumber <= 150; fishNumber++)
             {
                 FishEnemy fish = new()
                 {
@@ -112,7 +125,7 @@ namespace NeaProject.Classes
                     Attack = 5,
                     Defence = 10,
                     FrameIndex = random.Next(0, 2),
-                    AllowedTiles = { 'w' }
+                    AllowedTiles = { 'w' } //allowed in the water
                 };
                 while (map.GetOverlayTileChar(fish.XPos, fish.YPos) != '.' || map.GetTileChar(fish.XPos, fish.YPos) != 'w')
                 {
@@ -123,7 +136,8 @@ namespace NeaProject.Classes
                 Npcs.Add(fish);
             }
 
-            for (int snakeNumber = 1; snakeNumber <= 50; snakeNumber++) //snake
+            //snake
+            for (int snakeNumber = 1; snakeNumber <= 50; snakeNumber++)
             {
                 SnakeEnemy snake = new()
                 {
@@ -135,8 +149,10 @@ namespace NeaProject.Classes
                     Attack = 10,
                     Defence = 15,
                     FrameIndex = random.Next(0, 2),
-                    AllowedTiles = { 'm', 's' }
+                    AllowedTiles = { 'm', 's' } //allowed on mars rock or sand
                 };
+
+                //only allowed to spawn on unoccupied mars rock
                 while (map.GetOverlayTileChar(snake.XPos, snake.YPos) != '.' || map.GetTileChar(snake.XPos, snake.YPos) != 'm')
                 {
                     snake.XPos = random.Next(0, map.Width);
@@ -145,9 +161,9 @@ namespace NeaProject.Classes
                 map.SetOverlayTileChar(snake.XPos, snake.YPos, snake.SpriteRef);
                 Npcs.Add(snake);
             }
-            map.SetOverlayTileChar(finalBoss.XPos, finalBoss.YPos, finalBoss.SpriteRef);
-            Npcs.Add(finalBoss);
+            
 
+            //added as otherwise their current hp is 0 and swinging the sword wipes every npc on the map from existence, rendering the game unbeatable
             foreach (Npc npc in Npcs)
             {
                 npc.CurrentHp = npc.MaxHp;
@@ -157,13 +173,14 @@ namespace NeaProject.Classes
         // Movement
         public void MoveUp()
         {
-            if (Player.IsDead() || Player.HasWon() )
+            //don't move if the game has ended
+            if (Player.IsDead() || Player.HasWon() ) 
             {
                 return;
             }
-            Player.DirectionFacing = 'U';
-            Player.FrameIndex = 3;
-            Player.Move(0, -1, Map, Camera);
+            Player.DirectionFacing = 'U'; //sets direction the player is looking
+            Player.FrameIndex = 3; //switches to sprite looking away from camera
+            Player.Move(0, -1, Map, Camera); //attempts to move
         }
         public void MoveRight()
         {
@@ -197,10 +214,11 @@ namespace NeaProject.Classes
         }
 
         // Fights
-        public void PlayerEnemyCollision()
+        public void PlayerEnemyCollision() //if the player walks into an NPC
         {
-            if (Player.LookForFight == true)
+            if (Player.LookForFight == true) //if the NPC is an enemy
             {
+                //calculate where the enemy is
                 int enemyTileX = Player.XPos;
                 int enemyTileY = Player.YPos;
                 if (Player.DirectionFacing == 'U')
@@ -220,10 +238,10 @@ namespace NeaProject.Classes
                     enemyTileX -= 1;
                 }
 
-                     
+                //check if every npc is in front of the player, and if they are deal an appropriate amount of damage to both and stop looking
                 foreach (Npc npc in Npcs)
                 {
-                    if (npc.XPos == enemyTileX && npc.YPos == enemyTileY)
+                    if (npc.XPos == enemyTileX && npc.YPos == enemyTileY) 
                     {
                         Player.CurrentHp -= (2 * npc.Attack / Player.Defence + 1);
                         npc.CurrentHp -= (2 * Player.Attack / npc.Defence + 1);
@@ -234,14 +252,16 @@ namespace NeaProject.Classes
             }
         }
 
-        public void SwordSweep()
+        //hitting the enemy with the sword
+        public void SwordSweep() 
         {
             int enemyTileX = Player.XPos;
             int enemyTileY = Player.YPos;
-            int[,] checkingTiles = new int[2, 3];
+            int[,] checkingTiles = new int[2, 3]; //(x, y) in 3 locations. [0, n] is the x co-ordinate and [1, n] the y co-ord for that tile
+            
+            //calculate where to check for enemies
             if (Player.DirectionFacing == 'U')
             {
-                //play animation
                 enemyTileY -= 1;
                 for (int i = 0; i <= 2; i++)
                 {
@@ -276,14 +296,13 @@ namespace NeaProject.Classes
                     checkingTiles[1, i] = enemyTileY - i + 1; //base, mid, top
                 }
             }
+
             //and then see if enemies reside there
-
-
             foreach (Npc npc in Npcs.ToList()) 
             {
                 if (npc.XPos == checkingTiles[0, 0] && npc.YPos == checkingTiles[1, 0])
                 { //tile location 1
-                    npc.CurrentHp -= (5 * Player.Attack / npc.Defence + 3); //modifier on the end to add variation to sword sweep
+                    npc.CurrentHp -= (5 * Player.Attack / npc.Defence + 3); //modifier on the end to add variation to sword sweep damage
                 }
                 else if (npc.XPos == checkingTiles[0, 1] && npc.YPos == checkingTiles[1, 1])
                 { //tile location 2
@@ -293,6 +312,7 @@ namespace NeaProject.Classes
                 { //tile location 3
                     npc.CurrentHp -= (5 * Player.Attack / npc.Defence + 1);
                 }
+                //see if they died
                 CheckForDeath(npc);
             }
         }
@@ -301,8 +321,9 @@ namespace NeaProject.Classes
         {
             if (npc.IsDead())
             {
-                Map.SetOverlayTileChar(npc.XPos, npc.YPos, '.');
-                Npcs.Remove(npc);
+                Map.SetOverlayTileChar(npc.XPos, npc.YPos, '.'); //remove them from the map
+                Npcs.Remove(npc); //remove them from the list of npcs
+                //boost player's stats accordingly
                 Player.MaxHp += npc.MaxHp / 10;
                 Player.Attack += npc.Attack / 10;
                 Player.Defence += npc.Defence / 10;
