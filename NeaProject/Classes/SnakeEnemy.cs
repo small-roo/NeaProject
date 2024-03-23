@@ -27,26 +27,26 @@ namespace NeaProject.Classes
             _animationCountdown--;
             if (_animationCountdown == 0)
             {
-                int doMovement = _random.Next(0, 3); // if the movement  is greater than 1 here, it flips instead of moving
+                int doMovement = _random.Next(0, 3); //does one of 3 movements
                 if (doMovement == 0)
                 {
-                    Move(FrameIndex * -2 + 1, 0, game.Map, game.Camera);
+                    Move(FrameIndex * -2 + 1, 0, game.Map, game.Camera); //moves in the x direction it is facing
                 }
                 else if (doMovement == 1 )
                 {
-                    int yMovement = _random.Next(0, 2);
-                    Move(0, yMovement, game.Map, game.Camera);
+                    int yMovement = _random.Next(0, 2); //moves up or down
+                    Move(0, yMovement * 2 - 1, game.Map, game.Camera);
                 }
                 else
                 {
-                    FrameIndex = -FrameIndex + 1;
+                    FrameIndex = -FrameIndex + 1; //flips
                 }
                 ResetAnimationCountdown();
             }
         }
         private void ResetAnimationCountdown()
         {
-            _animationCountdown = _random.Next(10, 20);
+            _animationCountdown = _random.Next(10, 20); //amount of time between movements is random
         }
     }
 }

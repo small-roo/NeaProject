@@ -72,7 +72,7 @@ namespace NeaProject.Classes
             Random random = new();
 
             //bird
-            for (int birdNumber = 1; birdNumber <= 100; birdNumber++)
+            for (int birdNumber = 1; birdNumber <= 500; birdNumber++)
             {
                 BirdEnemy bird = new()
                 {
@@ -103,8 +103,8 @@ namespace NeaProject.Classes
                 Name = "Mellow",
                 SpriteRef = 'F',
                 //set spawn point
-                XPos = 32, 
-                YPos = 16,
+                XPos = 35, 
+                YPos = 29,
                 MaxHp = 20000,
                 Attack = 100,
                 Defence = 100
@@ -113,7 +113,7 @@ namespace NeaProject.Classes
             Npcs.Add(finalBoss);
 
             //fish
-            for (int fishNumber = 1; fishNumber <= 150; fishNumber++)
+            for (int fishNumber = 1; fishNumber <= 750; fishNumber++)
             {
                 FishEnemy fish = new()
                 {
@@ -137,7 +137,7 @@ namespace NeaProject.Classes
             }
 
             //snake
-            for (int snakeNumber = 1; snakeNumber <= 50; snakeNumber++)
+            for (int snakeNumber = 1; snakeNumber <= 250; snakeNumber++)
             {
                 SnakeEnemy snake = new()
                 {

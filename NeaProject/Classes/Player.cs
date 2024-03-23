@@ -56,7 +56,7 @@ namespace NeaProject.Classes
                     {
                         XPos += moveX;
                         YPos += moveY;
-                        stepCount++;
+                        stepCount++; //counts towards hp recovery
                         Inventory.Add("Sword");
                         map.SetOverlayTileChar(XPos, YPos, '.');
                         PreviousOverlayTile = '.';
@@ -95,8 +95,10 @@ namespace NeaProject.Classes
             {
                 FrameIndex += 16;
             }
-            else 
+            //don't try to walk inside a ufo
+            else if (FrameIndex != 20)
             {
+                //walk cycle has 4 frames in each direction
                 stepCycle++;
                 FrameIndex += (stepCycle % 4) * 4;
             }

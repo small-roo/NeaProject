@@ -12,7 +12,7 @@ namespace NeaProject.Classes
         public Sprite(SKBitmap bitmap, string name, int numOfFrames)
         {
             GetTileOffset(name, out int yOffset, out int xOffset);
-            _colour = new uint[32, 32, numOfFrames]; //creates a 32x32 array for the colours used in the tile
+            _colour = new uint[32, 32, numOfFrames]; //creates a 32x32xn array for the colours used in the tile, per frame
 
             for (int frameIndex = 0; frameIndex < numOfFrames; frameIndex++) //loops for if there are multiple sprites for the same object
             {
@@ -114,7 +114,7 @@ namespace NeaProject.Classes
                         break;
                     }
 
-                //weapon
+                //weapon - not currently implemented, but have been drawn out on the sheet
                 case "SwingUp":
                     {
                         xOffset = 8;

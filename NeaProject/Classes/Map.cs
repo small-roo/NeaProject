@@ -76,10 +76,10 @@ namespace NeaProject.Classes
             OverlayCharMap[yTile][xTile] = newOverlay;
         }
 
-        //can be reused for all randomisations
+        //reassigning tiles to give them random textures.
         private static char[][] RandomiseTiles(char[][] currentMap)
         {
-            Random random = new();
+            Random random = new(); //can be reused for all randomisations
             int yTile = 0;
             foreach (char[] tileRow in currentMap) 
             {

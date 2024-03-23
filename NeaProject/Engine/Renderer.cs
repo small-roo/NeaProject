@@ -37,9 +37,10 @@ public class Renderer
 
     public uint[,] UpdateFrameBuffer(Game game, int viewportWidth, int viewportHeight)
     {
-        if (viewportHeight != ViewportHeight || viewportWidth != ViewportWidth) //if doesn't match, recalculate size, viewport and recentre
+        //if doesn't match, recalculate size, viewport and recentre
+        if (viewportHeight != ViewportHeight || viewportWidth != ViewportWidth) 
         {
-            _buffer = new uint[viewportHeight, viewportWidth];
+            _buffer = new uint[viewportHeight, viewportWidth]; //new buffer array as the canvas is a different size
             ViewportHeight = viewportHeight;
             ViewportWidth = viewportWidth;
             ViewportTileY = viewportHeight / 32;
@@ -47,7 +48,8 @@ public class Renderer
             game.ScreenTileHeight = ViewportTileY;
             game.ScreenTileWidth = ViewportTileX;
 
-            if (ViewportTileX > 15) // how far from edge of screen it moves when the player takes a step
+            //set how far from edge of screen it moves when the player takes a step depending on screen size
+            if (ViewportTileX > 15) 
             {
                 ViewportEdgeBuffer = 3;
             }
@@ -61,9 +63,13 @@ public class Renderer
             }
             _map.VisibleHeight = ViewportTileY;
             _map.VisibleWidth = ViewportTileX;
+
+            //recentre map to avoid trying to draw off the edge of the screen
             game.Camera.DrawingStartTileX = game.Player.XPos - game.Map.VisibleWidth / 2;
             game.Camera.DrawingStartTileY = game.Player.YPos - game.Map.VisibleHeight / 2;
         }
+
+        //using a stopwatch prevents fps from affecting how fast the characters move
         bool isAnimationFrame = false;
         if (game.GameStopwatch.ElapsedMilliseconds > 100)
         {
@@ -80,7 +86,7 @@ public class Renderer
 
     private void DrawPlayer(bool isAnimationFrame, Game game)
     {
-        if (isAnimationFrame)
+        if (isAnimationFrame) //would be used for idle animations/set animations for story purposes
         {
             _player.Animate(game);
         }
@@ -91,7 +97,7 @@ public class Renderer
 
     private void DrawNpcs(bool isAnimationFrame, Game game)
     {
-        // move any onscreen npcs (which might move them offscreen :])
+        // move any onscreen npcs (which might move them offscreen)
         foreach (var npc in OnScreenNpcs(game))
         {
             if (isAnimationFrame)
@@ -126,9 +132,12 @@ public class Renderer
                 // determine sprite of tile
                 char mapChar = _map.GetTileChar(camera.DrawingStartTileX + drawingTileX, camera.DrawingStartTileY + drawingTileY);
                 Sprite? sprite = _sprites[mapChar];
+                //draw base tile
                 DrawSprite(drawingTileY, drawingTileX, sprite, null, 0);
+                // determine sprite of overlay tile
                 mapChar = _map.GetOverlayTileChar(camera.DrawingStartTileX + drawingTileX, camera.DrawingStartTileY + drawingTileY);
                 Sprite? overlaySprite = _sprites[mapChar];
+                //draw overlay tile if it isn't a character
                 switch (mapChar)
                 {
                     case 'B':
@@ -204,6 +213,7 @@ public class Renderer
         }
     }
 
+    //calculate what colour to draw a pixel from the existing colour, the new colour and the alpha channel of the new colour
     public static uint OpacityCalc(uint colour, uint baseColour, uint alpha)
     {
         colour = (colour * alpha + (0xff - alpha) * baseColour) / 0xff;

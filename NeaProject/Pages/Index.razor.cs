@@ -103,6 +103,7 @@ namespace NeaProject.Pages
             _renderer.MoveCamera(_game);
             switch (pressedKey)
             {
+                //if just moved, check to see if collided w/ enemy.
                 case "arrowup":
                 case "arrowdown":
                 case "arrowleft":
@@ -198,6 +199,7 @@ namespace NeaProject.Pages
             _bitmap = new SKBitmap(_renderer.ViewportWidth, _renderer.ViewportHeight);
         }
 
+        //immediately focus on canvas so the player doesn't need to click it to begin
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -206,6 +208,7 @@ namespace NeaProject.Pages
             }
         }
 
+        //not my code (outside || _game == null). also, commented out drawing the fps for the actual final tag, but didn't delete it.
         protected void OnPaintSurface(SKPaintSurfaceEventArgs e)
         {
             if (_renderer == null || _bitmap == null || _fpsCounter == null || _game == null)
@@ -243,7 +246,7 @@ namespace NeaProject.Pages
             };
 
             var surfaceSize = e.Info.Size;
-            canvas.DrawText($"{fps:0.00}fps", surfaceSize.Width / 2, surfaceSize.Height - 10f, paint);
+            //canvas.DrawText($"{fps:0.00}fps", surfaceSize.Width / 2, surfaceSize.Height - 10f, paint);
         }
 
         public async static Task<string> DownloadAsync(Uri uri)
