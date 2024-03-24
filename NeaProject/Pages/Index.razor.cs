@@ -14,10 +14,6 @@ namespace NeaProject.Pages
         [Inject] NavigationManager? NavigationManager { get; set; }
         [Inject] ILocalStorageService? LocalStorage { get; set; }
 
-        // Worth noting that the renderer is about 50% slower when you use Web GL. My assumption is that you end up
-        // interop-ing more than it seems, another copy of the byte array for the surface would cause about the level of
-        // slowdown I saw. But 2D canvas is fine - after all, just a 2D game.
-
         private Game? _game;
         private Npc? _talkingToNpc;
         private Dictionary<char, Sprite?>? _sprites;
@@ -208,7 +204,9 @@ namespace NeaProject.Pages
             }
         }
 
-        //not my code (outside || _game == null). also, commented out drawing the fps for the actual final tag, but didn't delete it.
+        // not my code, for the most part. comes from this project: 
+        // https://github.com/JamesRandall/csharp-wolfenstein/tree/b1a34dd03730f71754ae9d04e42851b0c4c03c2d
+        // also commented out drawing the fps for the actual final tag, but didn't delete it
         protected void OnPaintSurface(SKPaintSurfaceEventArgs e)
         {
             if (_renderer == null || _bitmap == null || _fpsCounter == null || _game == null)
