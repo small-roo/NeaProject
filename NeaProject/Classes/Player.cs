@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.RenderTree;
 using NeaProject.Classes;
 using NeaProject.Engine;
+using System.Diagnostics;
 using System.Threading;
 
 namespace NeaProject.Classes
@@ -9,9 +10,26 @@ namespace NeaProject.Classes
     {
         private int stepCount = 0;
         private int stepCycle = 0;
+        private Stopwatch? swingSwordStopwatch;
         public bool HasWon()
         {
             return Inventory.Contains("Heartfelt Gift"); //Game is won if all 4 swords have been traded in to final boss NPC
+        }
+
+        //true if the sword has been swinging for less than the max swing time
+        public bool IsSwingingSword() 
+        {
+            if (swingSwordStopwatch == null || swingSwordStopwatch.ElapsedMilliseconds > 250)
+            {
+                swingSwordStopwatch = null;
+                return false;
+            }
+            return true;
+        }
+
+        public void SwingSword()
+        { 
+            swingSwordStopwatch = Stopwatch.StartNew();
         }
 
         public override void MoveRules(int moveX, int moveY, Map map, Camera camera)

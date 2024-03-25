@@ -1,4 +1,4 @@
-using NeaProject.Classes;
+﻿using NeaProject.Classes;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -80,9 +80,83 @@ public class Renderer
         DrawMap(game.Camera);
         DrawNpcs(isAnimationFrame, game);
         DrawPlayer(isAnimationFrame, game);
+        if (game.Player.IsSwingingSword()) //aaaaaaaaaaaa
+        {
+            DrawSword(game);
+        }
 
         return _buffer;
     }
+
+    private void DrawSword(Game game) 
+    {
+        //very similar to the enemy location system in the game class, but with differences in which tiles are addressed when
+        int[,] hitTiles = new int[2, 3];
+        int swingTileX = game.Player.XPos;
+        int swingTileY = game.Player.YPos;
+        char swordSprite;
+        switch (game.Player.DirectionFacing)
+        {
+            case 'U':
+                {
+                    swingTileY -= 1;
+                    for (int i = 0; i <= 2; i++)
+                    {
+                        hitTiles[0, i] = swingTileX + i - 1; //left, mid, right
+                        hitTiles[1, i] = swingTileY;
+                    }
+                    swordSprite = '△';
+                    break;
+                }
+            case 'R':
+                {
+                    swingTileX += 1;
+                    for (int i = 0; i <= 2; i++)
+                    {
+                        hitTiles[0, i] = swingTileX;
+                        hitTiles[1, i] = swingTileY + i - 1; //top, mid, base
+                    }
+                    swordSprite = '▷';
+                    break;
+                }
+            case 'D':
+                {
+                    swingTileY += 1;
+                    for (int i = 0; i <= 2; i++)
+                    {
+                        hitTiles[0, i] = swingTileX + i - 1; //left, mid, right
+                        hitTiles[1, i] = swingTileY;
+                    }
+                    swordSprite = '▽';
+                    break;
+                }
+            case 'L':
+                {
+                    swingTileX -= 1;
+                    for (int i = 0; i <= 2; i++)
+                    {
+                        hitTiles[0, i] = swingTileX;
+                        hitTiles[1, i] = swingTileY + i - 1; //top, mid, base
+                    }
+                    swordSprite = '◁';
+                    break;
+                }
+            default: { return; }
+        }
+
+        for (int i = 0; i < 3; i++)
+        {
+            char mapChar = _map.GetTileChar(hitTiles[0, i], hitTiles[1, i]);
+            //drawing over the base tile, but not the enemy. Flashes briefly enough that that makes sense.
+            DrawSprite(hitTiles[1, i] - game.Camera.DrawingStartTileY, 
+                hitTiles[0, i] - game.Camera.DrawingStartTileX,
+                _sprites[swordSprite], _sprites[mapChar], i);
+        }
+
+    }
+        
+
+
 
     private void DrawPlayer(bool isAnimationFrame, Game game)
     {

@@ -255,6 +255,7 @@ namespace NeaProject.Classes
         //hitting the enemy with the sword
         public void SwordSweep() 
         {
+            Player.SwingSword(); //sets a timer going to let the renderer know to draw the sword swing
             int enemyTileX = Player.XPos;
             int enemyTileY = Player.YPos;
             int[,] checkingTiles = new int[2, 3]; //(x, y) in 3 locations. [0, n] is the x co-ordinate and [1, n] the y co-ord for that tile
