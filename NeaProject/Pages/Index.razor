@@ -10,29 +10,32 @@
 <div style="background-color:#222">
 
 <div style="width:100%; background-color:#222">
-    <button
-        @ref="buttonRef"
-        class="massive-invisible-button"
-        @onkeydown="KeyDown">
+    @if (NavigationManager != null && _game?.Player?.IsDead() == true)
+    {
+            <img src="@($"{NavigationManager.Uri}images/Other/YouLose.png")" style="width:100%; max-width:902px; margin:auto; display:block" />
+    }
+    else if (NavigationManager != null && _game?.Player?.HasWon() == true)
+    {
+            <img src="@($"{NavigationManager.Uri}images/Other/YouWin.png")" style="width:100%; max-width:902px; margin:auto; display:block" />
+    }
+    else
+    {
+        <button
+            @ref="buttonRef"
+            class="massive-invisible-button"
+            @onkeydown="KeyDown">
                 <SKCanvasView 
                     @ref="_skCanvasView"
                     OnPaintSurface="OnPaintSurface" 
                     IgnorePixelScaling="true"
                     EnableRenderLoop="true" 
                     style="width:100%; max-width:902px; margin:auto; border-style:solid; border-color:#fff; display:block"/>
-    </button>
+        </button>
+    }
 </div>
 
 <div style="color:#aaa;background-color:#222;height:10%">
-    @if (_game == null){ }
-    else if (_game.Player?.IsDead() == true)
-    {
-        <h1>YOU LOSE!!</h1>
-    }
-    else if (_game.Player?.HasWon() == true)
-    {
-        <h1>YOU WIN!!</h1>
-    }
+    @if (_game == null || _game.Player?.IsDead() == true || _game.Player?.HasWon() == true) { }
     else if (_game.Player != null && NavigationManager != null)
     {
         <table class="table-center" style="color:#fff;width:79%;height:100px">
