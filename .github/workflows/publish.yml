@@ -2,7 +2,7 @@ name: Deploy Blazor WASM to GitHub Pages
 
 on:
   push:
-    tags: [0.1.*]
+    tags: [1.0.*]
 
 jobs:
     deploy-to-github-pages:
