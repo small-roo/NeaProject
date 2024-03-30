@@ -20,6 +20,7 @@ namespace NeaProject.Classes
             Player = new() { Name = "", SpriteRef = '\0' };
             GameStopwatch = Stopwatch.StartNew();
         }
+
         public Game(string mapString)
         {
             Map = new Map(mapString);
@@ -61,12 +62,12 @@ namespace NeaProject.Classes
                 SpriteRef = 'p',
                 AllowedTiles = new List<char> { 'g', 'ĝ', 'ğ', 'ġ', 'ģ', 'm', 's', 'w' } //all kinds of grass, mars rock, sand and water
             };
-            SetUpNpcs(Map);
+            SetUpNpcs();
             GameStopwatch = Stopwatch.StartNew();
         }
 
         //creates a list of all npcs and places them on the map
-        private void SetUpNpcs(Map map)
+        private void SetUpNpcs()
         {
             Npcs.Clear();
             Random random = new();
@@ -78,8 +79,8 @@ namespace NeaProject.Classes
                 {
                     Name = $"bird{birdNumber}", //unique ID
                     SpriteRef = 'B', //character used to store them on the map
-                    XPos = random.Next(0, map.Width),
-                    YPos = random.Next(0, map.Height),
+                    XPos = random.Next(0, Map.Width),
+                    YPos = random.Next(0, Map.Height),
                     MaxHp = 20,
                     Attack = 10,
                     Defence = 5,
@@ -88,12 +89,12 @@ namespace NeaProject.Classes
                 };
 
                 //ensures the birds do not overwrite any previously existing overlay tiles and is attempting to spawn on one of its allowed tiles
-                while (map.GetOverlayTileChar(bird.XPos, bird.YPos) != '.' || bird.AllowedTiles.Contains(map.GetTileChar(bird.XPos, bird.YPos)) == false)
+                while (Map.GetOverlayTileChar(bird.XPos, bird.YPos) != '.' || bird.AllowedTiles.Contains(Map.GetTileChar(bird.XPos, bird.YPos)) == false)
                 {
-                    bird.XPos = random.Next(0, map.Width);
-                    bird.YPos = random.Next(0, map.Height);
+                    bird.XPos = random.Next(0, Map.Width);
+                    bird.YPos = random.Next(0, Map.Height);
                 }
-                map.SetOverlayTileChar(bird.XPos, bird.YPos, bird.SpriteRef);
+                Map.SetOverlayTileChar(bird.XPos, bird.YPos, bird.SpriteRef);
                 Npcs.Add(bird);
             }
 
@@ -109,7 +110,7 @@ namespace NeaProject.Classes
                 Attack = 100,
                 Defence = 100
             };
-            map.SetOverlayTileChar(finalBoss.XPos, finalBoss.YPos, finalBoss.SpriteRef);
+            Map.SetOverlayTileChar(finalBoss.XPos, finalBoss.YPos, finalBoss.SpriteRef);
             Npcs.Add(finalBoss);
 
             //fish
@@ -119,20 +120,20 @@ namespace NeaProject.Classes
                 {
                     Name = $"fish{fishNumber}",
                     SpriteRef = 'I',
-                    XPos = random.Next(0, map.Width),
-                    YPos = random.Next(0, map.Height),
+                    XPos = random.Next(0, Map.Width),
+                    YPos = random.Next(0, Map.Height),
                     MaxHp = 25,
                     Attack = 5,
                     Defence = 10,
                     FrameIndex = random.Next(0, 2),
                     AllowedTiles = { 'w' } //allowed in the water
                 };
-                while (map.GetOverlayTileChar(fish.XPos, fish.YPos) != '.' || map.GetTileChar(fish.XPos, fish.YPos) != 'w')
+                while (Map.GetOverlayTileChar(fish.XPos, fish.YPos) != '.' || Map.GetTileChar(fish.XPos, fish.YPos) != 'w')
                 {
-                    fish.XPos = random.Next(0, map.Width);
-                    fish.YPos = random.Next(0, map.Height);
+                    fish.XPos = random.Next(0, Map.Width);
+                    fish.YPos = random.Next(0, Map.Height);
                 }
-                map.SetOverlayTileChar(fish.XPos, fish.YPos, fish.SpriteRef);
+                Map.SetOverlayTileChar(fish.XPos, fish.YPos, fish.SpriteRef);
                 Npcs.Add(fish);
             }
 
@@ -143,8 +144,8 @@ namespace NeaProject.Classes
                 {
                     Name = $"snake{snakeNumber}",
                     SpriteRef = 'S',
-                    XPos = random.Next(0, map.Width),
-                    YPos = random.Next(0, map.Height),
+                    XPos = random.Next(0, Map.Width),
+                    YPos = random.Next(0, Map.Height),
                     MaxHp = 30,
                     Attack = 10,
                     Defence = 15,
@@ -153,12 +154,12 @@ namespace NeaProject.Classes
                 };
 
                 //only allowed to spawn on unoccupied mars rock
-                while (map.GetOverlayTileChar(snake.XPos, snake.YPos) != '.' || map.GetTileChar(snake.XPos, snake.YPos) != 'm')
+                while (Map.GetOverlayTileChar(snake.XPos, snake.YPos) != '.' || Map.GetTileChar(snake.XPos, snake.YPos) != 'm')
                 {
-                    snake.XPos = random.Next(0, map.Width);
-                    snake.YPos = random.Next(0, map.Height);
+                    snake.XPos = random.Next(0, Map.Width);
+                    snake.YPos = random.Next(0, Map.Height);
                 }
-                map.SetOverlayTileChar(snake.XPos, snake.YPos, snake.SpriteRef);
+                Map.SetOverlayTileChar(snake.XPos, snake.YPos, snake.SpriteRef);
                 Npcs.Add(snake);
             }
             

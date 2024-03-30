@@ -43,8 +43,8 @@ public class Renderer
             _buffer = new uint[viewportHeight, viewportWidth]; //new buffer array as the canvas is a different size
             ViewportHeight = viewportHeight;
             ViewportWidth = viewportWidth;
-            ViewportTileY = viewportHeight / 32;
-            ViewportTileX = viewportWidth / 32;
+            ViewportTileY = viewportHeight / Sprite.tileSize;
+            ViewportTileX = viewportWidth / Sprite.tileSize;
             game.ScreenTileHeight = ViewportTileY;
             game.ScreenTileWidth = ViewportTileX;
 
@@ -80,7 +80,8 @@ public class Renderer
         DrawMap(game.Camera);
         DrawNpcs(isAnimationFrame, game);
         DrawPlayer(isAnimationFrame, game);
-        if (game.Player.IsSwingingSword()) //aaaaaaaaaaaa
+        //draw the sword if within the right timeframe of the player swinging it 
+        if (game.Player.IsSwingingSword())
         {
             DrawSword(game);
         }

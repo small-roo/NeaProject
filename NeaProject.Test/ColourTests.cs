@@ -1,8 +1,9 @@
 using NeaProject.Engine;
+using Xunit;
 
 namespace NeaProject.Test
 {
-    public class UnitTest1
+    public class ColourTests
     {
         [Fact]
         public void MixesWell()

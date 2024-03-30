@@ -12,13 +12,13 @@ namespace NeaProject.Classes
         public Sprite(SKBitmap bitmap, string name, int numOfFrames)
         {
             GetTileOffset(name, out int yOffset, out int xOffset);
-            _colour = new uint[32, 32, numOfFrames]; //creates a 32x32xn array for the colours used in the tile, per frame
+            _colour = new uint[tileSize, tileSize, numOfFrames]; //creates a 32x32xn array for the colours used in the tile, per frame
 
             for (int frameIndex = 0; frameIndex < numOfFrames; frameIndex++) //loops for if there are multiple sprites for the same object
             {
-                for (int y = 0; y < 32; y++) //pixel loop
+                for (int y = 0; y < tileSize; y++) //pixel loop
                 {
-                    for (int x = 0; x < 32; x++)
+                    for (int x = 0; x < tileSize; x++)
                     {
                         uint tileColour = MakePixel(bitmap.GetPixel(x + xOffset, y + yOffset));
                         _colour[x, y, frameIndex] = tileColour;
@@ -114,7 +114,7 @@ namespace NeaProject.Classes
                         break;
                     }
 
-                //weapon - not currently implemented, but have been drawn out on the sheet
+                //weapon
                 case "SwingUp":
                     {
                         xOffset = 8;
@@ -230,7 +230,7 @@ namespace NeaProject.Classes
 
         public Sprite(string textSprite, string name) //for if the sprite is read in from a text file, like the map
         {
-            _colour = new uint[32, 32, 1];
+            _colour = new uint[tileSize, tileSize, 1];
             string[] spriteRows = textSprite.Split('\n').Skip(1).ToArray();
             int xIndex = 0;
             int yIndex = 0;
@@ -267,11 +267,11 @@ namespace NeaProject.Classes
 
         public Sprite(Color colour, string name) //for if the sprite is a specific colour
         {
-            _colour = new uint[32, 32, 1];
+            _colour = new uint[tileSize, tileSize, 1];
             uint tileColour = MakePixel(colour);
-            for (int y = 0; y < 32; y++)
+            for (int y = 0; y < tileSize; y++)
             {
-                for (int x = 0; x < 32; x++)
+                for (int x = 0; x < tileSize; x++)
                 {
                     _colour[x, y, 0] = tileColour;
                 }

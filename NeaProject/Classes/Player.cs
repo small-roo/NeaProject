@@ -11,6 +11,7 @@ namespace NeaProject.Classes
         private int stepCount = 0;
         private int stepCycle = 0;
         private Stopwatch? swingSwordStopwatch;
+
         public bool HasWon()
         {
             return Inventory.Contains("Heartfelt Gift"); //Game is won if all 4 swords have been traded in to final boss NPC

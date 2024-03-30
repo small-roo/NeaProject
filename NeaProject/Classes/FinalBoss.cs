@@ -14,6 +14,9 @@ namespace NeaProject.Classes
                 SpokenToCount++;
             }
 
+            //prevents from advancing dialogue if the player presses the save button or refreshes the page
+            player.LookForDialogue = false;
+
             //dialogue
             switch (SpokenToCount) 
             {
@@ -25,11 +28,11 @@ namespace NeaProject.Classes
                 case 1:
                     {
                         SpokenToCount++;
-                        return "But first, you left your sword is down by the water";
+                        return "But first, you left your sword down by the water.";
                     }
                 case 2:
                     {
-                        return "I'll explain more once you've got your sword from the beach";
+                        return "I'll explain more once you've got your sword from the beach.";
                     }
                 case 3:
                     {
@@ -54,7 +57,7 @@ namespace NeaProject.Classes
                 case 7:
                     {
                         SpokenToCount++;
-                        return "Most of them are rumoured to be on other planets, though";
+                        return "Most of them are rumoured to be on other planets, though.";
                     }
                 case 8:
                     {
@@ -68,7 +71,7 @@ namespace NeaProject.Classes
                     }
                 case 10:
                     {
-                        return $"You still need {4 - weaponCount} Legendary Weapon{(weaponCount == 1 ? "" : "s")}";
+                        return $"You still need {4 - weaponCount} Legendary Weapon{(weaponCount == 1 ? "" : "s")}.";
                     }
                 default:
                     { return ""; }
